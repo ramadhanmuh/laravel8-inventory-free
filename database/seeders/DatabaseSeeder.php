@@ -24,5 +24,9 @@ class DatabaseSeeder extends Seeder
             'role' => 'Admin',
             'created_at' => time()
         ]);
+
+        DB::table('applications')->insert([
+            'name' => 'Aplikasi Inventaris'
+        ]);
     }
 }
