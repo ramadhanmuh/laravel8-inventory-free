@@ -22,7 +22,7 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * Handle an authentication attempt.
+     * Handle an forgot password attempt.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response

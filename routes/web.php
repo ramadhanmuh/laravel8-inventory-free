@@ -20,12 +20,15 @@ use App\Http\Controllers\DashboardController;
 Route::middleware(['guest'])->group(function () {
     Route::controller(LoginController::class)->group(function () {
         Route::get('', 'view');
-        Route::post('', 'authenticate')->middleware('throttle:3,1');
+        Route::post('', 'authenticate')->middleware('throttle:5,1');
     });
 
     Route::prefix('forgot-password')->group(function () {
-        Route::get('', [ForgotPasswordController::class, 'view']);
-        Route::post('', [ForgotPasswordController::class, 'sendEmail']);
+        Route::controller(ForgotPasswordController::class)->group(function () {
+            Route::get('', 'view');
+            // Route::post('', 'sendEmail')->middleware('throttle:5,1');
+            Route::post('', 'sendEmail');
+        });
     });
 });
 

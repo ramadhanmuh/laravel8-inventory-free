@@ -267,6 +267,17 @@ return [
         'username' => 'Username',
         'email' => 'Email',
         'password' => 'Kata Sandi',
+        'name' => 'Nama',
+        'picker' => 'Penerima',
+        'expenditure_transaction_id' => 'Transaksi Pengeluaran',
+        'item_id' => 'Barang',
+        'amount' => 'Jumlah',
+        'supplier' => 'Pemasok',
+        'income_transaction_id' => 'Transaksi Pemasukkan',
+        'part_number' => 'Nomor Unik',
+        'short_name' => 'Nama Singkat',
+        'full_name' => 'Nama Panjang',
+        'role' => 'Jenis'
     ],
 
 ];
