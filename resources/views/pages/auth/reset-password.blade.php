@@ -7,11 +7,7 @@
 @section('content')
     <div class="p-5">
         <div class="text-center">
-            <h1 class="h4 text-gray-900 mb-2">Lupa Kata Sandi</h1>
-            <p class="mb-4">
-                Masukkan alamat email Anda di bawah ini
-                dan kami akan mengirimkan tautan untuk mengatur ulang kata sandi Anda.
-            </p>
+            <h1 class="h4 text-gray-900 mb-2">Ubah Kata Sandi</h1>
         </div>
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -35,18 +31,32 @@
                 {{ session('status') }}
             </div>
         @endif
-        <form class="user" method="POST">
+        <form class="user" method="POST" action="{{ url('reset-password') }}">
             @csrf
+            <input type="hidden" name="token" value="{{ $token }}">
             <div class="form-group">
                 <input type="email"
                     class="form-control form-control-user"
-                    id="exampleInputEmail"
-                    aria-describedby="emailHelp"
-                    placeholder="Ketikkan alamat email..."
+                    id="email"
+                    placeholder="Ketikkan email..."
                     name="email">
             </div>
+            <div class="form-group">
+                <input type="password"
+                    class="form-control form-control-user"
+                    id="password"
+                    placeholder="Ketikkan kata sandi baru..."
+                    name="password">
+            </div>
+            <div class="form-group">
+                <input type="password"
+                    class="form-control form-control-user"
+                    id="password_confirmation"
+                    placeholder="Ketik ulang kata sandi..."
+                    name="password_confirmation">
+            </div>
             <button type="submit" class="btn btn-primary btn-user btn-block">
-                Ubah Kata Sandi
+                Simpan
             </button>
         </form>
         <hr>

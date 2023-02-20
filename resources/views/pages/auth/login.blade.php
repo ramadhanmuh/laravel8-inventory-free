@@ -18,6 +18,12 @@
                 </ul>
             </div>
         @endif
+        
+        @if (session('status'))
+            <div class="alert alert-success">
+                {{ session('status') }}
+            </div>
+        @endif
         <form class="user" method="POST">
             @method('POST')
             @csrf
@@ -37,7 +43,7 @@
             </div>
             <div class="form-group">
                 <div class="custom-control custom-checkbox small">
-                    <input type="checkbox" class="custom-control-input" id="customCheck" name="remember_me">
+                    <input type="checkbox" class="custom-control-input" id="customCheck" name="remember_me" value="1">
                     <label class="custom-control-label" for="customCheck">
                         Tetap Masuk
                     </label>

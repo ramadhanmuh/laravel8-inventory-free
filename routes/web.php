@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\DashboardController;
 
@@ -26,8 +27,14 @@ Route::middleware(['guest'])->group(function () {
     Route::prefix('forgot-password')->group(function () {
         Route::controller(ForgotPasswordController::class)->group(function () {
             Route::get('', 'view');
-            // Route::post('', 'sendEmail')->middleware('throttle:5,1');
-            Route::post('', 'sendEmail');
+            Route::post('', 'sendEmail')->middleware('throttle:5,1');
+        });
+    });
+
+    Route::prefix('reset-password')->group(function () {
+        Route::controller(ResetPasswordController::class)->group(function () {
+            Route::get('{token}', 'view');
+            Route::post('', 'reset')->middleware('throttle:5,1');
         });
     });
 });

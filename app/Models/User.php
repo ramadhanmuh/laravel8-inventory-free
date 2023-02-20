@@ -41,6 +41,13 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'email_verified_at' => 'datetime'
     ];
+
+    /**
+     * The storage format of the model's date columns.
+     *
+     * @var string
+     */
+    protected $dateFormat = 'U';
 }
