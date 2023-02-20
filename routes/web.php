@@ -24,8 +24,8 @@ Route::middleware(['guest'])->group(function () {
     });
 
     Route::prefix('forgot-password')->group(function () {
-        Route::get('', [ForgotPassword::class, 'view']);
-        Route::post('', [ForgotPassword::class, 'sendEmail']);
+        Route::get('', [ForgotPasswordController::class, 'view']);
+        Route::post('', [ForgotPasswordController::class, 'sendEmail']);
     });
 });
 

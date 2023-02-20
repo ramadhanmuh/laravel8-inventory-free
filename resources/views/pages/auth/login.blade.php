@@ -49,7 +49,7 @@
         </form>
         <hr>
         <div class="text-center">
-            <a class="small" href="{{ url('lupa-kata-sandi') }}">Lupa Kata Sandi ?</a>
+            <a class="small" href="{{ url('forgot-password') }}">Lupa Kata Sandi ?</a>
         </div>
     </div>
 @endsection
