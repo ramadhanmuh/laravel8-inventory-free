@@ -11,6 +11,6 @@ class Application extends Model
 
     public static function getOne()
     {
-        return self::limit(1)->first();
+        return self::select('name', 'copyright')->limit(1)->first();
     }
 }

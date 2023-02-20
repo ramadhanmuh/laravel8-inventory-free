@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +17,18 @@ use App\Http\Controllers\LoginController;
 |
 */
 
-Route::get('/', [LoginController::class, 'view']);
-Route::post('/', [LoginController::class, 'authenticate']);
+Route::middleware(['guest'])->group(function () {
+    Route::controller(LoginController::class)->group(function () {
+        Route::get('', 'view');
+        Route::post('', 'authenticate')->middleware('throttle:3,1');
+    });
+
+    Route::prefix('forgot-password')->group(function () {
+        Route::get('', [ForgotPassword::class, 'view']);
+        Route::post('', [ForgotPassword::class, 'sendEmail']);
+    });
+});
+
+Route::post('logout', [LogoutController::class, 'logout']);
+
+Route::get('dashboard', [DashboardController::class, 'index']);

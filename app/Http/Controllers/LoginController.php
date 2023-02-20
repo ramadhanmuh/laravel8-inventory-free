@@ -9,7 +9,7 @@ use App\Models\Application;
 class LoginController extends Controller
 {
     /**
-     * Show the profile for a given user.
+     * Show the login form
      *
      * @param  int  $id
      * @return \Illuminate\View\View
@@ -18,7 +18,7 @@ class LoginController extends Controller
     {
         $data['application'] = Application::getOne();
 
-        return view('auth.login', $data);
+        return view('pages.auth.login', $data);
     }
 
     /**
@@ -29,24 +29,19 @@ class LoginController extends Controller
      */
     public function authenticate(Request $request)
     {
-        // return back()->withErrors([
-        //     'username' => 'Test'
-        // ]);
         $credentials = $request->validate([
             'username' => ['required', 'string'],
             'password' => ['required', 'string']
         ]);
  
-        if (Auth::attempt($credentials)) {
-            // $request->session()->regenerate();
+        if (Auth::attempt($credentials, $request->remember_me)) {
+            $request->session()->regenerate();
  
-            // return redirect()->intended('dashboard');
-            return 'test';
+            return redirect()->intended('dashboard');
         }
  
-        // return back()->withErrors([
-        //     'email' => 'The provided credentials do not match our records.',
-        // ]);
-        return back();
+        return back()->withErrors([
+            'username' => 'Identitas tersebut tidak cocok dengan data kami.',
+        ]);
     }
 }

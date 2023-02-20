@@ -26,7 +26,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('applications')->insert([
-            'name' => 'Aplikasi Inventaris'
+            'name' => 'Aplikasi Inventaris',
+            'copyright' => 'Inventaris 2023'
         ]);
     }
 }

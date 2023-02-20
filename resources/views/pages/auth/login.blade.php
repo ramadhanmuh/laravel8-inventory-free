@@ -18,7 +18,8 @@
                 </ul>
             </div>
         @endif
-        <form class="user" method="POST" action="{{ url('') }}">
+        <form class="user" method="POST">
+            @method('POST')
             @csrf
             <div class="form-group">
                 <input type="text"
@@ -26,9 +27,6 @@
                     id="exampleInputEmail"
                     placeholder="Username"
                     name="username">
-                @error('username')
-                    <small class="text-danger ml-4">{{ $message }}</small>
-                @enderror
             </div>
             <div class="form-group">
                 <input type="password"
@@ -36,9 +34,6 @@
                     id="exampleInputPassword"
                     placeholder="Kata sandi"
                     name="password">
-                @error('password')
-                    <small class="text-danger ml-4">{{ $message }}</small>
-                @enderror
             </div>
             <div class="form-group">
                 <div class="custom-control custom-checkbox small">
@@ -47,9 +42,6 @@
                         Tetap Masuk
                     </label>
                 </div>
-                @error('remember_me')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
             </div>
             <button type="submit" class="btn btn-primary btn-user btn-block">
                 Login
