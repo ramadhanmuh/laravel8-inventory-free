@@ -30,6 +30,10 @@ class Sidebar extends Component
      */
     public function render()
     {
-        return view('components.sidebar');
+        if (auth()->user()->role === 'Admin') {
+            return view('components.admin-sidebar');
+        }
+
+        return view('components.operator-sidebar');
     }
 }

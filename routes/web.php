@@ -6,6 +6,7 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +21,7 @@ use App\Http\Controllers\DashboardController;
 
 Route::middleware(['guest'])->group(function () {
     Route::controller(LoginController::class)->group(function () {
-        Route::get('', 'view');
+        Route::get('', 'view')->name('login');
         Route::post('', 'authenticate')->middleware('throttle:5,1');
     });
 
@@ -39,6 +40,12 @@ Route::middleware(['guest'])->group(function () {
     });
 });
 
-Route::post('logout', [LogoutController::class, 'logout']);
+Route::middleware(['auth'])->group(function () {
+    Route::post('logout', [LogoutController::class, 'logout']);
 
-Route::get('dashboard', [DashboardController::class, 'index']);
+    Route::get('dashboard', [DashboardController::class, 'index']);
+
+    Route::get('profile', [ProfileController::class, 'edit']);
+    Route::put('profile', [ProfileController::class, 'update']);
+});
+
