@@ -2,9 +2,10 @@
  
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Application;
 use App\Models\User;
+use App\Http\Requests\UpdateProfileRequest;
+use Illuminate\Support\Facades\Auth;
  
 class ProfileController extends Controller
 {
@@ -14,24 +15,21 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\View\View
      */
-    public function edit(Request $request)
+    public function edit()
     {
         $data['application'] = Application::getOne();
-
-        $data['input'] = $request->all();
 
         return view('pages.profile.edit', $data);
     }
 
-    public function update(Request $request)
+    public function update(UpdateProfileRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:191',
-            'username' => 'required|string|max:191',
-            'email' => 'required|email|max:191',
-            'password' => 'required',
-        ]);
+        $input = $request->safe()->only(['name', 'email', 'username']);
 
-        return back();
+        User::where('id', Auth::user()->id)
+            ->update($input);
+
+        return redirect('profile')
+                ->with('status', '1');
     }
 }

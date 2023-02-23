@@ -234,6 +234,7 @@ return [
     'uploaded'    => ':attribute gagal diunggah.',
     'url'         => 'Format :attribute tidak valid.',
     'uuid'        => ':attribute harus merupakan UUID yang valid.',
+    'current_password' => 'Kata Sandi salah.',
 
     /*
     |--------------------------------------------------------------------------
@@ -267,6 +268,9 @@ return [
         'username' => 'Username',
         'email' => 'Email',
         'password' => 'Kata Sandi',
+        'old_password' => 'Kata Sandi Lama',
+        'newpassword' => 'Kata Sandi Baru',
+        'newpassword_confirmation' => 'Konfirmasi Kata Sandi Baru',
         'name' => 'Nama',
         'picker' => 'Penerima',
         'expenditure_transaction_id' => 'Transaksi Pengeluaran',

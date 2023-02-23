@@ -18,7 +18,7 @@
 @endif
 @if (session('status'))
     <div class="alert alert-success alert-dismissible fade show">
-        Berhasil mengubah profil.
+        Berhasil mengubah kata sandi.
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -29,49 +29,43 @@
         Isi formulir
     </div>
     <div class="card-body">
-        <form action="{{ url('profile') }}" method="POST">
+        <form action="{{ url('change-password') }}" method="POST">
             @method('PUT')
             @csrf
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="name">
-                        Nama
+            <div class="row align-items-center">
+                <div class="col-md-5 col-lg-3">
+                    <label for="old_password">
+                        Kata Sandi Lama
                     </label>
-                    <input type="text"
-                        class="form-control"
-                        name="name"
-                        id="name"
-                        value="{{ empty(old('name')) ? auth()->user()->name : old('name') }}">
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label for="username">
-                        Username
-                    </label>
-                    <input type="text"
-                        class="form-control"
-                        name="username"
-                        id="username"
-                        value="{{ empty(old('username')) ? auth()->user()->username : old('username') }}">
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="email">
-                        Email
-                    </label>
-                    <input type="email"
-                        class="form-control"
-                        name="email"
-                        id="email"
-                        value="{{ empty(old('email')) ? auth()->user()->email : old('email') }}">
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="password">
-                        Kata Sandi
-                    </label>
+                <div class="col-md-7 col-lg-9 mb-3">
                     <input type="password"
                         class="form-control"
-                        name="password"
-                        id="password"
-                        placeholder="Isi kata sandi...">
+                        name="old_password"
+                        id="old_password">
+                </div>
+                <div class="col-md-5 col-lg-3">
+                    <label for="newpassword">
+                        Kata Sandi Baru
+                    </label>
+                </div>
+                <div class="col-md-7 col-lg-9 mb-3">
+                    <input type="password"
+                        class="form-control"
+                        name="newpassword"
+                        id="newpassword">
+                </div>
+                <div class="col-md-5 col-lg-3">
+                    <label for="newpassword_confirmation">
+                        Konfirmasi Kata Sandi
+                    </label>
+                </div>
+                <div class="col-md-7 col-lg-9 mb-3">
+                    <input type="password"
+                        class="form-control"
+                        name="newpassword_confirmation"
+                        id="newpassword_confirmation"
+                        placeholder="Ketik Kembali Kata Sandi Baru...">
                 </div>
                 <div class="col-12">
                     <button type="submit" class="btn btn-block btn-primary">

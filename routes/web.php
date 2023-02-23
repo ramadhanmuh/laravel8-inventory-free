@@ -7,6 +7,7 @@ use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ChangePasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,5 +48,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('profile', [ProfileController::class, 'edit']);
     Route::put('profile', [ProfileController::class, 'update']);
+
+    Route::get('change-password', [ChangePasswordController::class, 'edit']);
+    Route::put('change-password', [ChangePasswordController::class, 'update']);
 });
 
