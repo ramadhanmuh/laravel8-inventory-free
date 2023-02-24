@@ -19,11 +19,23 @@ class CategoryController extends Controller
     {
         $data['application'] = Application::first();
 
-        $data['items'] = Category::getData($request);
+        $data['input'] = $this->getInputParameter($request);
 
-        $data['request'] = $request->all();
+        // $itemTotal = Category::countWithCondition($request);
+
+        $data['items'] = Category::getData($data['input']);
 
         return view('pages.category.index', $data);
+    }
+
+    private function getInputParameter($request)
+    {
+        return [
+            'page'=> intval($request->page),
+            'order_by'=> strval($request->order_by),
+            'order_direction'=> strval($request->direction),
+            'keyword'=> strval($request->keyword)
+        ];
     }
 
     /**
@@ -50,7 +62,7 @@ class CategoryController extends Controller
     {
         $input = $request->validated();
 
-        Category::create($input);
+        Category::insertOrIgnore($input);
 
         return redirect('categories')
                 ->with('status', 'Berhasil menambah kategori.');

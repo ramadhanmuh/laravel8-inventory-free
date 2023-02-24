@@ -35,35 +35,30 @@ class Category extends Model
         'id' => 'string'
     ];
 
-    public function getData($request)
+    public function getData($input)
     {
-        if (empty($request->get('q')) && empty($request->get('order_by')) && empty($request->get('order_direction'))) {
-            return self::paginate();
+        $data = self::select('id', 'name');
+
+        if (empty($input['keyword']) && empty($input['order_by']) && empty($input['order_direction']) && empty($input['page'])) {
+            return $data->orderBy('name', 'asc')
+                        ->offset(0)
+                        ->limit(10)
+                        ->get();
         }
 
-        $data = 0;
-
-        if (!empty($request->get('q'))) {
-            $data = self::where('name', 'like', "%$request->q%")
-                        ->orWhere('id', 'like', "%$request->q%");
+        if (!empty($input['keyword'])) {
+            $data->where('name', 'like', "%" . $input['keyword'] . "%")
+                    ->orWhere('id', 'like', "%" . $input['keyword'] . "%");
         }
 
-        if ($request->order_by === 'name') {
-            if (!$data) {
-                if ($request->order_direction !== 'asc' && $request->order_direction !== 'desc') {
-                    $data = self::orderBy($request->order_by);
-                } else {
-                    $data = self::orderBy($request->order_by, $request->order_direction);
-                }
+        if ($input['order_by'] === 'name') {
+            if ($input['order_direction'] !== 'asc' && $input['order_direction'] !== 'desc') {
+                $data->orderBy($input['order_by']);
             } else {
-                if ($request->order_direction !== 'asc' && $request->order_direction !== 'desc') {
-                    $data->orderBy($request->order_by);
-                } else {
-                    $data->orderBy($request->order_by, $request->order_direction);
-                }
+                $data->orderBy($input['order_by'], $input['order_direction']);
             }
         }
 
-        return $data->paginate(10);
+        return $data->limit(10)->get();
     }
 }
