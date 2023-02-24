@@ -8,6 +8,7 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,5 +52,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('change-password', [ChangePasswordController::class, 'edit']);
     Route::put('change-password', [ChangePasswordController::class, 'update']);
+
+    Route::resource('categories', CategoryController::class);
 });
 

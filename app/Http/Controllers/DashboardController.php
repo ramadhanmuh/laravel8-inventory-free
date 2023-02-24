@@ -14,7 +14,7 @@ use App\Models\UnitOfMeasurement;
 class DashboardController extends Controller
 {
     /**
-     * Show the profile for a given user.
+     * Show the dashboard page.
      *
      * @param  int  $id
      * @return \Illuminate\View\View

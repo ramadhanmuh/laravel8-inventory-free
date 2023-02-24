@@ -26,15 +26,14 @@ class UpdateProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'max:191'],
+            'name' => ['required', 'string', 'max:191'],
             'email' => [
                 'required', 'email',
                 'max:191',
                 Rule::unique('users')->ignore(Auth::user()->id),
             ],
             'username' => [
-                'required', 'max:191',
-                'alpha_dash',
+                'required', 'string', 'max:191', 'alpha_dash',
                 Rule::unique('users')->ignore(Auth::user()->id)
             ],
             'password' => [
