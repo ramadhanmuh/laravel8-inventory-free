@@ -21,9 +21,19 @@ class CategoryController extends Controller
 
         $data['input'] = $this->getInputParameter($request);
 
-        // $itemTotal = Category::countWithCondition($request);
+        $data['input']['page'] = $data['input']['page'] < 1 ? 1 : $data['input']['page'];
+
+        $data['input']['offset'] = $data['input']['page'] > 1 ? ($data['input']['page'] * 10) - 10 : 0;
+
+        $data['number'] = $data['input']['offset'] + 1;
+
+        $itemTotal = Category::countData($data['input']);
+
+        $data['pageTotal'] = intval(ceil($itemTotal / 10));
 
         $data['items'] = Category::getData($data['input']);
+
+        // dd($data['items']);
 
         return view('pages.category.index', $data);
     }
@@ -33,7 +43,7 @@ class CategoryController extends Controller
         return [
             'page'=> intval($request->page),
             'order_by'=> strval($request->order_by),
-            'order_direction'=> strval($request->direction),
+            'order_direction'=> strval($request->order_direction),
             'keyword'=> strval($request->keyword)
         ];
     }

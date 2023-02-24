@@ -37,18 +37,12 @@ class Category extends Model
 
     public function getData($input)
     {
+        // dd($input);
         $data = self::select('id', 'name');
 
-        if (empty($input['keyword']) && empty($input['order_by']) && empty($input['order_direction']) && empty($input['page'])) {
-            return $data->orderBy('name', 'asc')
-                        ->offset(0)
-                        ->limit(10)
-                        ->get();
-        }
-
         if (!empty($input['keyword'])) {
-            $data->where('name', 'like', "%" . $input['keyword'] . "%")
-                    ->orWhere('id', 'like', "%" . $input['keyword'] . "%");
+            $data->where('id', 'LIKE', '%' . $input['keyword'] . '%')
+                    ->orWhere('name', 'LIKE', '%' . $input['keyword'] . '%');
         }
 
         if ($input['order_by'] === 'name') {
@@ -57,8 +51,24 @@ class Category extends Model
             } else {
                 $data->orderBy($input['order_by'], $input['order_direction']);
             }
+        } else {
+            $data->orderBy('name', 'asc');
         }
 
-        return $data->limit(10)->get();
+        return $data->offset($input['offset'])
+                        ->limit(10)
+                        ->get();
+    }
+
+    public function countData($input)
+    {
+        $data = self::select('id');
+
+        if (!empty($input['keyword'])) {
+            $data->where('name', 'like', "%" . $input['keyword'] . "%")
+                    ->orWhere('id', 'like', "%" . $input['keyword'] . "%");
+        }
+
+        return $data->count();
     }
 }
