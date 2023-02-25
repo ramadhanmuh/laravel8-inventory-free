@@ -40,7 +40,7 @@ class CreateItemsTable extends Migration
 
             $table->decimal('price', 10, 2);
 
-            $table->text('image');
+            $table->text('image')->nullable();
         });
     }
 

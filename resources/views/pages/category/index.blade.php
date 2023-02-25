@@ -34,8 +34,27 @@
     </div>
     <div class="card">
         <div class="card-header bg-white">
-            <div class="row justify-content-end">
-                <div class="col-auto col-md-5 col-lg-3">
+            <div class="row justify-content-center justify-content-lg-between align-items-center">
+                <div class="col-md-7 col-lg-4 col-xl-3 mb-2 mb-md-0">
+                    <div class="row align-items-center justify-content-center">
+                        <div class="col-md-auto">
+                            <label for="sort" class="m-0 font-weight-bold">Sortir</label>
+                        </div>
+                        <div class="col p-md-0">
+                            <select class="form-control form-control-sm" onchange="window.location.replace(this.value)">
+                                <option value="{{ route('categories.index', ['order_by' => 'name', 'order_direction' => 'asc']) }}"
+                                    {{ $input['order_by'] === 'name' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
+                                    Nama (Menaik)
+                                </option>
+                                <option value="{{ route('categories.index', ['order_by' => 'name', 'order_direction' => 'asc']) }}"
+                                    {{ $input['order_by'] === 'name' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
+                                    Nama (Menurun)
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-auto col-md-5 col-lg-3">
                     <form action="{{ route('categories.index') }}" method="get">
                         <input type="hidden" name="order_by" value="{{ $input['order_by'] }}">
                         <input type="hidden" name="order_direction" value="{{ $input['order_direction'] }}">
@@ -63,17 +82,7 @@
                         <tr>
                             <th class="text-center" style="width: 2px">No</th>
                             <th class="text-center">ID</th>
-                            <th>
-                                Nama
-                                <a href="{{ route('categories.index', ['order_by' => 'name', 'order_direction' => 'desc', 'keyword' => $input['keyword']]) }}"
-                                    class="btn btn-sm p-0 px-1 float-right">
-                                    <i class="fas fa-arrow-down {{ $input['order_by'] === 'name' && $input['order_direction'] === 'desc' ? 'text-primary' : 'text-secondary' }}"></i>
-                                </a>
-                                <a href="{{ route('categories.index', ['order_by' => 'name', 'order_direction' => 'asc', 'keyword' => $input['keyword']]) }}"
-                                    class="btn btn-sm p-0 px-1 float-right">
-                                    <i class="fas fa-arrow-up {{ ($input['order_by'] === 'name' || empty($input['order_by'])) && ($input['order_direction'] === 'asc' || empty($input['order_direction'])) ? 'text-primary' : 'text-secondary' }}"></i>
-                                </a>
-                            </th>
+                            <th>Nama</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -97,10 +106,10 @@
                                         {{ $item->name }}
                                     </td>
                                     <td class="text-center align-middle">
-                                        <a href="{{ route('categories.edit', $item->id) }}" class="btn btn-warning btn-sm">
+                                        <a href="{{ route('categories.edit', $item->id) }}" class="btn btn-warning btn-sm my-1 my-lg-0">
                                             Ubah
                                         </a>
-                                        <form action="{{ route('categories.destroy', $item->id) }}" method="post" class="d-inline">
+                                        <form action="{{ route('categories.destroy', $item->id) }}" method="post" class="d-inline my-1 my-lg-0">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Data lain yang menggunakan kategori ini akan ikut terhapus. Lanjutkan ?')">

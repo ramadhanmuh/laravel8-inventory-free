@@ -11,6 +11,7 @@ use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\UnitOfMeasurementController;
+use App\Http\Controllers\ItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,5 +67,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('unit-of-measurements', UnitOfMeasurementController::class)->except([
         'show'
     ]);
+
+    Route::resource('items', ItemController::class);
 });
 

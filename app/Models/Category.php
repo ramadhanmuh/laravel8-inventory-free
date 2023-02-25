@@ -70,4 +70,12 @@ class Category extends Model
 
         return $data->count();
     }
+
+    /**
+     * Get the items for the category.
+     */
+    public function comments()
+    {
+        return $this->hasMany(Item::class);
+    }
 }

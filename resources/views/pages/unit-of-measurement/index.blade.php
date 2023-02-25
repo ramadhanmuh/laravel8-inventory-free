@@ -34,8 +34,35 @@
     </div>
     <div class="card">
         <div class="card-header bg-white">
-            <div class="row justify-content-end">
-                <div class="col-auto col-md-5 col-lg-3">
+            <div class="row justify-content-center justify-content-lg-between align-items-center">
+                <div class="col-md-7 col-lg-4 mb-2 mb-md-0">
+                    <div class="row align-items-center justify-content-center">
+                        <div class="col-md-auto">
+                            <label for="sort" class="m-0 font-weight-bold">Sortir</label>
+                        </div>
+                        <div class="col p-md-0">
+                            <select class="form-control form-control-sm" onchange="window.location.replace(this.value)">
+                                <option value="{{ route('unit-of-measurements.index', ['order_by' => 'full_name', 'order_direction' => 'asc']) }}"
+                                    {{ $input['order_by'] === 'full_name' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
+                                    Nama Panjang (Menaik)
+                                </option>
+                                <option value="{{ route('unit-of-measurements.index', ['order_by' => 'full_name', 'order_direction' => 'asc']) }}"
+                                    {{ $input['order_by'] === 'full_name' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
+                                    Nama Panjang (Menurun)
+                                </option>
+                                <option value="{{ route('unit-of-measurements.index', ['order_by' => 'short_name', 'order_direction' => 'asc']) }}"
+                                    {{ $input['order_by'] === 'short_name' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
+                                    Nama Singkat (Menaik)
+                                </option>
+                                <option value="{{ route('unit-of-measurements.index', ['order_by' => 'short_name', 'order_direction' => 'asc']) }}"
+                                    {{ $input['order_by'] === 'short_name' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
+                                    Nama Singkat (Menurun)
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-auto col-md-5 col-lg-3">
                     <form action="{{ route('unit-of-measurements.index') }}" method="get">
                         <input type="hidden" name="order_by" value="{{ $input['order_by'] }}">
                         <input type="hidden" name="order_direction" value="{{ $input['order_direction'] }}">
@@ -63,28 +90,8 @@
                         <tr>
                             <th class="text-center align-middle" style="width: 2px">No</th>
                             <th class="text-center align-middle">ID</th>
-                            <th class="align-middle">
-                                Nama Singkat
-                                <a href="{{ route('unit-of-measurements.index', ['order_by' => 'short_name', 'order_direction' => 'desc', 'keyword' => $input['keyword']]) }}"
-                                    class="btn btn-sm p-0 px-1 float-right">
-                                    <i class="fas fa-arrow-down {{ $input['order_by'] === 'short_name' && $input['order_direction'] === 'desc' ? 'text-primary' : 'text-secondary' }}"></i>
-                                </a>
-                                <a href="{{ route('unit-of-measurements.index', ['order_by' => 'short_name', 'order_direction' => 'asc', 'keyword' => $input['keyword']]) }}"
-                                    class="btn btn-sm p-0 px-1 float-right">
-                                    <i class="fas fa-arrow-up {{ $input['order_by'] === 'short_name' && $input['order_direction'] === 'asc' ? 'text-primary' : 'text-secondary' }}"></i>
-                                </a>
-                            </th>
-                            <th class="align-middle">
-                                Nama Panjang
-                                <a href="{{ route('unit-of-measurements.index', ['order_by' => 'full_name', 'order_direction' => 'desc', 'keyword' => $input['keyword']]) }}"
-                                    class="btn btn-sm p-0 px-1 float-right">
-                                    <i class="fas fa-arrow-down {{ $input['order_by'] === 'full_name' && $input['order_direction'] === 'desc' ? 'text-primary' : 'text-secondary' }}"></i>
-                                </a>
-                                <a href="{{ route('unit-of-measurements.index', ['order_by' => 'full_name', 'order_direction' => 'asc', 'keyword' => $input['keyword']]) }}"
-                                    class="btn btn-sm p-0 px-1 float-right">
-                                    <i class="fas fa-arrow-up {{ ($input['order_by'] === 'full_name' || empty($input['order_by'])) && ($input['order_direction'] === 'asc' || empty($input['order_direction'])) ? 'text-primary' : 'text-secondary' }}"></i>
-                                </a>
-                            </th>
+                            <th class="align-middle">Nama Singkat</th>
+                            <th class="align-middle">Nama Panjang</th>
                             <th class="text-center align-middle">Aksi</th>
                         </tr>
                     </thead>
