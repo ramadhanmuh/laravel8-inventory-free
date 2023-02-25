@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Application;
-use App\Models\Category;
+use App\Models\Brand;
 use Illuminate\Support\Str;
-use App\Http\Requests\StoreCategoryRequest;
-use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Requests\StoreBrandRequest;
+use App\Http\Requests\UpdateBrandRequest;
 
-class CategoryController extends Controller
+class BrandController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -28,13 +28,13 @@ class CategoryController extends Controller
 
         $data['number'] = $data['input']['offset'] + 1;
 
-        $itemTotal = Category::countData($data['input']);
+        $itemTotal = Brand::countData($data['input']);
 
         $data['pageTotal'] = intval(ceil($itemTotal / 10));
 
-        $data['items'] = Category::getData($data['input']);
+        $data['items'] = Brand::getData($data['input']);
 
-        return view('pages.category.index', $data);
+        return view('pages.brand.index', $data);
     }
 
     private function getInputParameter($request)
@@ -58,7 +58,7 @@ class CategoryController extends Controller
 
         $data['id'] = Str::uuid();
 
-        return view('pages.category.create', $data);
+        return view('pages.brand.create', $data);
     }
 
     /**
@@ -67,14 +67,14 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreCategoryRequest $request)
+    public function store(StoreBrandRequest $request)
     {
         $input = $request->validated();
 
-        Category::insertOrIgnore($input);
+        Brand::insertOrIgnore($input);
 
-        return redirect('categories')
-                ->with('status', 'Berhasil menambah kategori.');
+        return redirect('brands')
+                ->with('status', 'Berhasil menambah merek.');
     }
 
     /**
@@ -98,9 +98,9 @@ class CategoryController extends Controller
     {
         $data['application'] = Application::first();
 
-        $data['item'] = Category::findOrFail($id);
+        $data['item'] = Brand::findOrFail($id);
 
-        return view('pages.category.edit', $data);
+        return view('pages.brand.edit', $data);
     }
 
     /**
@@ -110,16 +110,16 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateCategoryRequest $request, $id)
+    public function update(UpdateBrandRequest $request, $id)
     {
-        $data = Category::findOrFail($id);
+        $data = Brand::findOrFail($id);
 
         $input = $request->validated();
 
-        Category::where('id', $id)->update($input);
+        Brand::where('id', $id)->update($input);
 
-        return redirect('categories')
-                ->with('status', 'Berhasil mengubah kategori.');
+        return redirect('brands')
+                ->with('status', 'Berhasil mengubah merek.');
     }
 
     /**
@@ -130,10 +130,11 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $data = Category::findOrFail($id);
+        $data = Brand::findOrFail($id);
 
         $data->delete();
 
-        return back()->with('status', 'Berhasil menghapus kategori.');
+        return back()
+                ->with('status', 'Berhasil menghapus merek.');
     }
 }

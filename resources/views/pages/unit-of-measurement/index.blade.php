@@ -1,10 +1,10 @@
 @extends('layouts.dashboard')
 
-@section('title', "$application->name - Kategori")
+@section('title', "$application->name - Satuan Barang")
 
-@section('description', 'Halaman yang berisi daftar kategori yang dibuat.')
+@section('description', 'Halaman yang berisi daftar satuan barang yang dibuat.')
 
-@section('route_name', 'Kategori')
+@section('route_name', 'Satuan Barang')
 
 @section('content')
     @if ($errors->any())
@@ -26,7 +26,7 @@
     @endif
     <div class="row justify-content-end">
         <div class="col-auto">
-            <a href="{{ route('categories.create') }}" class="btn btn-sm btn-primary mb-3">
+            <a href="{{ route('unit-of-measurements.create') }}" class="btn btn-sm btn-primary mb-3">
                 <i class="fas fa-plus mr-1"></i>
                 Tambah
             </a>
@@ -36,7 +36,7 @@
         <div class="card-header bg-white">
             <div class="row justify-content-end">
                 <div class="col-auto col-md-5 col-lg-3">
-                    <form action="{{ route('categories.index') }}" method="get">
+                    <form action="{{ route('unit-of-measurements.index') }}" method="get">
                         <input type="hidden" name="order_by" value="{{ $input['order_by'] }}">
                         <input type="hidden" name="order_direction" value="{{ $input['order_direction'] }}">
                         <div class="input-group input-group-sm">
@@ -61,20 +61,31 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th class="text-center" style="width: 2px">No</th>
-                            <th class="text-center">ID</th>
-                            <th>
-                                Nama
-                                <a href="{{ route('categories.index', ['order_by' => 'name', 'order_direction' => 'desc', 'keyword' => $input['keyword']]) }}"
+                            <th class="text-center align-middle" style="width: 2px">No</th>
+                            <th class="text-center align-middle">ID</th>
+                            <th class="align-middle">
+                                Nama Singkat
+                                <a href="{{ route('unit-of-measurements.index', ['order_by' => 'short_name', 'order_direction' => 'desc', 'keyword' => $input['keyword']]) }}"
                                     class="btn btn-sm p-0 px-1 float-right">
-                                    <i class="fas fa-arrow-down {{ $input['order_by'] === 'name' && $input['order_direction'] === 'desc' ? 'text-primary' : 'text-secondary' }}"></i>
+                                    <i class="fas fa-arrow-down {{ $input['order_by'] === 'short_name' && $input['order_direction'] === 'desc' ? 'text-primary' : 'text-secondary' }}"></i>
                                 </a>
-                                <a href="{{ route('categories.index', ['order_by' => 'name', 'order_direction' => 'asc', 'keyword' => $input['keyword']]) }}"
+                                <a href="{{ route('unit-of-measurements.index', ['order_by' => 'short_name', 'order_direction' => 'asc', 'keyword' => $input['keyword']]) }}"
                                     class="btn btn-sm p-0 px-1 float-right">
-                                    <i class="fas fa-arrow-up {{ ($input['order_by'] === 'name' || empty($input['order_by'])) && ($input['order_direction'] === 'asc' || empty($input['order_direction'])) ? 'text-primary' : 'text-secondary' }}"></i>
+                                    <i class="fas fa-arrow-up {{ $input['order_by'] === 'short_name' && $input['order_direction'] === 'asc' ? 'text-primary' : 'text-secondary' }}"></i>
                                 </a>
                             </th>
-                            <th class="text-center">Aksi</th>
+                            <th class="align-middle">
+                                Nama Panjang
+                                <a href="{{ route('unit-of-measurements.index', ['order_by' => 'full_name', 'order_direction' => 'desc', 'keyword' => $input['keyword']]) }}"
+                                    class="btn btn-sm p-0 px-1 float-right">
+                                    <i class="fas fa-arrow-down {{ $input['order_by'] === 'full_name' && $input['order_direction'] === 'desc' ? 'text-primary' : 'text-secondary' }}"></i>
+                                </a>
+                                <a href="{{ route('unit-of-measurements.index', ['order_by' => 'full_name', 'order_direction' => 'asc', 'keyword' => $input['keyword']]) }}"
+                                    class="btn btn-sm p-0 px-1 float-right">
+                                    <i class="fas fa-arrow-up {{ ($input['order_by'] === 'full_name' || empty($input['order_by'])) && ($input['order_direction'] === 'asc' || empty($input['order_direction'])) ? 'text-primary' : 'text-secondary' }}"></i>
+                                </a>
+                            </th>
+                            <th class="text-center align-middle">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -94,16 +105,19 @@
                                         {{ $item->id }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ $item->name }}
+                                        {{ $item->short_name }}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ $item->full_name }}
                                     </td>
                                     <td class="text-center align-middle">
-                                        <a href="{{ route('categories.edit', $item->id) }}" class="btn btn-warning btn-sm">
+                                        <a href="{{ route('unit-of-measurements.edit', $item->id) }}" class="btn btn-warning btn-sm my-1">
                                             Ubah
                                         </a>
-                                        <form action="{{ route('categories.destroy', $item->id) }}" method="post" class="d-inline">
+                                        <form action="{{ route('unit-of-measurements.destroy', $item->id) }}" method="post" class="d-inline my-1">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Data lain yang menggunakan kategori ini akan ikut terhapus. Lanjutkan ?')">
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Data lain yang menggunakan satuan barang ini akan ikut terhapus. Lanjutkan ?')">
                                                 Hapus
                                             </button>
                                         </form>
@@ -133,7 +147,7 @@
 
                                 <li class="page-item active">
                                     <a
-                                        href="{{ route('categories.index', ['page' => 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}"
+                                        href="{{ route('unit-of-measurements.index', ['page' => 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}"
                                         class="page-link">
                                         1
                                     </a>
@@ -143,7 +157,7 @@
                                     @if ($i < 4)
                                         <li class="page-item">
                                             <a class="page-link"
-                                                href="{{ route('categories.index', ['page' => $i, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                                href="{{ route('unit-of-measurements.index', ['page' => $i, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
                                                 {{ $i }}
                                             </a>
                                         </li>
@@ -152,28 +166,28 @@
 
                                 <li class="page-item">
                                     <a class="page-link"
-                                        href="{{ route('categories.index', ['page' => $input['page'] + 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('unit-of-measurements.index', ['page' => $input['page'] + 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
                                         >
                                     </a>
                                 </li>
 
                                 <li class="page-item">
                                     <a class="page-link"
-                                        href="{{ route('categories.index', ['page' => $pageTotal, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('unit-of-measurements.index', ['page' => $pageTotal, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
                                         >>
                                     </a>
                                 </li>
                             @else
                                 <li class="page-item">
                                     <a class="page-link"
-                                        href="{{ route('categories.index', ['page' => 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('unit-of-measurements.index', ['page' => 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
                                         <<
                                     </a>
                                 </li>
 
                                 <li class="page-item">
                                     <a class="page-link"
-                                        href="{{ route('categories.index', ['page' => $input['page'] - 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('unit-of-measurements.index', ['page' => $input['page'] - 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
                                         <
                                     </a>
                                 </li>
@@ -187,7 +201,7 @@
                                 @for ($i = $pageStartNumber; $i <= $loopingNumberStop; $i++)
                                     <li class="page-item {{ $input['page'] === $i ? 'active' : '' }}">
                                         <a class="page-link"
-                                            href="{{ route('categories.index', ['page' => $i, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                            href="{{ route('unit-of-measurements.index', ['page' => $i, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
                                             {{ $i }}
                                         </a>
                                     </li>
@@ -195,14 +209,14 @@
 
                                 <li class="page-item {{ $input['page'] === $pageTotal ? 'disabled' : '' }}">
                                     <a class="page-link"
-                                        href="{{ route('categories.index', ['page' => $input['page'] + 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('unit-of-measurements.index', ['page' => $input['page'] + 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
                                         >
                                     </a>
                                 </li>
 
                                 <li class="page-item {{ $input['page'] === $pageTotal ? 'disabled' : '' }}">
                                     <a class="page-link"
-                                        href="{{ route('categories.index', ['page' => $pageTotal, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('unit-of-measurements.index', ['page' => $pageTotal, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
                                         >>
                                     </a>
                                 </li>

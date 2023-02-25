@@ -9,6 +9,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\UnitOfMeasurementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +55,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('change-password', [ChangePasswordController::class, 'edit']);
     Route::put('change-password', [ChangePasswordController::class, 'update']);
 
-    Route::resource('categories', CategoryController::class);
+    Route::resource('categories', CategoryController::class)->except([
+        'show'
+    ]);
+
+    Route::resource('brands', BrandController::class)->except([
+        'show'
+    ]);
+
+    Route::resource('unit-of-measurements', UnitOfMeasurementController::class)->except([
+        'show'
+    ]);
 });
 

@@ -63,10 +63,16 @@
             <span>Stok Barang</span></a>
     </li>
 
-    <li class="nav-item {{ (request()->is('admin/cities')) ? 'active' : '' }}">
-        <a class="nav-link" href="{{ url('items') }}">
+    <li class="nav-item {{ (request()->is('users')) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ url('users') }}">
             <i class="fas fa-fw fa-users"></i>
             <span>Pengguna</span></a>
+    </li>
+
+    <li class="nav-item {{ (request()->is('settings')) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ url('settings') }}">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Pengaturan Aplikasi</span></a>
     </li>
 
     {{-- Divider  --}}

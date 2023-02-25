@@ -35,9 +35,8 @@ class Category extends Model
         'id' => 'string'
     ];
 
-    public function getData($input)
+    public static function getData($input)
     {
-        // dd($input);
         $data = self::select('id', 'name');
 
         if (!empty($input['keyword'])) {
@@ -60,7 +59,7 @@ class Category extends Model
                         ->get();
     }
 
-    public function countData($input)
+    public static function countData($input)
     {
         $data = self::select('id');
 

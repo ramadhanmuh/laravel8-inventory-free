@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Category;
+use App\Models\Brand;
 
-class CategorySeeder extends Seeder
+class BrandSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,8 +14,8 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        Category::factory()
-                    ->count(20)
+        Brand::factory()
+                    ->count(50)
                     ->create();
     }
 }

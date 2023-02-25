@@ -17,7 +17,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             ApplicationSeeder::class,
-            CategorySeeder::class
+            CategorySeeder::class,
+            BrandSeeder::class,
+            UnitOfMeasurementSeeder::class
         ]);
     }
 }
