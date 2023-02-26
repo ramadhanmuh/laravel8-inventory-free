@@ -58,6 +58,14 @@
                                     {{ $input['order_by'] === 'part_number' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
                                     Nomor Unik (Menurun)
                                 </option>
+                                <option value="{{ route('items.index', ['order_by' => 'category', 'order_direction' => 'asc']) }}"
+                                    {{ $input['order_by'] === 'category' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
+                                    Satuan Barang (Menaik)
+                                </option>
+                                <option value="{{ route('items.index', ['order_by' => 'category', 'order_direction' => 'asc']) }}"
+                                    {{ $input['order_by'] === 'category' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
+                                    Satuan Barang (Menurun)
+                                </option>
                                 <option value="{{ route('items.index', ['order_by' => 'brand', 'order_direction' => 'asc']) }}"
                                     {{ $input['order_by'] === 'brand' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
                                     Merk (Menaik)
@@ -107,6 +115,7 @@
                             <th class="text-center align-middle" style="width: 2px">No</th>
                             <th class="align-middle">Nomor Unik</th>
                             <th class="align-middle">Deskripsi</th>
+                            <th class="align-middle">Kategori</th>
                             <th class="align-middle">Merek</th>
                             <th class="align-middle">Satuan Barang</th>
                             <th></th>
@@ -132,6 +141,9 @@
                                         {{ $item->description }}
                                     </td>
                                     <td class="align-middle">
+                                        {{ $item->category }}
+                                    </td>
+                                    <td class="align-middle">
                                         {{ $item->brand }}
                                     </td>
                                     <td class="align-middle">
@@ -139,7 +151,7 @@
                                     </td>
                                     <td class="text-center align-middle">
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
                                               Aksi
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">

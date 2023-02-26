@@ -28,7 +28,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="part_number">Nomor Unik</label>
-                            <input type="text" class="form-control" id="part_number" value="{{ old('part_number') }}">
+                            <input type="text" class="form-control" id="part_number" value="{{ old('part_number') }}" name="part_number">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -83,7 +83,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="price">Harga</label>
-                            <input type="number" class="form-control" id="price" name="price">
+                            <input type="number" class="form-control" id="price" name="price" value="{{ old('price') }}">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -96,7 +96,7 @@
                         <button type="submit" class="btn btn-primary">
                             Simpan
                         </button>
-                        <a href="{{ route('items.index') }}" class="btn btn-secondary">
+                        <a href="{{ url()->previous() }}" class="btn btn-secondary">
                             Kembali
                         </a>
                     </div>

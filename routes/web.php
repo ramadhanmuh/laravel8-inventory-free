@@ -68,6 +68,8 @@ Route::middleware(['auth'])->group(function () {
         'show'
     ]);
 
+    Route::get('items/{id}/image', [ItemController::class, 'openImage']);
+
     Route::resource('items', ItemController::class);
 });
 

@@ -11,6 +11,8 @@ use App\Models\UnitOfMeasurement;
 use Illuminate\Support\Str;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
+use Illuminate\Support\Facades\Crypt;
+use File;
 
 class ItemController extends Controller
 {
@@ -73,9 +75,20 @@ class ItemController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreCategoryRequest $request)
+    public function store(StoreItemRequest $request)
     {
         $input = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $fileName = str_shuffle(time() . Str::random(30))
+                        . '.' . $request->image->extension();
+
+            $storagePath = 'uploads/images';
+
+            $input['image'] = $storagePath . '/' . $fileName;
+
+            $request->file('image')->move(public_path($storagePath), $fileName);
+        }
 
         Item::insertOrIgnore($input);
 
@@ -125,11 +138,28 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateCategoryRequest $request, $id)
+    public function update(UpdateItemRequest $request, $id)
     {
         $data = Item::findOrFail($id);
 
         $input = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $fileName = str_shuffle(time() . Str::random(30))
+                        . '.' . $request->image->extension();
+
+            $storagePath = 'uploads/images';
+
+            $input['image'] = $storagePath . '/' . $fileName;
+
+            $request->file('image')->move(public_path($storagePath), $fileName);
+
+            if ($data->image !== null) {
+                if (File::exists(public_path($data->image))) {
+                    File::delete(public_path($data->image));
+                }
+            }
+        }
 
         Item::where('id', $id)->update($input);
 
@@ -147,8 +177,23 @@ class ItemController extends Controller
     {
         $data = Item::findOrFail($id);
 
+        $file = $data->image;
+
         $data->delete();
 
+        if ($file !== null) {
+            if (File::exists(public_path($file))) {
+                File::delete(public_path($file));
+            }
+        }
+
         return back()->with('status', 'Berhasil menghapus barang.');
+    }
+
+    public function openImage($id)
+    {
+        $data = Item::findOrFail($id);
+
+        return response()->file(public_path($data->image));
     }
 }

@@ -41,7 +41,7 @@
                         <button type="submit" class="btn btn-primary">
                             Simpan
                         </button>
-                        <a href="{{ route('brands.index') }}" class="btn btn-secondary">
+                        <a href="{{ url()->previous() }}" class="btn btn-secondary">
                             Kembali
                         </a>
                     </div>

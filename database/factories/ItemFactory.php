@@ -30,7 +30,7 @@ class ItemFactory extends Factory
             'brand_id' => Brand::inRandomOrder()->first()->id,
             'unit_of_measurement_id' => UnitOfMeasurement::inRandomOrder()->first()->id,
             'part_number' => $uniquePartNumber,
-            'description' => $this->faker->word(),
+            'description' => $this->faker->words(2, true),
             'price' => $this->faker->numberBetween(10000, 1000000)
         ];
     }

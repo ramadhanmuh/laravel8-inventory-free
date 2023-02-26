@@ -25,12 +25,12 @@ class UpdateItemRequest extends FormRequest
      */
     public function rules()
     {
-        dd($this);
+        $id = $this->segment(count($this->segments()));
+
         return [
             'part_number' => [
                 'required', 'string', 'max:191',
-                'unique:items,part_number',
-                Rule::unique('items')->ignore(),
+                Rule::unique('items')->ignore($id),
             ],
             'description' => ['required', 'string', 'max:65000'],
             'category_id' => ['required', 'exists:categories,id'],
@@ -39,7 +39,7 @@ class UpdateItemRequest extends FormRequest
                 'required',
                 'exists:unit_of_measurements,id'
             ],
-            'price' => ['required', 'numeric', 'max:10'],
+            'price' => ['required', 'numeric', 'max:9999999999'],
             'image' => [
                 'nullable', 'file', 'mimes:png,jpg,jpeg',
                 'max:5000'

@@ -35,7 +35,7 @@ class StoreItemRequest extends FormRequest
                 'required',
                 'exists:unit_of_measurements,id'
             ],
-            'price' => ['required', 'numeric', 'max:10'],
+            'price' => ['required', 'numeric', 'max:9999999999'],
             'image' => [
                 'nullable', 'file', 'mimes:png,jpg,jpeg',
                 'max:5000'

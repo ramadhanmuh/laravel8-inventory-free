@@ -15,7 +15,7 @@ class BrandFactory extends Factory
     {
         return [
             'id' => $this->faker->uuid(),
-            'name' => $this->faker->word()
+            'name' => $this->faker->words(2, true)
         ];
     }
 }
