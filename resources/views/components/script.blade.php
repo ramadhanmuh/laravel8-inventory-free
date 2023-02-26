@@ -26,8 +26,6 @@
                 minute = date.getMinutes().toString(),
                 second = date.getSeconds().toString();
 
-            console.log(month);
-
             month = month.length < 2 ? '0' + month : month;
 
             day = day.length < 2 ? '0' + day : day;

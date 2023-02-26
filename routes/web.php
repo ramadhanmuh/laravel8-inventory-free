@@ -13,6 +13,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\UnitOfMeasurementController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\IncomeTransactionController;
+use App\Http\Controllers\IncomeTransactionItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,6 +73,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('items/{id}/image', [ItemController::class, 'openImage']);
 
     Route::resource('items', ItemController::class);
+
+    Route::resource('income-transaction-items', IncomeTransactionItemController::class)->except([
+        'show', 'index', 'update'
+    ]);
 
     Route::resource('income-transactions', IncomeTransactionController::class);
 });

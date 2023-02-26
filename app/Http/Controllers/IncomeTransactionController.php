@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Application;
 use App\Models\IncomeTransaction;
+use App\Models\IncomeTransactionItem;
+use App\Models\Item;
 use Illuminate\Support\Str;
 use App\Http\Requests\StoreIncomeTransactionRequest;
 use App\Http\Requests\UpdateIncomeTransactionRequest;
@@ -56,7 +58,10 @@ class IncomeTransactionController extends Controller
     {
         $data = [
             'application' => Application::first(),
-            'items' => Item::get()
+            'items' => Item::get(),
+            'income_transaction_items' => IncomeTransactionItem::getWithSession(
+                session('create-income-transaction-item')
+            )
         ];
 
         return view('pages.income-transaction.create', $data);
