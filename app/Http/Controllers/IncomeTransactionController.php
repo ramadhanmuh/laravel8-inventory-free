@@ -4,16 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Application;
-use App\Models\Item;
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\UnitOfMeasurement;
+use App\Models\IncomeTransaction;
 use Illuminate\Support\Str;
-use App\Http\Requests\StoreItemRequest;
-use App\Http\Requests\UpdateItemRequest;
-use File;
+use App\Http\Requests\StoreIncomeTransactionRequest;
+use App\Http\Requests\UpdateIncomeTransactionRequest;
 
-class ItemController extends Controller
+class IncomeTransactionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -32,13 +28,13 @@ class ItemController extends Controller
 
         $data['number'] = $data['input']['offset'] + 1;
 
-        $itemTotal = Item::countData($data['input']);
+        $itemTotal = IncomeTransaction::countData($data['input']);
 
         $data['pageTotal'] = intval(ceil($itemTotal / 10));
 
-        $data['items'] = Item::getData($data['input']);
+        $data['items'] = IncomeTransaction::getData($data['input']);
 
-        return view('pages.item.index', $data);
+        return view('pages.income-transaction.index', $data);
     }
 
     private function getInputParameter($request)
@@ -60,12 +56,10 @@ class ItemController extends Controller
     {
         $data = [
             'application' => Application::first(),
-            'unit_of_measurements' => UnitOfMeasurement::get(),
-            'categories' => Category::get(),
-            'brands' => Brand::get()
+            'items' => Item::get()
         ];
 
-        return view('pages.item.create', $data);
+        return view('pages.income-transaction.create', $data);
     }
 
     /**
@@ -74,7 +68,7 @@ class ItemController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreItemRequest $request)
+    public function store(StoreIncomeTransactionRequest $request)
     {
         $input = $request->validated();
 
@@ -89,7 +83,7 @@ class ItemController extends Controller
             $request->file('image')->move(public_path($storagePath), $fileName);
         }
 
-        Item::insertOrIgnore($input);
+        IncomeTransaction::insertOrIgnore($input);
 
         return redirect('items')
                 ->with('status', 'Berhasil menambah barang.');
@@ -104,11 +98,11 @@ class ItemController extends Controller
     public function show($id)
     {
         $data = [
-            'item' => Item::findOrFail($id), 
+            'item' => IncomeTransaction::findOrFail($id), 
             'application' => Application::first()
         ];
 
-        return view('pages.item.detail', $data);
+        return view('pages.income-transaction.detail', $data);
     }
 
     /**
@@ -120,14 +114,14 @@ class ItemController extends Controller
     public function edit($id)
     {
         $data = [
-            'item' => Item::findOrFail($id), 
+            'item' => IncomeTransaction::findOrFail($id), 
             'application' => Application::first(),
             'unit_of_measurements' => UnitOfMeasurement::get(),
             'categories' => Category::get(),
             'brands' => Brand::get()
         ];
 
-        return view('pages.item.edit', $data);
+        return view('pages.income-transaction.edit', $data);
     }
 
     /**
@@ -137,9 +131,9 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateItemRequest $request, $id)
+    public function update(UpdateIncomeTransactionRequest $request, $id)
     {
-        $data = Item::findOrFail($id);
+        $data = IncomeTransaction::findOrFail($id);
 
         $input = $request->validated();
 
@@ -160,7 +154,7 @@ class ItemController extends Controller
             }
         }
 
-        Item::where('id', $id)->update($input);
+        IncomeTransaction::where('id', $id)->update($input);
 
         return redirect('items')
                 ->with('status', 'Berhasil mengubah barang.');
@@ -174,7 +168,7 @@ class ItemController extends Controller
      */
     public function destroy($id)
     {
-        $data = Item::findOrFail($id);
+        $data = IncomeTransaction::findOrFail($id);
 
         $file = $data->image;
 
@@ -191,7 +185,7 @@ class ItemController extends Controller
 
     public function openImage($id)
     {
-        $data = Item::findOrFail($id);
+        $data = IncomeTransaction::findOrFail($id);
 
         return response()->file(public_path($data->image));
     }

@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             BrandSeeder::class,
             UnitOfMeasurementSeeder::class,
-            ItemSeeder::class
+            ItemSeeder::class,
+            IncomeTransactionSeeder::class
         ]);
     }
 }

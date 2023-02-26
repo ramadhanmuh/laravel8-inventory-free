@@ -282,7 +282,8 @@ return [
         'short_name' => 'Nama Singkat',
         'full_name' => 'Nama Panjang',
         'role' => 'Jenis',
-        'price' => 'Harga'
+        'price' => 'Harga',
+        'remarks' => 'Catatan'
     ],
 
 ];

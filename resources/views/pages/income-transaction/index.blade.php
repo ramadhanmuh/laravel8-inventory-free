@@ -1,10 +1,10 @@
 @extends('layouts.dashboard')
 
-@section('title', "$application->name - Barang")
+@section('title', "$application->name - Transaksi (Masuk)")
 
-@section('description', 'Halaman yang berisi daftar data barang yang dibuat.')
+@section('description', 'Halaman yang berisi daftar data transaksi masuk yang dibuat.')
 
-@section('route_name', 'Barang')
+@section('route_name', 'Transaksi (Masuk)')
 
 @section('content')
     @if ($errors->any())
@@ -26,7 +26,7 @@
     @endif
     <div class="row justify-content-end">
         <div class="col-auto">
-            <a href="{{ route('items.create') }}" class="btn btn-sm btn-primary mb-3">
+            <a href="{{ route('income-transactions.create') }}" class="btn btn-sm btn-primary mb-3">
                 <i class="fas fa-plus mr-1"></i>
                 Tambah
             </a>
@@ -42,52 +42,44 @@
                         </div>
                         <div class="col p-md-0">
                             <select class="form-control form-control-sm" onchange="window.location.replace(this.value)">
-                                <option value="{{ route('items.index', ['order_by' => 'description', 'order_direction' => 'asc']) }}"
-                                    {{ $input['order_by'] === 'description' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
-                                    Deskripsi (Menaik)
+                                <option value="{{ route('income-transactions.index', ['order_by' => 'created_at', 'order_direction' => 'desc']) }}"
+                                    {{ $input['order_by'] === 'created_at' && $input['order_direction'] === 'desc' ? 'selected' : '' }}>
+                                    Tanggal (Menurun)
                                 </option>
-                                <option value="{{ route('items.index', ['order_by' => 'description', 'order_direction' => 'desc']) }}"
-                                    {{ $input['order_by'] === 'description' && $input['order_direction'] === 'desc' ? 'selected' : '' }}>
-                                    Deskripsi (Menurun)
+                                <option value="{{ route('income-transactions.index', ['order_by' => 'created_at', 'order_direction' => 'asc']) }}"
+                                    {{ $input['order_by'] === 'created_at' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
+                                    Tanggal (Menaik)
                                 </option>
-                                <option value="{{ route('items.index', ['order_by' => 'part_number', 'order_direction' => 'asc']) }}"
-                                    {{ $input['order_by'] === 'part_number' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
-                                    Nomor Unik (Menaik)
+                                <option value="{{ route('income-transactions.index', ['order_by' => 'supplier', 'order_direction' => 'desc']) }}"
+                                    {{ $input['order_by'] === 'supplier' && $input['order_direction'] === 'desc' ? 'selected' : '' }}>
+                                    Pemasok (Menurun)
                                 </option>
-                                <option value="{{ route('items.index', ['order_by' => 'part_number', 'order_direction' => 'desc']) }}"
-                                    {{ $input['order_by'] === 'part_number' && $input['order_direction'] === 'desc' ? 'selected' : '' }}>
-                                    Nomor Unik (Menurun)
+                                <option value="{{ route('income-transactions.index', ['order_by' => 'supplier', 'order_direction' => 'asc']) }}"
+                                    {{ $input['order_by'] === 'supplier' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
+                                    Pemasok (Menaik)
                                 </option>
-                                <option value="{{ route('items.index', ['order_by' => 'category', 'order_direction' => 'asc']) }}"
-                                    {{ $input['order_by'] === 'category' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
-                                    Kategori (Menaik)
+                                <option value="{{ route('income-transactions.index', ['order_by' => 'reference_number', 'order_direction' => 'desc']) }}"
+                                    {{ $input['order_by'] === 'reference_number' && $input['order_direction'] === 'desc' ? 'selected' : '' }}>
+                                    Nomor Referensi (Menurun)
                                 </option>
-                                <option value="{{ route('items.index', ['order_by' => 'category', 'order_direction' => 'desc']) }}"
-                                    {{ $input['order_by'] === 'category' && $input['order_direction'] === 'desc' ? 'selected' : '' }}>
-                                    Kategori (Menurun)
+                                <option value="{{ route('income-transactions.index', ['order_by' => 'reference_number', 'order_direction' => 'asc']) }}"
+                                    {{ $input['order_by'] === 'reference_number' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
+                                    Nomor Referensi (Menaik)
                                 </option>
-                                <option value="{{ route('items.index', ['order_by' => 'brand', 'order_direction' => 'asc']) }}"
-                                    {{ $input['order_by'] === 'brand' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
-                                    Merk (Menaik)
+                                <option value="{{ route('income-transactions.index', ['order_by' => 'remarks', 'order_direction' => 'desc']) }}"
+                                    {{ $input['order_by'] === 'remarks' && $input['order_direction'] === 'desc' ? 'selected' : '' }}>
+                                    Catatan (Menurun)
                                 </option>
-                                <option value="{{ route('items.index', ['order_by' => 'brand', 'order_direction' => 'desc']) }}"
-                                    {{ $input['order_by'] === 'brand' && $input['order_direction'] === 'desc' ? 'selected' : '' }}>
-                                    Merk (Menurun)
-                                </option>
-                                <option value="{{ route('items.index', ['order_by' => 'uom', 'order_direction' => 'asc']) }}"
-                                    {{ $input['order_by'] === 'uom' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
-                                    Satuan Barang (Menaik)
-                                </option>
-                                <option value="{{ route('items.index', ['order_by' => 'uom', 'order_direction' => 'desc']) }}"
-                                    {{ $input['order_by'] === 'uom' && $input['order_direction'] === 'desc' ? 'selected' : '' }}>
-                                    Satuan Barang (Menurun)
+                                <option value="{{ route('income-transactions.index', ['order_by' => 'remarks', 'order_direction' => 'asc']) }}"
+                                    {{ $input['order_by'] === 'remarks' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
+                                    Catatan (Menaik)
                                 </option>
                             </select>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-auto col-md-5 col-lg-3">
-                    <form action="{{ route('items.index') }}" method="get">
+                    <form action="{{ route('income-transactions.index') }}" method="get">
                         <input type="hidden" name="order_by" value="{{ $input['order_by'] }}">
                         <input type="hidden" name="order_direction" value="{{ $input['order_direction'] }}">
                         <div class="input-group input-group-sm">
@@ -113,11 +105,10 @@
                     <thead>
                         <tr>
                             <th class="text-center align-middle" style="width: 2px">No</th>
-                            <th class="align-middle">Nomor Unik</th>
-                            <th class="align-middle">Deskripsi</th>
-                            <th class="align-middle">Kategori</th>
-                            <th class="align-middle">Merek</th>
-                            <th class="align-middle">Satuan Barang</th>
+                            <th class="align-middle text-center">Tanggal</th>
+                            <th class="align-middle text-center">Nomor Referensi</th>
+                            <th class="align-middle">Pemasok</th>
+                            <th class="align-middle">Catatan</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -134,20 +125,17 @@
                                     <td class="text-center align-middle">
                                         {{ $number }}
                                     </td>
-                                    <td class="align-middle">
-                                        {{ $item->part_number }}
+                                    <td class="align-middle text-center unix-column">
+                                        {{ $item->created_at }}
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        {{ $item->reference_number }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ $item->description }}
+                                        {{ $item->supplier }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ $item->category }}
-                                    </td>
-                                    <td class="align-middle">
-                                        {{ $item->brand }}
-                                    </td>
-                                    <td class="align-middle">
-                                        {{ $item->uom }}
+                                        {{ $item->remarks }}
                                     </td>
                                     <td class="text-center align-middle">
                                         <div class="btn-group">
@@ -155,16 +143,16 @@
                                               Aksi
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <a href="{{ route('items.show', $item->id) }}" class="dropdown-item">
+                                                <a href="{{ route('income-transactions.show', $item->id) }}" class="dropdown-item">
                                                     Detail
                                                 </a>
-                                                <a href="{{ route('items.edit', $item->id) }}" class="dropdown-item">
+                                                <a href="{{ route('income-transactions.edit', $item->id) }}" class="dropdown-item">
                                                     Ubah
                                                 </a>
-                                                <form action="{{ route('items.destroy', $item->id) }}" method="post" class="dropdown-item">
+                                                <form action="{{ route('income-transactions.destroy', $item->id) }}" method="post" class="dropdown-item">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="dropdown-item text-left p-0" onclick="return confirm('Data lain yang menggunakan merek ini akan ikut terhapus. Lanjutkan ?')">
+                                                    <button type="submit" class="dropdown-item text-left p-0" onclick="return confirm('Data lain yang menggunakan transaksi ini akan ikut terhapus. Lanjutkan ?')">
                                                         Hapus
                                                     </button>
                                                 </form>
@@ -196,7 +184,7 @@
 
                                 <li class="page-item active">
                                     <a
-                                        href="{{ route('items.index', ['page' => 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}"
+                                        href="{{ route('income-transactions.index', ['page' => 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}"
                                         class="page-link">
                                         1
                                     </a>
@@ -206,7 +194,7 @@
                                     @if ($i < 4)
                                         <li class="page-item">
                                             <a class="page-link"
-                                                href="{{ route('items.index', ['page' => $i, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                                href="{{ route('income-transactions.index', ['page' => $i, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
                                                 {{ $i }}
                                             </a>
                                         </li>
@@ -215,28 +203,28 @@
 
                                 <li class="page-item">
                                     <a class="page-link"
-                                        href="{{ route('items.index', ['page' => $input['page'] + 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('income-transactions.index', ['page' => $input['page'] + 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
                                         >
                                     </a>
                                 </li>
 
                                 <li class="page-item">
                                     <a class="page-link"
-                                        href="{{ route('items.index', ['page' => $pageTotal, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('income-transactions.index', ['page' => $pageTotal, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
                                         >>
                                     </a>
                                 </li>
                             @else
                                 <li class="page-item">
                                     <a class="page-link"
-                                        href="{{ route('items.index', ['page' => 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('income-transactions.index', ['page' => 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
                                         <<
                                     </a>
                                 </li>
 
                                 <li class="page-item">
                                     <a class="page-link"
-                                        href="{{ route('items.index', ['page' => $input['page'] - 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('income-transactions.index', ['page' => $input['page'] - 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
                                         <
                                     </a>
                                 </li>
@@ -250,7 +238,7 @@
                                 @for ($i = $pageStartNumber; $i <= $loopingNumberStop; $i++)
                                     <li class="page-item {{ $input['page'] === $i ? 'active' : '' }}">
                                         <a class="page-link"
-                                            href="{{ route('items.index', ['page' => $i, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                            href="{{ route('income-transactions.index', ['page' => $i, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
                                             {{ $i }}
                                         </a>
                                     </li>
@@ -258,14 +246,14 @@
 
                                 <li class="page-item {{ $input['page'] === $pageTotal ? 'disabled' : '' }}">
                                     <a class="page-link"
-                                        href="{{ route('items.index', ['page' => $input['page'] + 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('income-transactions.index', ['page' => $input['page'] + 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
                                         >
                                     </a>
                                 </li>
 
                                 <li class="page-item {{ $input['page'] === $pageTotal ? 'disabled' : '' }}">
                                     <a class="page-link"
-                                        href="{{ route('items.index', ['page' => $pageTotal, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('income-transactions.index', ['page' => $pageTotal, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
                                         >>
                                     </a>
                                 </li>

@@ -65,7 +65,7 @@ class Item extends Model
             'part_number' => 'a.part_number',
             'description' => 'a.description',
             'brand' => 'b.name',
-            'uom' => 'c.name',
+            'uom' => 'c.full_name',
             'category' => 'd.name'
         ];
 

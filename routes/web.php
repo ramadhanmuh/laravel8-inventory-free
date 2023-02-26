@@ -12,6 +12,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\UnitOfMeasurementController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\IncomeTransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,5 +72,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('items/{id}/image', [ItemController::class, 'openImage']);
 
     Route::resource('items', ItemController::class);
+
+    Route::resource('income-transactions', IncomeTransactionController::class);
 });
 

@@ -17,7 +17,7 @@ class CreateIncomeTransactionsTable extends Migration
             $table->id();
             $table->string('supplier');
             $table->string('reference_number')->unique();
-            $table->string('remarks');
+            $table->text('remarks');
             $table->bigInteger('created_at');
         });
     }
