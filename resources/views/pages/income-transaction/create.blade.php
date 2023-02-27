@@ -65,9 +65,6 @@
                     </div>
                 </div>
             </form>
-            <div class="row">
-
-            </div>
         </div>
         <div class="tab-pane fade p-2 px-3 bg-white border" id="selected" role="tabpanel">
             <div class="table-responsive">
@@ -117,6 +114,71 @@
                 </table>
             </div>
         </div>
-        <div class="tab-pane fade" id="profile" role="tabpanel">Transaksi</div>
-      </div>
+        <div class="tab-pane fade p-2 px-3 bg-white border" id="profile" role="tabpanel">
+            <form class="row" action="{{ route('income-transactions.store') }}" method="POST">
+                @csrf
+                @method('POST')
+                <div class="col-md-6 col-lg-4">
+                    <div class="form-group">
+                        <label for="html_created_at">Tanggal</label>
+                        <input type="datetime-local"
+                            class="form-control"
+                            id="html_created_at"
+                            name="html_created_at"
+                            onkeyup="document.getElementById('created_at').value = +new Date(this.value) / 1000"
+                            data-value="{{ empty(old('created_at')) ? time() : old('created_at') }}">
+                        <input type="hidden"
+                            name="created_at"
+                            id="created_at"
+                            value="{{ empty(old('created_at')) ? time() : old('created_at') }}">
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="form-group">
+                        <label for="reference_number">Nomor Referensi</label>
+                        <input type="text"
+                            name="reference_number"
+                            id="reference_number"
+                            value="{{ old('reference_number') }}"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="form-group">
+                        <label for="supplier">Pemasok</label>
+                        <input type="text"
+                            class="form-control"
+                            id="supplier"
+                            name="supplier"
+                            value="{{ old('supplier') }}">
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="remarks">Catatan</label>
+                        <textarea name="remarks" id="remarks" class="form-control">{{ old('remarks') }}</textarea>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <button type="submit"
+                        class="btn btn-primary">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        function datetimeLocal(unix) {
+            var dt = new Date(unix * 1000);
+            dt.setMinutes(dt.getMinutes() - dt.getTimezoneOffset());
+            return dt.toISOString().slice(0, 16);
+        }
+
+        var htmlCreatedAt = document.getElementById('html_created_at'),
+            unix = parseInt(htmlCreatedAt.getAttribute('data-value')),
+            date = datetimeLocal(unix);
+            
+        htmlCreatedAt.value = date;
+    </script>
 @endsection

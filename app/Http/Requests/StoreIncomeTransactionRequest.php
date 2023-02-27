@@ -32,7 +32,6 @@ class StoreIncomeTransactionRequest extends FormRequest
                 'unique:income_transactions'
             ],
             'remarks' => ['required', 'string', 'max:60000'],
-            'brand_id' => ['required', 'exists:brands,id'],
             'created_at' => [
                 'required', 'numeric',
                 'max:99999999999999999999'

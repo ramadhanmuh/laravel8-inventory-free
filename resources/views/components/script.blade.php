@@ -23,8 +23,7 @@
                 month = date.getMonth().toString(),
                 day = date.getDay().toString(),
                 hour = date.getHours().toString(),
-                minute = date.getMinutes().toString(),
-                second = date.getSeconds().toString();
+                minute = date.getMinutes().toString();
 
             month = month.length < 2 ? '0' + month : month;
 
@@ -34,9 +33,7 @@
 
             minute = minute.length < 2 ? '0' + minute : minute;
 
-            second = second.length < 2 ? '0' + second : second;
-
-            unixColumn.textContent = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+            unixColumn.textContent = year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
         }
     }
 

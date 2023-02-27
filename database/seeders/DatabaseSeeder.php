@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             BrandSeeder::class,
             UnitOfMeasurementSeeder::class,
             ItemSeeder::class,
-            IncomeTransactionSeeder::class
+            IncomeTransactionSeeder::class,
+            IncomeTransactionItemSeeder::class
         ]);
     }
 }

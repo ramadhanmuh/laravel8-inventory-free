@@ -45,7 +45,8 @@ class IncomeTransactionController extends Controller
             'page'=> intval($request->page),
             'order_by'=> strval($request->order_by),
             'order_direction'=> strval($request->order_direction),
-            'keyword'=> strval($request->keyword)
+            'keyword'=> strval($request->keyword),
+            'year' => strval($request->year)
         ];
     }
 
@@ -77,21 +78,16 @@ class IncomeTransactionController extends Controller
     {
         $input = $request->validated();
 
-        if ($request->hasFile('image')) {
-            $fileName = str_shuffle(time() . Str::random(30))
-                        . '.' . $request->image->extension();
+        $incomeTransaction = IncomeTransaction::create($input);
 
-            $storagePath = 'uploads/images';
+        $incomeTransaction->incomeTransactionItems()->createMany(
+            $request->session()->get('create-income-transaction-item')
+        );
 
-            $input['image'] = $storagePath . '/' . $fileName;
+        $request->session()->forget('create-income-transaction-item');
 
-            $request->file('image')->move(public_path($storagePath), $fileName);
-        }
-
-        IncomeTransaction::insertOrIgnore($input);
-
-        return redirect('items')
-                ->with('status', 'Berhasil menambah barang.');
+        return redirect('income-transactions')
+                ->with('status', 'Berhasil menambah transaksi (masuk).');
     }
 
     /**
@@ -161,8 +157,8 @@ class IncomeTransactionController extends Controller
 
         IncomeTransaction::where('id', $id)->update($input);
 
-        return redirect('items')
-                ->with('status', 'Berhasil mengubah barang.');
+        return redirect('income-transactions')
+                ->with('status', 'Berhasil mengubah transaksi (masuk).');
     }
 
     /**
@@ -185,7 +181,7 @@ class IncomeTransactionController extends Controller
             }
         }
 
-        return back()->with('status', 'Berhasil menghapus barang.');
+        return back()->with('status', 'Berhasil menghapus transaksi (masuk).');
     }
 
     public function openImage($id)

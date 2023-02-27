@@ -39,7 +39,6 @@ class IncomeTransactionItemController extends Controller
      */
     public function store(StoreIncomeTransactionItemRequest $request)
     {
-        
         $session = $request->session()->get('create-income-transaction-item');
         
         if (empty($session)) {
@@ -58,6 +57,7 @@ class IncomeTransactionItemController extends Controller
                 if ($value['item_id'] == $request->item_id) {
                     $session[$key]['amount'] += intval($request->amount);
                     $itemExists = 1;
+                    break;
                 }
             }
 
@@ -116,17 +116,32 @@ class IncomeTransactionItemController extends Controller
      */
     public function destroy($id)
     {
-        $data = IncomeTransactionItem::findOrFail($id);
+        
+    }
 
-        $file = $data->image;
+    public function deleteCreateSession(Request $request, $item_id)
+    {
+        $session = $request->session()->get('create-income-transaction-item');
 
-        $data->delete();
+        if (empty($session)) {
+            abort(404);
+        }
 
-        if ($file !== null) {
-            if (File::exists(public_path($file))) {
-                File::delete(public_path($file));
+        $changeKey = 0;
+
+        foreach ($session as $key => $value) {
+            if ($value['item_id'] == $item_id) {
+                unset($session[$key]);
+                $changeKey = 1;
+                continue;
+            }
+
+            if ($changeKey) {
+                $session[$key - 1] = $value;
             }
         }
+
+        $request->session()->put('create-income-transaction-item', $session);
 
         return back()->with('status', 'Berhasil menghapus barang.');
     }

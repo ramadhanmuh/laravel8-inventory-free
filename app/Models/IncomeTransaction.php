@@ -38,14 +38,13 @@ class IncomeTransaction extends Model
     public static function getData($input)
     {
         $data = self::select(
-            'id', 'supplier', 'reference_number', 'remarks', 'created_at'
+            'id', 'supplier', 'reference_number', 'remarks', 'created_at',
         );
 
         if (!empty($input['keyword'])) {
             $data->where('supplier', 'LIKE', '%' . $input['keyword'] . '%')
                     ->orWhere('reference_number', 'LIKE', '%' . $input['keyword'] . '%')
-                    ->orWhere('remarks', 'LIKE', '%' . $input['keyword'] . '%')
-                    ->orWhere('created_at', 'LIKE', '%' . $input['keyword'] . '%');
+                    ->orWhere('remarks', 'LIKE', '%' . $input['keyword'] . '%');
         }
 
         $orders = [
@@ -79,5 +78,13 @@ class IncomeTransaction extends Model
         }
 
         return $data->count();
+    }
+
+    /**
+     * Get the income transaction items for the income trasaction.
+     */
+    public function incomeTransactionItems()
+    {
+        return $this->hasMany(IncomeTransactionItem::class);
     }
 }

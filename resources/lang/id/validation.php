@@ -283,7 +283,8 @@ return [
         'full_name' => 'Nama Panjang',
         'role' => 'Jenis',
         'price' => 'Harga',
-        'remarks' => 'Catatan'
+        'remarks' => 'Catatan',
+        'created_at' => 'Tanggal Dibuat'
     ],
 
 ];

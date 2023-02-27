@@ -57,14 +57,44 @@ class IncomeTransactionItem extends Model
             return null;
         }
 
-        foreach ($data as $key => $value) {
-            foreach ($session as $key2 => $value2) {
+        $changeKey = 0;
+
+        foreach ($session as $key2 => $value2) {
+            $itemExists = 0;
+
+            foreach ($data as $key => $value) {
                 if ($value->id == $value2['item_id']) {
                     $data[$key]->amount = $value2['amount'];
+                    $itemExists = 1;
                 }
+            }
+
+            if (!$itemExists) {
+                unset($session[$key2]);
+                $changeKey = 1;
             }
         }
 
+        if ($changeKey) {
+            $index = 0;
+
+            foreach ($session as $key => $value) {
+                $session[0] = $value;
+                $index++;
+            }
+
+            session()->put('create-income-transaction-item', $session);
+        }
+
         return $data;
+    }
+
+    /**
+     * Get the income transaction that owns
+     * the income transaction item.
+     */
+    public function incomeTransaction()
+    {
+        return $this->belongsTo(Post::class);
     }
 }

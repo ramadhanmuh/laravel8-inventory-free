@@ -74,8 +74,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('items', ItemController::class);
 
+    Route::delete('income-transaction-items/{item_id}/create', [
+        IncomeTransactionItemController::class, 'deleteCreateSession'
+    ]);
+
     Route::resource('income-transaction-items', IncomeTransactionItemController::class)->except([
-        'show', 'index', 'update'
+        'show', 'index', 'update', 'delete'
     ]);
 
     Route::resource('income-transactions', IncomeTransactionController::class);

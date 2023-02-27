@@ -35,7 +35,7 @@
     <div class="card">
         <div class="card-header bg-white">
             <div class="row justify-content-center justify-content-lg-between align-items-center">
-                <div class="col-md-7 col-lg-4 col-xl-3 mb-2 mb-md-0">
+                <div class="col-md-7 col-lg-4 mb-2 mb-lg-0">
                     <div class="row align-items-center justify-content-center">
                         <div class="col-md-auto">
                             <label for="sort" class="m-0 font-weight-bold">Sortir</label>
@@ -78,7 +78,28 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-auto col-md-5 col-lg-3">
+                <div class="col-12 col-md-6 col-lg-2 mb-2 mb-md-0">
+                    <form action="{{ route('income-transactions.index') }}" method="get">
+                        <input type="hidden" name="order_by" value="{{ $input['order_by'] }}">
+                        <input type="hidden" name="order_direction" value="{{ $input['order_direction'] }}">
+                        <input type="hidden" name="keyword" value="{{ $input['keyword'] }}">
+                        <div class="input-group input-group-sm">
+                            <input type="number"
+                                class="form-control"
+                                name="year"
+                                id="year"
+                                placeholder="Tahun"
+                                value="{{ empty($input['year']) ? '' : $input['year'] }}"
+                                min="1">
+                            <div class="input-group-append">
+                              <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
+                                <i class="fas fa-filter"></i>
+                              </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-auto col-md-6">
                     <form action="{{ route('income-transactions.index') }}" method="get">
                         <input type="hidden" name="order_by" value="{{ $input['order_by'] }}">
                         <input type="hidden" name="order_direction" value="{{ $input['order_direction'] }}">
