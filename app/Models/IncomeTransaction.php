@@ -42,9 +42,27 @@ class IncomeTransaction extends Model
         );
 
         if (!empty($input['keyword'])) {
-            $data->where('supplier', 'LIKE', '%' . $input['keyword'] . '%')
-                    ->orWhere('reference_number', 'LIKE', '%' . $input['keyword'] . '%')
-                    ->orWhere('remarks', 'LIKE', '%' . $input['keyword'] . '%');
+            $data->where(function ($query) use ($input) {
+                $query->where('supplier', 'LIKE', '%' . $input['keyword'] . '%')
+                        ->orWhere('reference_number', 'LIKE', '%' . $input['keyword'] . '%')
+                        ->orWhere('remarks', 'LIKE', '%' . $input['keyword'] . '%');
+            });
+        }
+
+        if (!empty($input['start_date']) && !empty($input['end_date'])) {
+            // dd($input['start_date'] - 86400, $input['end_date'] + 86400, 1624393265, $input['end_date']);
+            $data->whereBetween('created_at', [
+                $input['start_date'] - 86400,
+                $input['end_date'] + 86400
+            ]);
+        } else {
+            if (!empty($input['start_date'])) {
+                $data->where('created_at', '>', $input['start_date'] - 86400);
+            }
+
+            if (!empty($input['end_date'])) {
+                $data->where('created_at', '<', $input['end_date'] + 86400);
+            }
         }
 
         $orders = [
@@ -71,10 +89,26 @@ class IncomeTransaction extends Model
         $data = self::select('id');
 
         if (!empty($input['keyword'])) {
-            $data->where('supplier', 'LIKE', '%' . $input['keyword'] . '%')
-                    ->orWhere('reference_number', 'LIKE', '%' . $input['keyword'] . '%')
-                    ->orWhere('remarks', 'LIKE', '%' . $input['keyword'] . '%')
-                    ->orWhere('created_at', 'LIKE', '%' . $input['keyword'] . '%');
+            $data->where(function ($query) use ($input) {
+                $query->where('supplier', 'LIKE', '%' . $input['keyword'] . '%')
+                        ->orWhere('reference_number', 'LIKE', '%' . $input['keyword'] . '%')
+                        ->orWhere('remarks', 'LIKE', '%' . $input['keyword'] . '%');
+            });
+        }
+
+        if (!empty($input['start_date']) && !empty($input['end_date'])) {
+            $data->whereBetween('created_at', [
+                $input['start_date'] - 86400,
+                $input['end_date'] + 86400
+            ]);
+        } else {
+            if (!empty($input['start_date'])) {
+                $data->where('created_at', '>', $input['start_date'] - 86400);
+            }
+
+            if (!empty($input['end_date'])) {
+                $data->where('created_at', '<', $input['end_date'] + 86400);
+            }
         }
 
         return $data->count();

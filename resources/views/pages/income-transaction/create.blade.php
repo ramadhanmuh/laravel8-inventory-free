@@ -34,8 +34,8 @@
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="profile-tab" data-toggle="tab" data-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Transaksi</button>
         </li>
-      </ul>
-      <div class="tab-content" id="myTabContent">
+    </ul>
+    <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active bg-white border p-2 px-3" id="home" role="tabpanel">
             <form action="{{ route('income-transaction-items.store') }}" method="post">
                 @csrf
@@ -59,6 +59,9 @@
                         </div>
                     </div>
                     <div class="col-12 text-right">
+                        <a href="{{ route('income-transactions.index') }}" class="btn btn-secondary">
+                            Kembali
+                        </a>
                         <button class="btn btn-primary" type="submit">
                             Tambah
                         </button>
@@ -113,6 +116,9 @@
                     </tbody>
                 </table>
             </div>
+            <a href="{{ route('income-transactions.index') }}" class="btn btn-secondary">
+                Kembali
+            </a>
         </div>
         <div class="tab-pane fade p-2 px-3 bg-white border" id="profile" role="tabpanel">
             <form class="row" action="{{ route('income-transactions.store') }}" method="POST">
@@ -153,13 +159,16 @@
                             value="{{ old('supplier') }}">
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-12">
                     <div class="form-group">
                         <label for="remarks">Catatan</label>
                         <textarea name="remarks" id="remarks" class="form-control">{{ old('remarks') }}</textarea>
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-12 text-right">
+                    <a href="{{ route('income-transactions.index') }}" class="btn btn-secondary">
+                        Kembali
+                    </a>
                     <button type="submit"
                         class="btn btn-primary">
                         Simpan
@@ -178,7 +187,7 @@
         var htmlCreatedAt = document.getElementById('html_created_at'),
             unix = parseInt(htmlCreatedAt.getAttribute('data-value')),
             date = datetimeLocal(unix);
-            
+
         htmlCreatedAt.value = date;
     </script>
 @endsection

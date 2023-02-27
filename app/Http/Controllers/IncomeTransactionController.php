@@ -46,7 +46,10 @@ class IncomeTransactionController extends Controller
             'order_by'=> strval($request->order_by),
             'order_direction'=> strval($request->order_direction),
             'keyword'=> strval($request->keyword),
-            'year' => strval($request->year)
+            'start_date' => intval($request->start_date),
+            'end_date' => intval($request->end_date),
+            'string_start_date' => strval($request->string_start_date),
+            'string_end_date' => strval($request->string_end_date)
         ];
     }
 

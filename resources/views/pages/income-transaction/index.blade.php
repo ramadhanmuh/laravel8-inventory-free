@@ -32,77 +32,109 @@
             </a>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form class="modal-content" action="{{ route('income-transactions.index') }}" method="GET">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="filterModalLabel">Sortir / Saring Transaksi (Masuk)</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="hidden" name="keyword" value="{{ $input['keyword'] }}">
+                        <label for="order_by">Kolom Sortir</label>
+                        <select class="form-control form-control-sm" id="order_by" name="order_by">
+                            <option value="created_at"
+                                {{ $input['order_by'] === 'created_at' ? 'selected' : '' }}>
+                                Tanggal
+                            </option>
+                            <option value="supplier"
+                                {{ $input['order_by'] === 'supplier' ? 'selected' : '' }}>
+                                Pemasok
+                            </option>
+                            <option value="reference_number"
+                                {{ $input['order_by'] === 'reference_number' ? 'selected' : '' }}>
+                                Nomor Referensi
+                            </option>
+                            <option value="remarks"
+                                {{ $input['order_by'] === 'remarks' ? 'selected' : '' }}>
+                                Catatan
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="order_direction">Arah Sortir</label>
+                        <select name="order_direction" id="order_direction" class="form-control form-control-sm">
+                            <option value="desc"
+                                {{ $input['order_direction'] === 'desc' ? 'selected' : '' }}>
+                                Turun
+                            </option>
+                            <option value="asc"
+                                {{ $input['order_direction'] === 'asc' ? 'selected' : '' }}>
+                                Naik
+                            </option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="string_start_date">Tanggal Mulai</label>
+                                <input type="date"
+                                    class="form-control"
+                                    value="{{ $input['string_start_date'] }}"
+                                    id="string_start_date"
+                                    name="string_start_date"
+                                    onkeyup="document.getElementById('start_date').value = new Date(this.value).getTime() / 1000"
+                                    onchange="document.getElementById('start_date').value = new Date(this.value).getTime() / 1000">
+                                <input type="hidden"
+                                    name="start_date"
+                                    id="start_date"
+                                    value="{{ $input['start_date'] }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="string_end_date">Tanggal Akhir</label>
+                                <input type="date"
+                                    class="form-control"
+                                    value="{{ $input['string_end_date'] }}"
+                                    id="string_end_date"
+                                    name="string_end_date"
+                                    onkeyup="document.getElementById('end_date').value = new Date(this.value).getTime() / 1000"
+                                    onchange="document.getElementById('end_date').value = new Date(this.value).getTime() / 1000">
+                                <input type="hidden"
+                                    name="end_date"
+                                    id="end_date"
+                                    value="{{ $input['end_date'] }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <div class="card">
         <div class="card-header bg-white">
             <div class="row justify-content-center justify-content-lg-between align-items-center">
                 <div class="col-md-7 col-lg-4 mb-2 mb-lg-0">
-                    <div class="row align-items-center justify-content-center">
-                        <div class="col-md-auto">
-                            <label for="sort" class="m-0 font-weight-bold">Sortir</label>
-                        </div>
-                        <div class="col p-md-0">
-                            <select class="form-control form-control-sm" onchange="window.location.replace(this.value)">
-                                <option value="{{ route('income-transactions.index', ['order_by' => 'created_at', 'order_direction' => 'desc']) }}"
-                                    {{ $input['order_by'] === 'created_at' && $input['order_direction'] === 'desc' ? 'selected' : '' }}>
-                                    Tanggal (Menurun)
-                                </option>
-                                <option value="{{ route('income-transactions.index', ['order_by' => 'created_at', 'order_direction' => 'asc']) }}"
-                                    {{ $input['order_by'] === 'created_at' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
-                                    Tanggal (Menaik)
-                                </option>
-                                <option value="{{ route('income-transactions.index', ['order_by' => 'supplier', 'order_direction' => 'desc']) }}"
-                                    {{ $input['order_by'] === 'supplier' && $input['order_direction'] === 'desc' ? 'selected' : '' }}>
-                                    Pemasok (Menurun)
-                                </option>
-                                <option value="{{ route('income-transactions.index', ['order_by' => 'supplier', 'order_direction' => 'asc']) }}"
-                                    {{ $input['order_by'] === 'supplier' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
-                                    Pemasok (Menaik)
-                                </option>
-                                <option value="{{ route('income-transactions.index', ['order_by' => 'reference_number', 'order_direction' => 'desc']) }}"
-                                    {{ $input['order_by'] === 'reference_number' && $input['order_direction'] === 'desc' ? 'selected' : '' }}>
-                                    Nomor Referensi (Menurun)
-                                </option>
-                                <option value="{{ route('income-transactions.index', ['order_by' => 'reference_number', 'order_direction' => 'asc']) }}"
-                                    {{ $input['order_by'] === 'reference_number' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
-                                    Nomor Referensi (Menaik)
-                                </option>
-                                <option value="{{ route('income-transactions.index', ['order_by' => 'remarks', 'order_direction' => 'desc']) }}"
-                                    {{ $input['order_by'] === 'remarks' && $input['order_direction'] === 'desc' ? 'selected' : '' }}>
-                                    Catatan (Menurun)
-                                </option>
-                                <option value="{{ route('income-transactions.index', ['order_by' => 'remarks', 'order_direction' => 'asc']) }}"
-                                    {{ $input['order_by'] === 'remarks' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
-                                    Catatan (Menaik)
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-2 mb-2 mb-md-0">
-                    <form action="{{ route('income-transactions.index') }}" method="get">
-                        <input type="hidden" name="order_by" value="{{ $input['order_by'] }}">
-                        <input type="hidden" name="order_direction" value="{{ $input['order_direction'] }}">
-                        <input type="hidden" name="keyword" value="{{ $input['keyword'] }}">
-                        <div class="input-group input-group-sm">
-                            <input type="number"
-                                class="form-control"
-                                name="year"
-                                id="year"
-                                placeholder="Tahun"
-                                value="{{ empty($input['year']) ? '' : $input['year'] }}"
-                                min="1">
-                            <div class="input-group-append">
-                              <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
-                                <i class="fas fa-filter"></i>
-                              </button>
-                            </div>
-                        </div>
-                    </form>
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#filterModal">
+                        <i class="fas fa-filter mr-1"></i>
+                        Sortir / Saring
+                    </button>
                 </div>
                 <div class="col-lg-auto col-md-6">
                     <form action="{{ route('income-transactions.index') }}" method="get">
                         <input type="hidden" name="order_by" value="{{ $input['order_by'] }}">
                         <input type="hidden" name="order_direction" value="{{ $input['order_direction'] }}">
+                        <input type="hidden" name="start_date" value="{{ $input['start_date'] }}">
+                        <input type="hidden" name="end_date" value="{{ $input['end_date'] }}">
                         <div class="input-group input-group-sm">
                             <input type="search"
                                 class="form-control"
@@ -136,7 +168,7 @@
                     <tbody>
                         @if ($items->isEmpty())
                             <tr>
-                                <td class="text-center" colspan="4">
+                                <td class="text-center" colspan="6">
                                     Data tidak ditemukan.
                                 </td>
                             </tr>
