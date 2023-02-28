@@ -117,13 +117,22 @@ class IncomeTransactionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id, Request $request)
+    public function edit($id)
     {
         $data = [
-            'item' => IncomeTransaction::with('incomeTransactionItems')->findOrFail($id), 
+            'item' => IncomeTransaction::with([
+                'incomeTransactionItems.item.unitOfMeasurement'
+            ])
+            ->findOrFail($id),
             'application' => Application::first(),
-            'items' => Item::get()
+            'items' => Item::orderBy('description')->get()
         ];
+
+        $session = session('edit-income-transaction-item');
+
+        if (!empty($session)) {
+            
+        }
 
         return view('pages.income-transaction.edit', $data);
     }

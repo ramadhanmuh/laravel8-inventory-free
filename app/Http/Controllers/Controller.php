@@ -10,4 +10,13 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public function __construct() {
+        if (!request()->is('income-transactions/*') || !request()->is('income-transactions')) {
+            session()->forget([
+                'create-income-transaction-item',
+                'edit-income-transaction-item'
+            ]);
+        }
+    }
 }

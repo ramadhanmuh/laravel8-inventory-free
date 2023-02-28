@@ -94,6 +94,7 @@
                                     </td>
                                     <td class="align-middle">
                                         {{ $incomeTransactionItem->item->unitOfMeasurement->short_name }}
+                                        {{-- Test --}}
                                     </td>
                                     <td class="align-middle text-center">
                                         {{ $incomeTransactionItem->amount }}
@@ -110,7 +111,7 @@
                                 </tr>
                             @endforeach
                         @else
-                            @forelse (session('edit-income-transaction-item') as $key => $session)
+                            @forelse (session('edit-income-transaction-item') as $session)
                                 <tr>
                                     <td class="align-middle">
                                         {{ $session->item->part_number }}

@@ -21,6 +21,11 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        // if (session()->has('create-income-transaction-item')) {
+        //     session()->forget('create-income-transaction-item');
+        // }
+        // session()->forget('create-income-transaction-item');
+
         $data['application'] = Application::getOne();
 
         $data['itemTotal'] = $this->numberFormatting(Item::count());
