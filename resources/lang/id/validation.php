@@ -284,7 +284,8 @@ return [
         'role' => 'Jenis',
         'price' => 'Harga',
         'remarks' => 'Catatan',
-        'created_at' => 'Tanggal Dibuat'
+        'created_at' => 'Tanggal Dibuat',
+        'reference_number' => 'Nomor Referensi'
     ],
 
 ];

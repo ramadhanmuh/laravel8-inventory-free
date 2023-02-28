@@ -134,6 +134,7 @@
                             id="html_created_at"
                             name="html_created_at"
                             onkeyup="document.getElementById('created_at').value = +new Date(this.value) / 1000"
+                            onchange="document.getElementById('created_at').value = +new Date(this.value) / 1000"
                             data-value="{{ empty(old('created_at')) ? time() : old('created_at') }}">
                         <input type="hidden"
                             name="created_at"

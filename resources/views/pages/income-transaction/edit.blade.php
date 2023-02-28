@@ -111,11 +111,6 @@
                             @endforeach
                         @else
                             @forelse (session('edit-income-transaction-item') as $key => $session)
-                                @if ($key > 5)
-                                    @php
-                                        continue;
-                                    @endphp
-                                @endif
                                 <tr>
                                     <td class="align-middle">
                                         {{ $session->item->part_number }}

@@ -124,7 +124,7 @@
                     <tbody>
                         @if ($items->isEmpty())
                             <tr>
-                                <td class="text-center" colspan="4">
+                                <td class="text-center" colspan="7">
                                     Data tidak ditemukan.
                                 </td>
                             </tr>

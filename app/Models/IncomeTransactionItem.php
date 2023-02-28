@@ -76,14 +76,13 @@ class IncomeTransactionItem extends Model
         }
 
         if ($changeKey) {
-            $index = 0;
+            $newSession = [];
 
             foreach ($session as $key => $value) {
-                $session[0] = $value;
-                $index++;
+                $newSession[] = $value;
             }
 
-            session()->put('create-income-transaction-item', $session);
+            session()->put('create-income-transaction-item', $newSession);
         }
 
         return $data;

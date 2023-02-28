@@ -78,7 +78,7 @@ Route::middleware(['auth'])->group(function () {
         IncomeTransactionItemController::class, 'deleteCreateSession'
     ]);
 
-    Route::delete('income-transaction-items/{item_id}/create', [
+    Route::delete('income-transaction-items/{item_id}/edit', [
         IncomeTransactionItemController::class, 'deleteEditSession'
     ]);
 

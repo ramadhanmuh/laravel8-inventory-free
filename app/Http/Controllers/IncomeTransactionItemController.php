@@ -126,7 +126,9 @@ class IncomeTransactionItemController extends Controller
         if (!$itemExists) {
             $session->push((object) [
                 'item_id' => $request->item_id,
-                'amount' => $request->amount
+                'amount' => $request->amount,
+                'item' => Item::with('unitOfMeasurement')
+                                ->find($request->item_id)
             ]);
         }
 
@@ -168,7 +170,11 @@ class IncomeTransactionItemController extends Controller
             }
         }
 
-        $request->session()->put('create-income-transaction-item', $session);
+        if (count($session)) {
+            $request->session()->put('create-income-transaction-item', $session);
+        } else {
+            $request->session()->forget('create-income-transaction-item');
+        }
 
         return back()->with('status', 'Berhasil menghapus barang.');
     }

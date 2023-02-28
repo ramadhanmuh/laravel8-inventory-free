@@ -66,7 +66,7 @@ class IncomeTransactionController extends Controller
     {
         $data = [
             'application' => Application::first(),
-            'items' => Item::get(),
+            'items' => Item::orderBy('description')->get(),
             'income_transaction_items' => IncomeTransactionItem::getWithSession(
                 session('create-income-transaction-item')
             )
@@ -90,8 +90,6 @@ class IncomeTransactionController extends Controller
         $incomeTransaction->incomeTransactionItems()->createMany(
             $request->session()->get('create-income-transaction-item')
         );
-
-        $request->session()->forget('create-income-transaction-item');
 
         return redirect('income-transactions')
                 ->with('status', 'Berhasil menambah transaksi (masuk).');
@@ -126,12 +124,6 @@ class IncomeTransactionController extends Controller
             'application' => Application::first(),
             'items' => Item::get()
         ];
-
-        // $session = $request->session()->get('edit-income-transaction-item');
-
-        // if (!empty($session)) {
-        //     dd($session);
-        // }
 
         return view('pages.income-transaction.edit', $data);
     }
