@@ -36,6 +36,10 @@ class IncomeTransactionController extends Controller
 
         $data['items'] = IncomeTransaction::getData($data['input']);
 
+        $request->session()->forget([
+            'create-income-transaction-item', 'edit-income-transaction-item'
+        ]);
+
         return view('pages.income-transaction.index', $data);
     }
 
@@ -115,15 +119,19 @@ class IncomeTransactionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
         $data = [
-            'item' => IncomeTransaction::findOrFail($id), 
+            'item' => IncomeTransaction::with('incomeTransactionItems')->findOrFail($id), 
             'application' => Application::first(),
-            'unit_of_measurements' => UnitOfMeasurement::get(),
-            'categories' => Category::get(),
-            'brands' => Brand::get()
+            'items' => Item::get()
         ];
+
+        // $session = $request->session()->get('edit-income-transaction-item');
+
+        // if (!empty($session)) {
+        //     dd($session);
+        // }
 
         return view('pages.income-transaction.edit', $data);
     }

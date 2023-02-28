@@ -8,6 +8,7 @@ use App\Models\IncomeTransactionItem;
 use App\Models\Item;
 use Illuminate\Support\Str;
 use App\Http\Requests\StoreIncomeTransactionItemRequest;
+use App\Http\Requests\UpdateIncomeTransactionItemRequest;
 
 class IncomeTransactionItemController extends Controller
 {
@@ -103,9 +104,35 @@ class IncomeTransactionItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateIncomeTransactionRequest $request, $id)
+    public function update(UpdateIncomeTransactionItemRequest $request, $id)
     {
-        
+        $session = $request->session()
+                            ->get('edit-income-transaction-item');
+
+        if (empty($session)) {
+            $session = IncomeTransactionItem::where('income_transaction_id', '=', $id)
+                                            ->get();
+        }
+
+        $itemExists = 0;
+
+        foreach ($session as $key => $value) {
+            if ($request->item_id == $value->item_id) {
+                $session[$key]->amount += $request->amount;
+                $itemExists = 1;
+            }
+        }
+
+        if (!$itemExists) {
+            $session->push((object) [
+                'item_id' => $request->item_id,
+                'amount' => $request->amount
+            ]);
+        }
+
+        $request->session()->put('edit-income-transaction-item', $session);
+
+        return back()->with('status', 'Berhasil menambahkan barang.');
     }
 
     /**

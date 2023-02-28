@@ -116,9 +116,11 @@
                     </tbody>
                 </table>
             </div>
-            <a href="{{ route('income-transactions.index') }}" class="btn btn-secondary">
-                Kembali
-            </a>
+            <div class="text-right">
+                <a href="{{ route('income-transactions.index') }}" class="btn btn-secondary">
+                    Kembali
+                </a>
+            </div>
         </div>
         <div class="tab-pane fade p-2 px-3 bg-white border" id="profile" role="tabpanel">
             <form class="row" action="{{ route('income-transactions.store') }}" method="POST">
