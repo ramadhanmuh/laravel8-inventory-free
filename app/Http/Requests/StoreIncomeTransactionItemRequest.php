@@ -36,7 +36,7 @@ class StoreIncomeTransactionItemRequest extends FormRequest
                     if (!empty($session)) {
                         foreach ($session as $key => $data) {
                             if ($data['item_id'] == request()->item_id) {
-                                if ($data['amount'] > 99999999999999999998) {
+                                if ($data['amount'] > 9999999999) {
                                     $fail('Jumlah barang telah mencapai maksimum kapasitas.');
                                 }
                             }

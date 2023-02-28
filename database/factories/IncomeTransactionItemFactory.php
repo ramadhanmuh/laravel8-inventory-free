@@ -18,7 +18,7 @@ class IncomeTransactionItemFactory extends Factory
         return [
             'income_transaction_id' => IncomeTransaction::inRandomOrder()->first()->id,
             'item_id' => Item::inRandomOrder()->first()->id,
-            'amount' => $this->faker->numberBetween(1, 99999999999999999999)
+            'amount' => $this->faker->numberBetween(1, 9999999999)
         ];
     }
 }

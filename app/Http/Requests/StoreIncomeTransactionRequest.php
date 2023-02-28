@@ -24,6 +24,13 @@ class StoreIncomeTransactionRequest extends FormRequest
     public function rules()
     {
         return [
+            'income_transaction_items' => [
+                function ($attribute, $value, $fail) {
+                    if (empty(session('create-income-transaction-item'))) {
+                        $fail('Barang perlu dipilih terlebih dahulu.');
+                    }
+                }
+            ],
             'supplier' => [
                 'required', 'string', 'max:191',
             ],

@@ -158,7 +158,7 @@
                     <thead>
                         <tr>
                             <th class="text-center align-middle" style="width: 2px">No</th>
-                            <th class="align-middle text-center">Tanggal</th>
+                            <th class="align-middle text-center">Tanggal (WIB)</th>
                             <th class="align-middle text-center">Nomor Referensi</th>
                             <th class="align-middle">Pemasok</th>
                             <th class="align-middle">Catatan</th>

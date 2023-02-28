@@ -19,21 +19,11 @@
             var unixColumn = unixColumns[index],
                 unix = parseInt(unixColumn.textContent),
                 date = new Date(unix * 1000),
-                year = date.getFullYear().toString(),
-                month = date.getMonth().toString(),
-                day = date.getDay().toString(),
-                hour = date.getHours().toString(),
-                minute = date.getMinutes().toString();
+                local = date.toLocaleDateString('id-ID', {
+                    hour: '2-digit', minute: '2-digit'
+                });
 
-            month = month.length < 2 ? '0' + month : month;
-
-            day = day.length < 2 ? '0' + day : day;
-            
-            hour = hour.length < 2 ? '0' + hour : hour;
-
-            minute = minute.length < 2 ? '0' + minute : minute;
-
-            unixColumn.textContent = year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
+            unixColumn.textContent = local;
         }
     }
 

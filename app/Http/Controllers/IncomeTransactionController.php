@@ -102,7 +102,7 @@ class IncomeTransactionController extends Controller
     public function show($id)
     {
         $data = [
-            'item' => IncomeTransaction::findOrFail($id), 
+            'item' => IncomeTransaction::with('incomeTransactionItems')->findOrFail($id), 
             'application' => Application::first()
         ];
 

@@ -97,4 +97,12 @@ class IncomeTransactionItem extends Model
     {
         return $this->belongsTo(Post::class);
     }
+
+     /**
+     * Get the item that owns the income transaction item.
+     */
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
 }

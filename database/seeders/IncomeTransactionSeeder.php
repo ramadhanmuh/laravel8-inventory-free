@@ -15,7 +15,7 @@ class IncomeTransactionSeeder extends Seeder
     public function run()
     {
         IncomeTransaction::factory()
-                            ->count(50)
+                            ->count(30)
                             ->create();
     }
 }

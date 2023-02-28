@@ -50,7 +50,6 @@ class IncomeTransaction extends Model
         }
 
         if (!empty($input['start_date']) && !empty($input['end_date'])) {
-            // dd($input['start_date'] - 86400, $input['end_date'] + 86400, 1624393265, $input['end_date']);
             $data->whereBetween('created_at', [
                 $input['start_date'] - 86400,
                 $input['end_date'] + 86400

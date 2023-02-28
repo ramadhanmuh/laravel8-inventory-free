@@ -130,4 +130,12 @@ class Item extends Model
     {
         return $this->belongsTo(UnitOfMeasurement::class);
     }
+
+    /**
+     * Get the income transaction items for the item.
+     */
+    public function incomeTransactionItems()
+    {
+        return $this->hasMany(IncomeTransactionItem::class);
+    }
 }
