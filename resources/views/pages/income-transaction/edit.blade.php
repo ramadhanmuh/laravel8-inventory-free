@@ -94,7 +94,6 @@
                                     </td>
                                     <td class="align-middle">
                                         {{ $incomeTransactionItem->item->unitOfMeasurement->short_name }}
-                                        {{-- Test --}}
                                     </td>
                                     <td class="align-middle text-center">
                                         {{ $incomeTransactionItem->amount }}
@@ -111,22 +110,22 @@
                                 </tr>
                             @endforeach
                         @else
-                            @forelse (session('edit-income-transaction-item') as $session)
+                            @forelse (session('edit-income-transaction-item')['incomeTransactionItems'] as $session)
                                 <tr>
                                     <td class="align-middle">
-                                        {{ $session->item->part_number }}
+                                        {{ $session['item']['part_number'] }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ $session->item->description }}
+                                        {{ $session['item']['description'] }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ $session->item->unitOfMeasurement->short_name }}
+                                        {{ $session['item']['unitOfMeasurement']['short_name'] }}
                                     </td>
                                     <td class="align-middle text-center">
-                                        {{ $session->amount }}
+                                        {{ $session['amount'] }}
                                     </td>
                                     <td class="align-middle text-center">
-                                        <form action="{{ url("income-transaction-items/$item->id/$session->item_id") }}" method="post" class="d-inline">
+                                        <form action="{{ url("income-transaction-items/$item->id/" . $session['item_id']) }}" method="post" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm">

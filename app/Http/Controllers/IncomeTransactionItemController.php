@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Application;
 use App\Models\IncomeTransactionItem;
 use App\Models\Item;
+use App\Models\UnitOfMeasurement;
 use Illuminate\Support\Str;
 use App\Http\Requests\StoreIncomeTransactionItemRequest;
 use App\Http\Requests\UpdateIncomeTransactionItemRequest;
@@ -110,26 +111,64 @@ class IncomeTransactionItemController extends Controller
                             ->get('edit-income-transaction-item');
 
         if (empty($session)) {
-            $session = IncomeTransactionItem::where('income_transaction_id', '=', $id)
-                                            ->get();
+            $incomeTransactionItems = IncomeTransactionItem::where('income_transaction_id', '=', $id)
+                                                            ->get();
+            
+            $session['id'] = $id;
+            $session['incomeTransactionItems'] = [];
+
+            foreach ($incomeTransactionItems as $key => $value) {
+                $item = Item::select('part_number', 'description', 'unit_of_measurement_id')
+                            ->find($value->item_id);
+
+                $unitOfMeasurement = UnitOfMeasurement::select('short_name')
+                                            ->find($item->unit_of_measurement_id);
+
+                $incomeTrasactionItem['income_transaction_id'] = $value->income_transaction_id;
+                $incomeTrasactionItem['item_id'] = $value->item_id;
+                $incomeTrasactionItem['amount'] = $value->amount;
+
+                $incomeTrasactionItem['item'] = [
+                    'part_number' => $item->part_number,
+                    'description' => $item->description,
+                    'unitOfMeasurement' => [
+                        'short_name' => $unitOfMeasurement->short_name
+                    ]
+                ];
+
+                array_push($session['incomeTransactionItems'], $incomeTrasactionItem);
+            }
         }
 
         $itemExists = 0;
 
-        foreach ($session as $key => $value) {
-            if ($request->item_id == $value->item_id) {
-                $session[$key]->amount += $request->amount;
+        foreach ($session['incomeTransactionItems'] as $key => $value) {
+            if ($request->item_id == $value['item_id']) {
+                $session['incomeTransactionItems'][$key]->amount += $request->amount;
                 $itemExists = 1;
             }
         }
 
         if (!$itemExists) {
-            $session->push((object) [
+            $item = Item::select('part_number', 'description', 'unit_of_measurement_id')
+                            ->find($request->item_id);
+
+            $unitOfMeasurement = UnitOfMeasurement::select('short_name')
+                                                    ->find($item->unit_of_measurement_id);
+
+            $incomeTransactionItem = [
                 'item_id' => $request->item_id,
                 'amount' => $request->amount,
-                'item' => Item::with('unitOfMeasurement')
-                                ->find($request->item_id)
-            ]);
+                'item' => [
+                    'part_number' => $item->part_number,
+                    'description' => $item->description,
+                    'unitOfMeasurement' => [
+                        'short_name' => $unitOfMeasurement->short_name
+                    ]
+                ]
+            ];
+
+            array_push($session['incomeTransactionItems'], $incomeTransactionItem);
         }
 
         $request->session()->put('edit-income-transaction-item', $session);

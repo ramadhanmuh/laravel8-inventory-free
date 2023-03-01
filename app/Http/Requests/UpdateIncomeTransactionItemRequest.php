@@ -30,7 +30,7 @@ class UpdateIncomeTransactionItemRequest extends FormRequest
             ],
             'amount' => [
                 'required', 'numeric', 'min:1',
-                'max:99999999999999999999',
+                'max:9999999999',
                 function ($attribute, $value, $fail) {
                     $session = session('edit-income-transaction-item');
 
@@ -49,9 +49,9 @@ class UpdateIncomeTransactionItemRequest extends FormRequest
                             }
                         }
                     } else {
-                        foreach ($session as $key => $data) {
-                            if ($data->item == request()->item_id) {
-                                if ($data->amount > 9999999999) {
+                        foreach ($session['incomeTransactionItems'] as $key => $data) {
+                            if ($data['item_id'] == request()->item_id) {
+                                if ($data['amount'] > 9999999999) {
                                     $fail('Jumlah barang telah mencapai maksimum kapasitas.');
                                 }
                             }

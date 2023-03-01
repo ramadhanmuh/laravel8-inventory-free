@@ -119,20 +119,33 @@ class IncomeTransactionController extends Controller
      */
     public function edit($id)
     {
-        $data = [
-            'item' => IncomeTransaction::with([
-                'incomeTransactionItems.item.unitOfMeasurement'
-            ])
-            ->findOrFail($id),
-            'application' => Application::first(),
-            'items' => Item::orderBy('description')->get()
-        ];
-
         $session = session('edit-income-transaction-item');
 
+        $findAllData = false;
+
         if (!empty($session)) {
-            
+            if ($session['id'] != $id) {
+                $request->session()->forget('edit-income-transaction-item');
+                $findAllData = true;
+            } else {
+                $findAllData = false;
+            }
+        } else {
+            $findAllData = true;
         }
+
+        if ($findAllData) {
+            $data['item'] = IncomeTransaction::with(
+                'incomeTransactionItems.item.unitOfMeasurement'
+            )
+            ->findOrFail($id);
+        } else {
+            $data['item'] = IncomeTransaction::findOrFail($id);
+        }
+
+        $data['application'] = Application::first();
+
+        $data['items'] = Item::orderBy('description')->get();
 
         return view('pages.income-transaction.edit', $data);
     }
