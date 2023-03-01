@@ -37,8 +37,8 @@ class UpdateIncomeTransactionRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     $session = session('edit-income-transaction-item');
 
-                    if (is_array($session) && count($session) < 1) {
-                        $fail('Terdapat data barang yang tidak ada. Silahkan isi kembali formulir. Jika sudah benar, silahkan tekan tombol "Simpan" kembali.');
+                    if (is_array($session['incomeTransactionItems']) && count($session['incomeTransactionItems']) < 1) {
+                        $fail('Barang wajib dipilih.');
                     }
 
                     if (!empty($session)) {
