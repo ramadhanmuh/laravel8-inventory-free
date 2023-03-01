@@ -18,5 +18,12 @@ class Controller extends BaseController
                 'edit-income-transaction-item'
             ]);
         }
+
+        if (!request()->is('income-transactions/*') || !request()->is('income-transactions')) {
+            session()->forget([
+                'create-expenditure-transaction-item',
+                'edit-expenditure-transaction-item'
+            ]);
+        }
     }
 }

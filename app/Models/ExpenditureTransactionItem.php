@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class IncomeTransactionItem extends Model
+class ExpenditureTransactionItem extends Model
 {
     use HasFactory;
 
@@ -16,7 +16,7 @@ class IncomeTransactionItem extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'income_transaction_id',
+        'expenditure_transaction_id',
         'item_id',
         'amount',
     ];
@@ -82,23 +82,23 @@ class IncomeTransactionItem extends Model
                 $newSession[] = $value;
             }
 
-            session()->put('create-income-transaction-item', $newSession);
+            session()->put('create-expenditure-transaction-item', $newSession);
         }
 
         return $data;
     }
 
     /**
-     * Get the income transaction that owns
-     * the income transaction item.
+     * Get the expenditure transaction that owns
+     * the expenditure transaction item.
      */
-    public function incomeTransaction()
+    public function expenditureTransaction()
     {
-        return $this->belongsTo(IncomeTransaction::class);
+        return $this->belongsTo(ExpenditureTransaction::class);
     }
 
      /**
-     * Get the item that owns the income transaction item.
+     * Get the item that owns the expenditure transaction item.
      */
     public function item()
     {

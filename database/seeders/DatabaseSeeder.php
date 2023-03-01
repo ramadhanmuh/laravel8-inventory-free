@@ -22,7 +22,9 @@ class DatabaseSeeder extends Seeder
             UnitOfMeasurementSeeder::class,
             ItemSeeder::class,
             IncomeTransactionSeeder::class,
-            IncomeTransactionItemSeeder::class
+            IncomeTransactionItemSeeder::class,
+            ExpenditureTransactionSeeder::class,
+            ExpenditureTransactionItemSeeder::class
         ]);
     }
 }

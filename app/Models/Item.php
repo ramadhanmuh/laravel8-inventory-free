@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 class Item extends Model
 {
@@ -107,6 +108,25 @@ class Item extends Model
         return $data->count();
     }
 
+    public static function getAvailableItem()
+    {
+        $expenditure_transaction_items = DB::table('expenditure_transaction_items')
+                ->select(DB::raw('item_id, SUM(amount) as b_amount'))
+                ->groupBy('item_id');
+
+        return self::whereHas('incomeTransactionItems', function (Builder $query) use ($expenditure_transaction_items)
+        {
+            $query->select(DB::raw('(SUM(income_transaction_items.amount) - IFNUll(SUM(b_amount), 0)) as total'))
+                    ->joinSub($expenditure_transaction_items, 'expenditure_transaction_items', function ($join) {
+                        $join->on('income_transaction_items.item_id', '=', 'expenditure_transaction_items.item_id');
+                    })
+                    ->groupBy('income_transaction_items.item_id')
+                    ->having('total', '>', 0);
+        })
+        ->orderBy('description')
+        ->get();
+    }
+
     /**
      * Get the category that owns the item.
      */
@@ -137,5 +157,13 @@ class Item extends Model
     public function incomeTransactionItems()
     {
         return $this->hasMany(IncomeTransactionItem::class);
+    }
+
+    /**
+     * Get the expenditure transaction items for the item.
+     */
+    public function expenditureTransactionItems()
+    {
+        return $this->hasMany(ExpenditureTransactionItem::class);
     }
 }

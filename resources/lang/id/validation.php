@@ -272,7 +272,7 @@ return [
         'newpassword' => 'Kata Sandi Baru',
         'newpassword_confirmation' => 'Konfirmasi Kata Sandi Baru',
         'name' => 'Nama',
-        'picker' => 'Penerima',
+        'picker' => 'Pengambil',
         'expenditure_transaction_id' => 'Transaksi Pengeluaran',
         'item_id' => 'Barang',
         'amount' => 'Jumlah',

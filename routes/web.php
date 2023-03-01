@@ -14,6 +14,8 @@ use App\Http\Controllers\UnitOfMeasurementController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\IncomeTransactionController;
 use App\Http\Controllers\IncomeTransactionItemController;
+use App\Http\Controllers\ExpenditureTransactionController;
+use App\Http\Controllers\ExpenditureTransactionItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,5 +89,19 @@ Route::middleware(['auth'])->group(function () {
     ]);
 
     Route::resource('income-transactions', IncomeTransactionController::class);
+
+    Route::delete('expenditure-transaction-items/{item_id}/create', [
+        ExpenditureTransactionItemController::class, 'deleteCreateSession'
+    ]);
+
+    Route::delete('expenditure-transaction-items/{expenditure_transaction_id}/{item_id}', [
+        ExpenditureTransactionItemController::class, 'deleteEditSession'
+    ]);
+
+    Route::resource('expenditure-transaction-items', ExpenditureTransactionItemController::class)->except([
+        'show', 'index', 'delete'
+    ]);
+
+    Route::resource('expenditure-transactions', ExpenditureTransactionController::class);
 });
 
