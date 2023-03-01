@@ -111,33 +111,7 @@ class IncomeTransactionItemController extends Controller
                             ->get('edit-income-transaction-item');
 
         if (empty($session)) {
-            $incomeTransactionItems = IncomeTransactionItem::where('income_transaction_id', '=', $id)
-                                                            ->get();
-            
-            $session['id'] = $id;
-            $session['incomeTransactionItems'] = [];
-
-            foreach ($incomeTransactionItems as $key => $value) {
-                $item = Item::select('part_number', 'description', 'unit_of_measurement_id')
-                            ->find($value->item_id);
-
-                $unitOfMeasurement = UnitOfMeasurement::select('short_name')
-                                            ->find($item->unit_of_measurement_id);
-
-                $incomeTrasactionItem['income_transaction_id'] = $value->income_transaction_id;
-                $incomeTrasactionItem['item_id'] = $value->item_id;
-                $incomeTrasactionItem['amount'] = $value->amount;
-
-                $incomeTrasactionItem['item'] = [
-                    'part_number' => $item->part_number,
-                    'description' => $item->description,
-                    'unitOfMeasurement' => [
-                        'short_name' => $unitOfMeasurement->short_name
-                    ]
-                ];
-
-                array_push($session['incomeTransactionItems'], $incomeTrasactionItem);
-            }
+            $session = $this->createEditSession($id);
         }
 
         $itemExists = 0;
@@ -216,5 +190,57 @@ class IncomeTransactionItemController extends Controller
         }
 
         return back()->with('status', 'Berhasil menghapus barang.');
+    }
+
+    public function deleteEditSession(Request $request, $income_transaction_id, $item_id)
+    {
+        $session = session('edit-income-transaction-item');
+
+        if (empty($session)) {
+            $session = $this->createEditSession($income_transaction_id);
+        }
+
+        foreach ($session['incomeTransactionItems'] as $key => $value) {
+            if ($value['item_id'] == $item_id) {
+                unset($session['incomeTransactionItems'][$key]);
+            }
+        }
+
+        $request->session()->put('edit-income-transaction-item', $session);
+
+        return back()->with('status', 'Berhasil menghapus barang.');
+    }
+
+    private function createEditSession($income_transaction_id)
+    {
+        $incomeTransactionItems = IncomeTransactionItem::where('income_transaction_id', '=', $income_transaction_id)
+                                                        ->get();
+            
+        $session['id'] = $income_transaction_id;
+        $session['incomeTransactionItems'] = [];
+
+        foreach ($incomeTransactionItems as $key => $value) {
+            $item = Item::select('part_number', 'description', 'unit_of_measurement_id')
+                        ->find($value->item_id);
+
+            $unitOfMeasurement = UnitOfMeasurement::select('short_name')
+                                        ->find($item->unit_of_measurement_id);
+
+            $incomeTrasactionItem['income_transaction_id'] = $value->income_transaction_id;
+            $incomeTrasactionItem['item_id'] = $value->item_id;
+            $incomeTrasactionItem['amount'] = $value->amount;
+
+            $incomeTrasactionItem['item'] = [
+                'part_number' => $item->part_number,
+                'description' => $item->description,
+                'unitOfMeasurement' => [
+                    'short_name' => $unitOfMeasurement->short_name
+                ]
+            ];
+
+            array_push($session['incomeTransactionItems'], $incomeTrasactionItem);
+        }
+
+        return $session;
     }
 }

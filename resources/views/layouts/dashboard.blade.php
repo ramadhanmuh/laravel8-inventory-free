@@ -4,6 +4,11 @@
 <x-head/>
 
 <body id="page-top">
+    <div class="fixed-top min-vw-100 min-vh-100 bg-light justify-content-center align-items-center d-flex" id="pageLoader">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
 
     {{-- Page Wrapper  --}}
     <div id="wrapper">

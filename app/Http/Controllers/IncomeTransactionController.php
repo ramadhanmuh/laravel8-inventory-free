@@ -161,26 +161,26 @@ class IncomeTransactionController extends Controller
     {
         $data = IncomeTransaction::findOrFail($id);
 
-        $input = $request->validated();
+        $input['income_transaction'] = $request->validated();
 
-        if ($request->hasFile('image')) {
-            $fileName = str_shuffle(time() . Str::random(30))
-                        . '.' . $request->image->extension();
+        $session = $request->session()->get('edit-income-transaction-item');
 
-            $storagePath = 'uploads/images';
+        IncomeTransaction::where('id', $id)->update($input['income_transaction']);
 
-            $input['image'] = $storagePath . '/' . $fileName;
+        if (!empty($session)) {
+            $input['income_transaction_items'] = [];
 
-            $request->file('image')->move(public_path($storagePath), $fileName);
-
-            if ($data->image !== null) {
-                if (File::exists(public_path($data->image))) {
-                    File::delete(public_path($data->image));
-                }
+            foreach ($session['incomeTransactionItems'] as $key => $value) {
+                array_push($input['income_transaction_items'], new IncomeTransactionItem([
+                    'item_id' => $value['item_id'],
+                    'amount' => $value['amount']
+                ]));
             }
-        }
 
-        IncomeTransaction::where('id', $id)->update($input);
+            IncomeTransactionItem::where('income_transaction_id', $id)->delete();
+
+            $data->incomeTransactionItems()->saveMany($input['income_transaction_items']);
+        }
 
         return redirect('income-transactions')
                 ->with('status', 'Berhasil mengubah transaksi (masuk).');
@@ -196,23 +196,8 @@ class IncomeTransactionController extends Controller
     {
         $data = IncomeTransaction::findOrFail($id);
 
-        $file = $data->image;
-
         $data->delete();
 
-        if ($file !== null) {
-            if (File::exists(public_path($file))) {
-                File::delete(public_path($file));
-            }
-        }
-
         return back()->with('status', 'Berhasil menghapus transaksi (masuk).');
-    }
-
-    public function openImage($id)
-    {
-        $data = IncomeTransaction::findOrFail($id);
-
-        return response()->file(public_path($data->image));
     }
 }

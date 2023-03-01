@@ -99,7 +99,7 @@
                                         {{ $incomeTransactionItem->amount }}
                                     </td>
                                     <td class="align-middle text-center">
-                                        <form action="{{ url("income-transaction-items/$item->id/$incomeTransactionItem->id") }}" method="post" class="d-inline">
+                                        <form action="{{ url("income-transaction-items/$item->id/$incomeTransactionItem->item_id") }}" method="post" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm">

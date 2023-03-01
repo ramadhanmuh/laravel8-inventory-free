@@ -8,6 +8,31 @@
 {{-- Custom scripts for all pages --}}
 <script defer src="{{ url('template/sb-admin-2') }}/js/sb-admin-2.min.js"></script>
 <script>
+    var pageLoader = document.getElementById('pageLoader'),
+        pageLoaderClass = pageLoader.getAttribute('class').split(' ');
+
+    function disablePageLoader() {
+        var popped = pageLoaderClass.pop(),
+            nonActivePageLoaderClass = pageLoaderClass.push('d-none'),
+            nonActivePageLoaderClass = nonActivePageLoaderClass.toString().replace(/[,]/g, ' ');
+
+        pageLoader.className = nonActivePageLoaderClass + ' d-none';
+    }
+
+    function createFormEvent() {
+        var form = document.getElementsByTagName('form'),
+            popped = pageLoaderClass.pop(),
+            activePageLoaderClass = pageLoaderClass.toString(),
+            activePageLoaderClass = activePageLoaderClass.replace(/[,]/g, ' '),
+            activePageLoaderClass = activePageLoaderClass + ' d-flex';
+
+        for (var index = 0; index < form.length; index++) {
+            form[index].addEventListener('submit', function () {
+                pageLoader.className = activePageLoaderClass;
+            });
+        }
+    }
+
     function convertUnixColumnValueToDate() {
         var unixColumns = document.getElementsByClassName('unix-column');
 
@@ -32,6 +57,10 @@
             clearInterval(stateCheck);
 
             convertUnixColumnValueToDate();
+
+            createFormEvent();
+
+            disablePageLoader()
         }
     }, 100);
 </script>
