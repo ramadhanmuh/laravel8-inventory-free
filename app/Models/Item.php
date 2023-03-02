@@ -127,6 +127,30 @@ class Item extends Model
         ->get();
     }
 
+    public static function getAvailableItemIncludeIds($ids)
+    {
+        $expenditure_transaction_items = DB::table('expenditure_transaction_items')
+                ->select(DB::raw('item_id, SUM(amount) as b_amount'))
+                ->groupBy('item_id');
+
+        $query = self::whereHas('incomeTransactionItems', function (Builder $query) use ($expenditure_transaction_items)
+        {
+            $query->select(DB::raw('(SUM(income_transaction_items.amount) - IFNUll(SUM(b_amount), 0)) as total'))
+                    ->joinSub($expenditure_transaction_items, 'expenditure_transaction_items', function ($join) {
+                        $join->on('income_transaction_items.item_id', '=', 'expenditure_transaction_items.item_id');
+                    })
+                    ->groupBy('income_transaction_items.item_id')
+                    ->having('total', '>', 0);
+        });
+
+        foreach ($ids as $key => $value) {
+            $query->orWhere('id', '=', $value);
+        }
+
+        return $query->orderBy('description')
+                    ->get();
+    }
+
     public static function countAvailableItemById($id)
     {
         $expenditure_transaction_items = DB::table('expenditure_transaction_items')
@@ -147,7 +171,7 @@ class Item extends Model
                     ->count();
     }
 
-    public static function getItemWithTotalTransactionAmount()
+    public static function getStockById($id)
     {
         $income_transaction_items = DB::table('income_transaction_items')
                                         ->select(DB::raw(
@@ -166,8 +190,8 @@ class Item extends Model
                     ->select(
                         DB::raw(
                             'a.id, a.description, a.part_number,' .
-                            'IFNULL(income_transaction_items.income_transaction_items_amount, 0) as income_transaction_items_amount,' .
-                            'IFNULL(expenditure_transaction_items.expenditure_transaction_items_amount, 0) as expenditure_transaction_items_amount'
+                            '(IFNULL(income_transaction_items.income_transaction_items_amount, 0) -' .
+                            'IFNULL(expenditure_transaction_items.expenditure_transaction_items_amount, 0)) as total'
                         )
                     )
                     ->leftJoinSub($income_transaction_items, 'income_transaction_items', function ($join) {
@@ -176,6 +200,7 @@ class Item extends Model
                     ->leftJoinSub($expenditure_transaction_items, 'expenditure_transaction_items', function ($join) {
                         $join->on('a.id', '=', 'expenditure_transaction_items.item_id');
                     })
+                    ->where('id', '=', $id)
                     ->groupBy('a.id')
                     ->get();
     }

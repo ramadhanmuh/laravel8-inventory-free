@@ -148,7 +148,12 @@ class ExpenditureTransactionController extends Controller
         if (empty($session)) {
             $data['items'] = Item::getAvailableItem();
         } else {
-            $data['items'] = Item::getItemWithTotalTransactionAmountTotal();
+            $ids = array_column($session['deletedItems'], 'item_id');
+            if (empty($ids)) {
+                $data['items'] = Item::getAvailableItem();
+            } else {
+                $data['items'] = Item::getAvailableItemIncludeIds($ids);
+            }
         }
 
         return view('pages.expenditure-transaction.edit', $data);

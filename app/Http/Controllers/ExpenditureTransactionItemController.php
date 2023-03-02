@@ -109,39 +109,84 @@ class ExpenditureTransactionItemController extends Controller
         $session = $request->session()
                             ->get('edit-expenditure-transaction-item');
 
+        $checkDeletedItem = 1;
+
         if (empty($session)) {
             $session = $this->createEditSession($id);
+            $checkDeletedItem = 0;
         }
 
         $itemExists = 0;
 
-        foreach ($session['expenditureTransactionItems'] as $key => $value) {
-            if ($request->item_id == $value['item_id']) {
-                $session['expenditureTransactionItems'][$key]->amount += $request->amount;
-                $itemExists = 1;
+        if ($checkDeletedItem) {
+            $filtered = array_filter($session['deletedItems'], function ($value) {
+                return $value['item_id'] == $request->item_id;
+            });
+
+            if (count($filtered)) {
+                foreach ($filtered as $key => $value) {
+                    $filtered[$key]['amount'] += intval($request->amount);
+                    $session['expenditureTransactionItems'][] = $filtered[$key];
+                }
+            } else {
+                foreach ($session['expenditureTransactionItems'] as $key => $value) {
+                    if ($request->item_id == $value['item_id']) {
+                        $session['expenditureTransactionItems'][$key]->amount += $request->amount;
+                        $itemExists = 1;
+                    }
+                }
+        
+                if (!$itemExists) {
+                    $item = Item::select('part_number', 'description', 'unit_of_measurement_id')
+                                    ->find($request->item_id);
+        
+                    $unitOfMeasurement = UnitOfMeasurement::select('short_name')
+                                                            ->find($item->unit_of_measurement_id);
+        
+                    $incomeTransactionItem = [
+                        'item_id' => $request->item_id,
+                        'amount' => $request->amount,
+                        'item' => [
+                            'part_number' => $item->part_number,
+                            'description' => $item->description,
+                            'unitOfMeasurement' => [
+                                'short_name' => $unitOfMeasurement->short_name
+                            ]
+                        ]
+                    ];
+        
+                    array_push($session['expenditureTransactionItems'], $incomeTransactionItem);
+                }
             }
-        }
-
-        if (!$itemExists) {
-            $item = Item::select('part_number', 'description', 'unit_of_measurement_id')
-                            ->find($request->item_id);
-
-            $unitOfMeasurement = UnitOfMeasurement::select('short_name')
-                                                    ->find($item->unit_of_measurement_id);
-
-            $incomeTransactionItem = [
-                'item_id' => $request->item_id,
-                'amount' => $request->amount,
-                'item' => [
-                    'part_number' => $item->part_number,
-                    'description' => $item->description,
-                    'unitOfMeasurement' => [
-                        'short_name' => $unitOfMeasurement->short_name
+        } else {
+            foreach ($session['expenditureTransactionItems'] as $key => $value) {
+                if ($request->item_id == $value['item_id']) {
+                    $session['expenditureTransactionItems'][$key]->amount += $request->amount;
+                    $itemExists = 1;
+                }
+            }
+    
+            if (!$itemExists) {
+                $item = Item::select('part_number', 'description', 'unit_of_measurement_id')
+                                ->find($request->item_id);
+    
+                $unitOfMeasurement = UnitOfMeasurement::select('short_name')
+                                                        ->find($item->unit_of_measurement_id);
+    
+                $incomeTransactionItem = [
+                    'item_id' => $request->item_id,
+                    'amount' => $request->amount,
+                    'item' => [
+                        'part_number' => $item->part_number,
+                        'description' => $item->description,
+                        'unitOfMeasurement' => [
+                            'short_name' => $unitOfMeasurement->short_name
+                        ]
                     ]
-                ]
-            ];
-
-            array_push($session['expenditureTransactionItems'], $incomeTransactionItem);
+                ];
+    
+                array_push($session['expenditureTransactionItems'], $incomeTransactionItem);
+            }
         }
 
         $request->session()->put('edit-expenditure-transaction-item', $session);
@@ -191,12 +236,12 @@ class ExpenditureTransactionItemController extends Controller
         return back()->with('status', 'Berhasil menghapus barang.');
     }
 
-    public function deleteEditSession(Request $request, $income_transaction_id, $item_id)
+    public function deleteEditSession(Request $request, $expenditure_transaction_id, $item_id)
     {
         $session = session('edit-expenditure-transaction-item');
 
         if (empty($session)) {
-            $session = $this->createEditSession($income_transaction_id);
+            $session = $this->createEditSession($expenditure_transaction_id);
         }
 
         foreach ($session['expenditureTransactionItems'] as $key => $value) {
@@ -210,12 +255,12 @@ class ExpenditureTransactionItemController extends Controller
         return back()->with('status', 'Berhasil menghapus barang.');
     }
 
-    private function createEditSession($income_transaction_id)
+    private function createEditSession($expenditure_transaction_id)
     {
-        $expenditureTransactionItems = ExpenditureTransactionItem::where('income_transaction_id', '=', $income_transaction_id)
+        $expenditureTransactionItems = ExpenditureTransactionItem::where('expenditure_transaction_id', '=', $expenditure_transaction_id)
                                                         ->get();
             
-        $session['id'] = $income_transaction_id;
+        $session['id'] = $expenditure_transaction_id;
         $session['expenditureTransactionItems'] = [];
 
         foreach ($expenditureTransactionItems as $key => $value) {
@@ -225,7 +270,7 @@ class ExpenditureTransactionItemController extends Controller
             $unitOfMeasurement = UnitOfMeasurement::select('short_name')
                                         ->find($item->unit_of_measurement_id);
 
-            $incomeTrasactionItem['income_transaction_id'] = $value->income_transaction_id;
+            $incomeTrasactionItem['expenditure_transaction_id'] = $value->expenditure_transaction_id;
             $incomeTrasactionItem['item_id'] = $value->item_id;
             $incomeTrasactionItem['amount'] = $value->amount;
 
@@ -239,6 +284,8 @@ class ExpenditureTransactionItemController extends Controller
 
             array_push($session['expenditureTransactionItems'], $incomeTrasactionItem);
         }
+
+        $session['deletedItems'] = [];
 
         return $session;
     }
