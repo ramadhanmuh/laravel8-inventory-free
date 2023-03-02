@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Item;
 
-class StoreIncomeTransactionItemRequest extends FormRequest
+class StoreExpenditureTransactionItemRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,13 +26,18 @@ class StoreIncomeTransactionItemRequest extends FormRequest
     {
         return [
             'item_id' => [
-                'required', 'exists:items,id'
+                'required', 'numeric',
+                function ($attribute, $value, $fail) {
+                    if (!Item::countAvailableItemById($value)) {
+                        $fail('Barang yang dipilih tidak valid.');
+                    }
+                }
             ],
             'amount' => [
                 'required', 'numeric', 'min:1',
                 'max:9999999999',
                 function ($attribute, $value, $fail) {
-                    $session = session('create-income-transaction-item');
+                    $session = session('create-expenditure-transaction-item');
 
                     if (!empty($session)) {
                         foreach ($session as $key => $data) {

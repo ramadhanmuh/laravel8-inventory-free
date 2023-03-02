@@ -82,12 +82,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (empty($income_transaction_items))
+                        @if (empty($expenditure_transaction_items))
                             <tr>
                                 <td colspan="5" class="text-center">Barang belum dipilih.</td>
                             </tr>
                         @else
-                            @foreach ($income_transaction_items as $item)
+                            @foreach ($expenditure_transaction_items as $item)
                                 <tr>
                                     <td class="align-middle">
                                         {{ $item->part_number }}
