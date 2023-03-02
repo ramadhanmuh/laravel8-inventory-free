@@ -1,10 +1,10 @@
 @extends('layouts.dashboard')
 
-@section('title', "$application->name - Transaksi (Masuk) - Ubah")
+@section('title', "$application->name - Transaksi (Keluar) - Ubah")
 
-@section('description', 'Halaman yang berisi formulir untuk mengubah data transaksi pemasukkan.')
+@section('description', 'Halaman yang berisi formulir untuk mengubah data transaksi pengeluaran.')
 
-@section('route_name', 'Ubah Transaksi (Masuk)')
+@section('route_name', 'Ubah Transaksi (Keluar)')
 
 @section('content')
     @if ($errors->any())
@@ -37,7 +37,7 @@
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active bg-white border p-2 px-3" id="home" role="tabpanel">
-            <form action="{{ route('income-transaction-items.update', $item->id) }}" method="post">
+            <form action="{{ route('expenditure-transaction-items.update', $item->id) }}" method="post">
                 @method('PUT')
                 @csrf
                 <div class="row">
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <div class="col-12 text-right">
-                        <a href="{{ route('income-transactions.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('expenditure-transactions.index') }}" class="btn btn-secondary">
                             Kembali
                         </a>
                         <button class="btn btn-primary" type="submit">
@@ -83,23 +83,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (empty(session('edit-income-transaction-item')))
-                            @foreach ($item->incomeTransactionItems as $incomeTransactionItem)
+                        @if (empty(session('edit-expenditure-transaction-item')))
+                            @foreach ($item->expenditureTransactionItems as $expenditureTransactionItem)
                                 <tr>
                                     <td class="align-middle">
-                                        {{ $incomeTransactionItem->item->part_number }}
+                                        {{ $expenditureTransactionItem->item->part_number }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ $incomeTransactionItem->item->description }}
+                                        {{ $expenditureTransactionItem->item->description }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ $incomeTransactionItem->item->unitOfMeasurement->short_name }}
+                                        {{ $expenditureTransactionItem->item->unitOfMeasurement->short_name }}
                                     </td>
                                     <td class="align-middle text-center">
-                                        {{ $incomeTransactionItem->amount }}
+                                        {{ $expenditureTransactionItem->amount }}
                                     </td>
                                     <td class="align-middle text-center">
-                                        <form action="{{ url("income-transaction-items/$item->id/$incomeTransactionItem->item_id") }}" method="post" class="d-inline">
+                                        <form action="{{ url("expenditure-transaction-items/$item->id/$expenditureTransactionItem->item_id") }}" method="post" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm">
@@ -110,7 +110,7 @@
                                 </tr>
                             @endforeach
                         @else
-                            @forelse (session('edit-income-transaction-item')['incomeTransactionItems'] as $session)
+                            @forelse (session('edit-expenditure-transaction-item')['expenditureTransactionItems'] as $session)
                                 <tr>
                                     <td class="align-middle">
                                         {{ $session['item']['part_number'] }}
@@ -125,7 +125,7 @@
                                         {{ $session['amount'] }}
                                     </td>
                                     <td class="align-middle text-center">
-                                        <form action="{{ url("income-transaction-items/$item->id/" . $session['item_id']) }}" method="post" class="d-inline">
+                                        <form action="{{ url("expenditure-transaction-items/$item->id/" . $session['item_id']) }}" method="post" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm">
@@ -144,13 +144,13 @@
                 </table>
             </div>
             <div class="text-right">
-                <a href="{{ route('income-transactions.index') }}" class="btn btn-secondary">
+                <a href="{{ route('expenditure-transactions.index') }}" class="btn btn-secondary">
                     Kembali
                 </a>
             </div>
         </div>
         <div class="tab-pane fade p-2 px-3 bg-white border" id="profile" role="tabpanel">
-            <form class="row" action="{{ route('income-transactions.update', $item->id) }}" method="POST">
+            <form class="row" action="{{ route('expenditure-transactions.update', $item->id) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="col-md-6 col-lg-4">
@@ -180,12 +180,12 @@
                 </div>
                 <div class="col-md-6 col-lg-4">
                     <div class="form-group">
-                        <label for="supplier">Pemasok</label>
+                        <label for="picker">Pengambil</label>
                         <input type="text"
                             class="form-control"
-                            id="supplier"
-                            name="supplier"
-                            value="{{ empty(old('supplier')) ? $item->supplier : old('supplier') }}">
+                            id="picker"
+                            name="picker"
+                            value="{{ empty(old('picker')) ? $item->picker : old('picker') }}">
                     </div>
                 </div>
                 <div class="col-12">
@@ -195,7 +195,7 @@
                     </div>
                 </div>
                 <div class="col-12 text-right">
-                    <a href="{{ route('income-transactions.index') }}" class="btn btn-secondary">
+                    <a href="{{ route('expenditure-transactions.index') }}" class="btn btn-secondary">
                         Kembali
                     </a>
                     <button type="submit"

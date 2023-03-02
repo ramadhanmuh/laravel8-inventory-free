@@ -125,6 +125,7 @@ class ExpenditureTransactionController extends Controller
         if (!empty($session)) {
             if ($session['id'] != $id) {
                 $request->session()->forget('edit-expenditure-transaction-item');
+                $session = null;
                 $findAllData = true;
             } else {
                 $findAllData = false;
@@ -144,7 +145,11 @@ class ExpenditureTransactionController extends Controller
 
         $data['application'] = Application::first();
 
-        $data['items'] = Item::orderBy('description')->get();
+        if (empty($session)) {
+            $data['items'] = Item::getAvailableItem();
+        } else {
+            $data['items'] = Item::getItemWithTotalTransactionAmountTotal();
+        }
 
         return view('pages.expenditure-transaction.edit', $data);
     }

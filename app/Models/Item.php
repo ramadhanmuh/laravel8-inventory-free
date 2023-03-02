@@ -147,6 +147,39 @@ class Item extends Model
                     ->count();
     }
 
+    public static function getItemWithTotalTransactionAmount()
+    {
+        $income_transaction_items = DB::table('income_transaction_items')
+                                        ->select(DB::raw(
+                                            'SUM(amount) as income_transaction_items_amount,' .
+                                            'item_id'
+                                        ))
+                                        ->groupBy('item_id');
+
+        $expenditure_transaction_items = DB::table('expenditure_transaction_items')
+                                            ->select(DB::raw(
+                                                'SUM(amount) as expenditure_transaction_items_amount,' .
+                                                'item_id'
+                                            ))
+                                            ->groupBy('item_id');
+        return DB::table('items as a')
+                    ->select(
+                        DB::raw(
+                            'a.id, a.description, a.part_number,' .
+                            'IFNULL(income_transaction_items.income_transaction_items_amount, 0) as income_transaction_items_amount,' .
+                            'IFNULL(expenditure_transaction_items.expenditure_transaction_items_amount, 0) as expenditure_transaction_items_amount'
+                        )
+                    )
+                    ->leftJoinSub($income_transaction_items, 'income_transaction_items', function ($join) {
+                        $join->on('a.id', '=', 'income_transaction_items.item_id');
+                    })
+                    ->leftJoinSub($expenditure_transaction_items, 'expenditure_transaction_items', function ($join) {
+                        $join->on('a.id', '=', 'expenditure_transaction_items.item_id');
+                    })
+                    ->groupBy('a.id')
+                    ->get();
+    }
+
     /**
      * Get the category that owns the item.
      */
