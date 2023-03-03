@@ -72,4 +72,12 @@ class UnitOfMeasurement extends Model
 
         return $data->count();
     }
+
+    /**
+     * Get the items for the unit of measurement.
+     */
+    public function items()
+    {
+        return $this->hasMany(Item::class);
+    }
 }

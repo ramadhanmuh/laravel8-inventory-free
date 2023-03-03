@@ -36,7 +36,7 @@ class UpdateExpenditureTransactionItemRequest extends FormRequest
                             $fail('Barang yang dipilih tidak valid.');
                         }
                     } else {
-                        $filtered = array_filter($session['deletedItems'], function ($val) {
+                        $filtered = array_filter($session['deletedItems'], function ($val) use ($value) {
                             return $val['item_id'] == $value;
                         });
 

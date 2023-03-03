@@ -21,30 +21,20 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // if (session()->has('create-income-transaction-item')) {
-        //     session()->forget('create-income-transaction-item');
-        // }
-        // session()->forget('create-income-transaction-item');
-
         $data['application'] = Application::getOne();
 
-        $data['itemTotal'] = $this->numberFormatting(Item::count());
+        $data['itemTotal'] = currency(Item::count());
 
-        $data['incomeTransactionTotal'] = $this->numberFormatting(IncomeTransaction::count());
+        $data['incomeTransactionTotal'] = currency(IncomeTransaction::count());
 
-        $data['expenditureTransactionTotal'] = $this->numberFormatting(ExpenditureTransaction::count());
+        $data['expenditureTransactionTotal'] = currency(ExpenditureTransaction::count());
 
-        $data['categoryTotal'] = $this->numberFormatting(Category::count());
+        $data['categoryTotal'] = currency(Category::count());
 
-        $data['brandTotal'] = $this->numberFormatting(Brand::count());
+        $data['brandTotal'] = currency(Brand::count());
 
-        $data['unitOfMeasurementTotal'] = $this->numberFormatting(UnitOfMeasurement::count());
+        $data['unitOfMeasurementTotal'] = currency(UnitOfMeasurement::count());
 
         return view('pages.dashboard.index', $data);
-    }
-
-    private function numberFormatting($number)
-    {
-        return number_format($number, 0, ',', '.');
     }
 }

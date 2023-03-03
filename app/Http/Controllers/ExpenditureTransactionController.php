@@ -135,9 +135,9 @@ class ExpenditureTransactionController extends Controller
         }
 
         if ($findAllData) {
-            $data['item'] = ExpenditureTransaction::with(
-                'expenditureTransactionItems.item.unitOfMeasurement'
-            )
+            $data['item'] = ExpenditureTransaction::with([
+                'expenditureTransactionItems.item.unitOfMeasurement',
+            ])
             ->findOrFail($id);
         } else {
             $data['item'] = ExpenditureTransaction::findOrFail($id);

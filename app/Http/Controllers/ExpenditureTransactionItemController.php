@@ -119,14 +119,17 @@ class ExpenditureTransactionItemController extends Controller
         $itemExists = 0;
 
         if ($checkDeletedItem) {
-            $filtered = array_filter($session['deletedItems'], function ($value) {
+            $filtered = array_filter($session['deletedItems'], function ($value) use ($request) {
                 return $value['item_id'] == $request->item_id;
             });
 
             if (count($filtered)) {
                 foreach ($filtered as $key => $value) {
                     $filtered[$key]['amount'] += intval($request->amount);
+
                     $session['expenditureTransactionItems'][] = $filtered[$key];
+
+                    unset($session['deletedItems'][$key]);
                 }
             } else {
                 foreach ($session['expenditureTransactionItems'] as $key => $value) {
@@ -246,9 +249,17 @@ class ExpenditureTransactionItemController extends Controller
 
         foreach ($session['expenditureTransactionItems'] as $key => $value) {
             if ($value['item_id'] == $item_id) {
+                if (!array_key_exists('deletedItems', $session)) {
+                    $session['deletedItems'] = [];
+                }
+
+                $session['deletedItems'][] = $value;
+
                 unset($session['expenditureTransactionItems'][$key]);
             }
         }
+
+        dd($session);
 
         $request->session()->put('edit-expenditure-transaction-item', $session);
 
@@ -257,8 +268,9 @@ class ExpenditureTransactionItemController extends Controller
 
     private function createEditSession($expenditure_transaction_id)
     {
-        $expenditureTransactionItems = ExpenditureTransactionItem::where('expenditure_transaction_id', '=', $expenditure_transaction_id)
-                                                        ->get();
+        $expenditureTransactionItems = ExpenditureTransactionItem::getByExpenditureTransactionId(
+            $expenditure_transaction_id
+        );
             
         $session['id'] = $expenditure_transaction_id;
         $session['expenditureTransactionItems'] = [];

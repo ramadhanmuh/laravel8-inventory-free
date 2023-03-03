@@ -99,7 +99,7 @@
                                         {{ $item->short_name }}
                                     </td>
                                     <td class="align-middle text-center">
-                                        {{ $item->amount }}
+                                        {{ currency($item->amount) }}
                                     </td>
                                     <td class="align-middle text-center">
                                         <form action="{{ url("expenditure-transaction-items/$item->id/create") }}" method="post" class="d-inline">

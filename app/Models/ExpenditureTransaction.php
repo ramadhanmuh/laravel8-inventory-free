@@ -113,6 +113,12 @@ class ExpenditureTransaction extends Model
         return $data->count();
     }
 
+    public static function getByExpenditureTransactionId($expenditure_transaction_id)
+    {
+        return self::where('expenditure_transaction_id', '=', $expenditure_transaction_id)
+                    ->get();
+    }
+
     /**
      * Get the expenditure transaction items for the expenditure trasaction.
      */

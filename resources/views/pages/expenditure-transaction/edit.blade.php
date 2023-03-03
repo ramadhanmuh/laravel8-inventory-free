@@ -84,7 +84,7 @@
                     </thead>
                     <tbody>
                         @if (empty(session('edit-expenditure-transaction-item')))
-                            @foreach ($item->expenditureTransactionItems as $expenditureTransactionItem)
+                            @foreach ($item->expenditureTransactionItems as $key => $expenditureTransactionItem)
                                 <tr>
                                     <td class="align-middle">
                                         {{ $expenditureTransactionItem->item->part_number }}
@@ -93,10 +93,18 @@
                                         {{ $expenditureTransactionItem->item->description }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ $expenditureTransactionItem->item->unitOfMeasurement->short_name }}
+                                        @if (empty($expenditureTransactionItem->item->unitOfMeasurement))
+                                            @php
+                                                echo App\Models\UnitOfMeasurement::
+                                                find($expenditureTransactionItem->item->unit_of_measurement_id)
+                                                ->short_name
+                                            @endphp
+                                        @else
+                                            {{ $expenditureTransactionItem->item->unitOfMeasurement->short_name }}
+                                        @endif
                                     </td>
                                     <td class="align-middle text-center">
-                                        {{ $expenditureTransactionItem->amount }}
+                                        {{ currency($expenditureTransactionItem->amount) }}
                                     </td>
                                     <td class="align-middle text-center">
                                         <form action="{{ url("expenditure-transaction-items/$item->id/$expenditureTransactionItem->item_id") }}" method="post" class="d-inline">
@@ -122,7 +130,7 @@
                                         {{ $session['item']['unitOfMeasurement']['short_name'] }}
                                     </td>
                                     <td class="align-middle text-center">
-                                        {{ $session['amount'] }}
+                                        {{ currency($session['amount']) }}
                                     </td>
                                     <td class="align-middle text-center">
                                         <form action="{{ url("expenditure-transaction-items/$item->id/" . $session['item_id']) }}" method="post" class="d-inline">

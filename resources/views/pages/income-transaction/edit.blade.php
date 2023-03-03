@@ -93,10 +93,18 @@
                                         {{ $incomeTransactionItem->item->description }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ $incomeTransactionItem->item->unitOfMeasurement->short_name }}
+                                        @if (empty($incomeTransactionItem->item->unitOfMeasurement))
+                                            @php
+                                                echo App\Models\UnitOfMeasurement::
+                                                find($incomeTransactionItem->item->unit_of_measurement_id)
+                                                ->short_name
+                                            @endphp
+                                        @else
+                                            {{ $incomeTransactionItem->item->unitOfMeasurement->short_name }}
+                                        @endif
                                     </td>
                                     <td class="align-middle text-center">
-                                        {{ $incomeTransactionItem->amount }}
+                                        {{ currency($incomeTransactionItem->amount) }}
                                     </td>
                                     <td class="align-middle text-center">
                                         <form action="{{ url("income-transaction-items/$item->id/$incomeTransactionItem->item_id") }}" method="post" class="d-inline">
@@ -122,7 +130,7 @@
                                         {{ $session['item']['unitOfMeasurement']['short_name'] }}
                                     </td>
                                     <td class="align-middle text-center">
-                                        {{ $session['amount'] }}
+                                        {{ currency($session['amount']) }}
                                     </td>
                                     <td class="align-middle text-center">
                                         <form action="{{ url("income-transaction-items/$item->id/" . $session['item_id']) }}" method="post" class="d-inline">
