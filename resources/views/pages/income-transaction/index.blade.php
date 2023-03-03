@@ -123,7 +123,7 @@
     <div class="card">
         <div class="card-header bg-white">
             <div class="row justify-content-center justify-content-lg-between align-items-center">
-                <div class="col-md-7 col-lg-4 mb-2 mb-lg-0">
+                <div class="col-md-7 col-lg-4 mb-2 mb-lg-10">
                     <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#filterModal">
                         <i class="fas fa-filter mr-1"></i>
                         Sortir / Saring

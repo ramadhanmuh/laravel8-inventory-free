@@ -205,6 +205,143 @@ class Item extends Model
                     ->get();
     }
 
+    public static function getWithCategoryBrandUOMStock($input)
+    {
+        $income_transaction_items = DB::table('income_transaction_items')
+                                        ->select(DB::raw(
+                                            'SUM(amount) as income_transaction_items_amount,' .
+                                            'item_id'
+                                        ))
+                                        ->groupBy('item_id');
+
+        $expenditure_transaction_items = DB::table('expenditure_transaction_items')
+                                            ->select(DB::raw(
+                                                'SUM(amount) as expenditure_transaction_items_amount,' .
+                                                'item_id'
+                                            ))
+                                            ->groupBy('item_id');
+                                            
+        $data = self::select(DB::raw(
+            'items.*, categories.name as category_name, brands.name as brand_name,' .
+            'unit_of_measurements.short_name,' .
+            '(IFNULL(income_transaction_items.income_transaction_items_amount, 0) -' .
+            'IFNULL(expenditure_transaction_items.expenditure_transaction_items_amount, 0)) as stock'
+        ))
+        ->join(
+            'categories', 'items.category_id', '=', 'categories.id'
+        )
+        ->join(
+            'brands', 'items.brand_id', '=', 'brands.id'
+        )
+        ->join(
+            'unit_of_measurements', 'items.unit_of_measurement_id', '=', 'unit_of_measurements.id'
+        )
+        ->leftJoinSub($income_transaction_items, 'income_transaction_items', function ($join) {
+            $join->on('items.id', '=', 'income_transaction_items.item_id');
+        })
+        ->leftJoinSub($expenditure_transaction_items, 'expenditure_transaction_items', function ($join) {
+            $join->on('items.id', '=', 'expenditure_transaction_items.item_id');
+        });
+
+        if (!empty($input['keyword'])) {
+            $data->where('items.part_number', 'like', '%' . $input['keyword'] . '%')
+                    ->orWhere('items.description', 'like', '%' . $input['keyword'] . '%')
+                    ->orWhere('items.price', 'like', '%' . str_replace('.', '', $input['keyword']) . '%')
+                    ->orWhere('categories.name', 'like', '%' . $input['keyword'] . '%')
+                    ->orWhere('brands.name', 'like', '%' . $input['keyword'] . '%')
+                    ->orWhere('unit_of_measurements.short_name', 'like', '%' . $input['keyword'] . '%');
+        }
+
+        $orderColumns = [
+            'part_number' => 'items.part_number',
+            'description' => 'items.description',
+            'price' => 'items.price',
+            'category' => 'categories.name',
+            'brand' => 'brands.name',
+            'uom' => 'unit_of_measurement.short_name',
+        ];
+
+        if (array_key_exists($input['order_by'], $orderColumns)) {
+            if ($input['order_direction'] === 'asc' || $input['order_direction'] === 'desc') {
+                $data->orderBy($orderColumns[$input['order_by']], $input['order_direction']);
+            } else {
+                $data->orderBy('items.part_number', 'asc');
+            }
+        } else {
+            $data->orderBy('items.part_number', 'asc');
+        }
+
+        if (!empty($input['start_stock'])) {
+            $data->having('stock', '>', intval($input['start_stock']) - 1);
+        }
+
+        if (!empty($input['end_stock'])) {
+            $data->having('stock', '<', intval($input['end_stock']) + 1);
+        }
+
+        return $data->offset($input['offset'])
+                        ->limit(10)
+                        ->get();
+    }
+
+    public static function countWithCategoryBrandUOMStock($input)
+    {
+        $income_transaction_items = DB::table('income_transaction_items')
+                                        ->select(DB::raw(
+                                            'SUM(amount) as income_transaction_items_amount,' .
+                                            'item_id'
+                                        ))
+                                        ->groupBy('item_id');
+
+        $expenditure_transaction_items = DB::table('expenditure_transaction_items')
+                                            ->select(DB::raw(
+                                                'SUM(amount) as expenditure_transaction_items_amount,' .
+                                                'item_id'
+                                            ))
+                                            ->groupBy('item_id');
+                                            
+        $data = self::select(DB::raw(
+            'items.*, categories.name as category_name, brands.name as brand_name,' .
+            'unit_of_measurements.short_name,' .
+            '(IFNULL(income_transaction_items.income_transaction_items_amount, 0) -' .
+            'IFNULL(expenditure_transaction_items.expenditure_transaction_items_amount, 0)) as stock'
+        ))
+        ->join(
+            'categories', 'items.category_id', '=', 'categories.id'
+        )
+        ->join(
+            'brands', 'items.brand_id', '=', 'brands.id'
+        )
+        ->join(
+            'unit_of_measurements', 'items.unit_of_measurement_id', '=', 'unit_of_measurements.id'
+        )
+        ->leftJoinSub($income_transaction_items, 'income_transaction_items', function ($join) {
+            $join->on('items.id', '=', 'income_transaction_items.item_id');
+        })
+        ->leftJoinSub($expenditure_transaction_items, 'expenditure_transaction_items', function ($join) {
+            $join->on('items.id', '=', 'expenditure_transaction_items.item_id');
+        });
+
+        if (!empty($input['keyword'])) {
+            $data->where('items.part_number', 'like', '%' . $input['keyword'] . '%')
+                    ->orWhere('items.description', 'like', '%' . $input['keyword'] . '%')
+                    ->orWhere('items.price', 'like', '%' . str_replace('.', '', $input['keyword']) . '%')
+                    ->orWhere('categories.name', 'like', '%' . $input['keyword'] . '%')
+                    ->orWhere('brands.name', 'like', '%' . $input['keyword'] . '%')
+                    ->orWhere('unit_of_measurements.short_name', 'like', '%' . $input['keyword'] . '%');
+        }
+
+        if (!empty($input['start_stock'])) {
+            $data->having('stock', '>', intval($input['start_stock']) - 1);
+        }
+
+        if (!empty($input['end_stock'])) {
+            $data->having('stock', '<', intval($input['end_stock']) + 1);
+        }
+
+        return $data->count();
+    }
+
     /**
      * Get the category that owns the item.
      */

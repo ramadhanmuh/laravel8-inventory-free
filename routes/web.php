@@ -16,6 +16,7 @@ use App\Http\Controllers\IncomeTransactionController;
 use App\Http\Controllers\IncomeTransactionItemController;
 use App\Http\Controllers\ExpenditureTransactionController;
 use App\Http\Controllers\ExpenditureTransactionItemController;
+use App\Http\Controllers\StockController;
 
 /*
 |--------------------------------------------------------------------------
@@ -103,5 +104,7 @@ Route::middleware(['auth'])->group(function () {
     ]);
 
     Route::resource('expenditure-transactions', ExpenditureTransactionController::class);
+
+    Route::get('stocks', [StockController::class, 'index'])->name('stocks.index');
 });
 
