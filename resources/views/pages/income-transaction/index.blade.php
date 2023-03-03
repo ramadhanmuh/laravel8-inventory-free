@@ -205,7 +205,7 @@
                                                 <form action="{{ route('income-transactions.destroy', $item->id) }}" method="post" class="dropdown-item">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="dropdown-item text-left p-0" onclick="return confirm('Data lain yang menggunakan transaksi ini akan ikut terhapus. Lanjutkan ?')">
+                                                    <button type="submit" class="dropdown-item text-left p-0" onclick="return confirm('Transaksi {{ $item->reference_number }} akan dihapus. Lanjutkan')">
                                                         Hapus
                                                     </button>
                                                 </form>

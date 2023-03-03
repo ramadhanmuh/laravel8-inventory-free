@@ -1,10 +1,10 @@
 @extends('layouts.dashboard')
 
-@section('title', "$application->name - Transaksi Masuk - $item->reference_number")
+@section('title', "$application->name - Transaksi Keluar - $item->reference_number")
 
-@section('description', 'Halaman yang berisi informasi detail transaksi masuk.')
+@section('description', 'Halaman yang berisi informasi detail transaksi Kelar.')
 
-@section('route_name', 'Detail Transaksi Masuk')
+@section('route_name', 'Detail Transaksi (Keluar)')
 
 @section('content')
     <div class="card">
@@ -16,10 +16,10 @@
         <div class="card-body">
             <div class="row mb-2">
                 <div class="col-md-4 col-lg-3">
-                    <b>Pemasok <span class="d-md-none">:</span></b>
+                    <b>Pengambil <span class="d-md-none">:</span></b>
                 </div>
                 <div class="col-md-8 col-lg-9">
-                    <b class="d-none d-md-inline">:</b> {{ $item->supplier }}
+                    <b class="d-none d-md-inline">:</b> {{ $item->picker }}
                 </div>
             </div>
             <div class="row mb-2">
@@ -49,27 +49,36 @@
                                     $number = 1;
                                     $itemTotal = 0;
                                 @endphp
-                                @foreach ($item->incomeTransactionItems as $incomeTransactionItem)
+                                @foreach ($item->expenditureTransactionItems as $expenditureTransactionItem)
                                     <tr>
                                         <td class="align-middle">
                                             {{ $number }}
                                         </td>
                                         <td class="align-middle text-left">
-                                            {{ $incomeTransactionItem->item->part_number }}
+                                            {{ $expenditureTransactionItem->item->part_number }}
                                         </td>
                                         <td class="align-middle text-left">
-                                            {{ $incomeTransactionItem->item->description }}
+                                            {{ $expenditureTransactionItem->item->description }}
                                         </td>
                                         <td class="align-middle">
-                                            {{ $incomeTransactionItem->item->unitOfMeasurement->full_name }}
+                                            @if (empty($expenditureTransactionItem->item->unitOfMeasurement))
+                                                {{
+                                                    App\Models\UnitOfMeasurement::find(
+                                                        $expenditureTransactionItem->item->unit_of_measurement_id
+                                                    )
+                                                    ->full_name
+                                                }}
+                                            @else
+                                                {{ $expenditureTransactionItem->item->unitOfMeasurement->full_name }}
+                                            @endif
                                         </td>
                                         <td class="align-middle text-right">
-                                            {{ number_format($incomeTransactionItem->amount, 0, ',', '.') }}
+                                            {{ currency($expenditureTransactionItem->amount) }}
                                         </td>
                                     </tr>
                                     @php
                                         $number++;
-                                        $itemTotal += $incomeTransactionItem->amount;
+                                        $itemTotal += $expenditureTransactionItem->amount;
                                     @endphp
                                 @endforeach
                             </tbody>
@@ -79,7 +88,7 @@
                                         Total Barang
                                     </th>
                                     <th class="text-right">
-                                        {{ number_format($itemTotal, 0, ',', '.') }}
+                                        {{ currency($itemTotal) }}
                                     </th>
                                 </tr>
                             </tfoot>

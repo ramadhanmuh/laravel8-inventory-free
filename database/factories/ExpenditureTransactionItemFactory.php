@@ -34,7 +34,7 @@ class ExpenditureTransactionItemFactory extends Factory
         return [
             'expenditure_transaction_id' => $expenditure_transaction_id,
             'item_id' => $unique_item_id,
-            'amount' => $this->faker->numberBetween(1, 9999999999)
+            'amount' => $this->faker->numberBetween(1, 999)
         ];
     }
 }

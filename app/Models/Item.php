@@ -116,7 +116,7 @@ class Item extends Model
 
         return self::whereHas('incomeTransactionItems', function (Builder $query) use ($expenditure_transaction_items)
         {
-            $query->select(DB::raw('(SUM(income_transaction_items.amount) - IFNUll(SUM(b_amount), 0)) as total'))
+            $query->select(DB::raw('(IFNULL(SUM(income_transaction_items.amount), 0) - IFNUll(SUM(b_amount), 0)) as total'))
                     ->joinSub($expenditure_transaction_items, 'expenditure_transaction_items', function ($join) {
                         $join->on('income_transaction_items.item_id', '=', 'expenditure_transaction_items.item_id');
                     })

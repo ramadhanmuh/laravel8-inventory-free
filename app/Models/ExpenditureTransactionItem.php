@@ -88,6 +88,19 @@ class ExpenditureTransactionItem extends Model
         return $data;
     }
 
+    public static function getByExpenditureTransactionId($expenditure_transaction_id)
+    {
+        return self::where('expenditure_transaction_id', '=', $expenditure_transaction_id)
+                    ->get();
+    }
+
+    public static function getByExpenditureTransactionIdAndItemId($expenditure_transaction_id, $item_id)
+    {
+        return self::where('expenditure_transaction_id', '=', $expenditure_transaction_id)
+                    ->where('item_id', '=', $item_id)
+                    ->first();
+    }
+
     /**
      * Get the expenditure transaction that owns
      * the expenditure transaction item.

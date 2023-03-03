@@ -125,7 +125,7 @@ class ExpenditureTransactionItemController extends Controller
 
             if (count($filtered)) {
                 foreach ($filtered as $key => $value) {
-                    $filtered[$key]['amount'] += intval($request->amount);
+                    $filtered[$key]['amount'] = intval($request->amount);
 
                     $session['expenditureTransactionItems'][] = $filtered[$key];
 
@@ -258,8 +258,6 @@ class ExpenditureTransactionItemController extends Controller
                 unset($session['expenditureTransactionItems'][$key]);
             }
         }
-
-        dd($session);
 
         $request->session()->put('edit-expenditure-transaction-item', $session);
 

@@ -91,7 +91,7 @@ class ExpenditureTransactionController extends Controller
         );
 
         return redirect('expenditure-transactions')
-                ->with('status', 'Berhasil menambah transaksi (masuk).');
+                ->with('status', 'Berhasil menambah transaksi (keluar).');
     }
 
     /**
@@ -103,7 +103,7 @@ class ExpenditureTransactionController extends Controller
     public function show($id)
     {
         $data = [
-            'item' => ExpenditureTransaction::with('expenditureTransactionItems')->findOrFail($id), 
+            'item' => ExpenditureTransaction::with('expenditureTransactionItems.item.unitOfMeasurement')->findOrFail($id), 
             'application' => Application::first()
         ];
 
@@ -170,11 +170,11 @@ class ExpenditureTransactionController extends Controller
     {
         $data = ExpenditureTransaction::findOrFail($id);
 
-        $input['income_transaction'] = $request->validated();
+        $input['expenditure_transaction'] = $request->validated();
 
         $session = $request->session()->get('edit-expenditure-transaction-item');
 
-        ExpenditureTransaction::where('id', $id)->update($input['income_transaction']);
+        ExpenditureTransaction::where('id', $id)->update($input['expenditure_transaction']);
 
         if (!empty($session)) {
             $input['expenditure_transaction_items'] = [];
@@ -186,13 +186,13 @@ class ExpenditureTransactionController extends Controller
                 ]));
             }
 
-            ExpenditureTransactionItem::where('income_transaction_id', $id)->delete();
+            ExpenditureTransactionItem::where('expenditure_transaction_id', $id)->delete();
 
             $data->expenditureTransactionItems()->saveMany($input['expenditure_transaction_items']);
         }
 
         return redirect('expenditure-transactions')
-                ->with('status', 'Berhasil mengubah transaksi (masuk).');
+                ->with('status', 'Berhasil mengubah transaksi (keluar).');
     }
 
     /**
@@ -207,6 +207,6 @@ class ExpenditureTransactionController extends Controller
 
         $data->delete();
 
-        return back()->with('status', 'Berhasil menghapus transaksi (masuk).');
+        return back()->with('status', 'Berhasil menghapus transaksi (keluar).');
     }
 }
