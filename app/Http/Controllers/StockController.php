@@ -44,8 +44,8 @@ class StockController extends Controller
             'category' => strval($request->category),
             'brand' => strval($request->brand),
             'uom' => strval($request->uom),
-            'start_stock' => strval($request->start_stock),
-            'end_stock' => strval($request->end_stock),
+            'start_stock' => $request->start_stock,
+            'end_stock' => $request->end_stock,
         ];
     }
 }

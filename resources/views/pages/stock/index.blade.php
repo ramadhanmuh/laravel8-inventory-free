@@ -145,7 +145,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if ($items->isEmpty())
+                        @if (empty($items))
                             <tr>
                                 <td class="text-center" colspan="8">
                                     Data tidak ditemukan.
@@ -203,7 +203,7 @@
 
                                 <li class="page-item active">
                                     <a
-                                        href="{{ route('stocks.index', ['page' => 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}"
+                                        href="{{ route('stocks.index', ['page' => 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword'], 'start_stock' => $input['start_stock'], 'end_stock' => $input['end_stock']]) }}"
                                         class="page-link">
                                         1
                                     </a>
@@ -213,7 +213,7 @@
                                     @if ($i < 4)
                                         <li class="page-item">
                                             <a class="page-link"
-                                                href="{{ route('stocks.index', ['page' => $i, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                                href="{{ route('stocks.index', ['page' => $i, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword'], 'start_stock' => $input['start_stock'], 'end_stock' => $input['end_stock']]) }}">
                                                 {{ $i }}
                                             </a>
                                         </li>
@@ -222,28 +222,28 @@
 
                                 <li class="page-item">
                                     <a class="page-link"
-                                        href="{{ route('stocks.index', ['page' => $input['page'] + 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('stocks.index', ['page' => $input['page'] + 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword'], 'start_stock' => $input['start_stock'], 'end_stock' => $input['end_stock']]) }}">
                                         >
                                     </a>
                                 </li>
 
                                 <li class="page-item">
                                     <a class="page-link"
-                                        href="{{ route('stocks.index', ['page' => $pageTotal, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('stocks.index', ['page' => $pageTotal, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword'], 'start_stock' => $input['start_stock'], 'end_stock' => $input['end_stock']]) }}">
                                         >>
                                     </a>
                                 </li>
                             @else
                                 <li class="page-item">
                                     <a class="page-link"
-                                        href="{{ route('stocks.index', ['page' => 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('stocks.index', ['page' => 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword'], 'start_stock' => $input['start_stock'], 'end_stock' => $input['end_stock']]) }}">
                                         <<
                                     </a>
                                 </li>
 
                                 <li class="page-item">
                                     <a class="page-link"
-                                        href="{{ route('stocks.index', ['page' => $input['page'] - 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('stocks.index', ['page' => $input['page'] - 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword'], 'start_stock' => $input['start_stock'], 'end_stock' => $input['end_stock']]) }}">
                                         <
                                     </a>
                                 </li>
@@ -257,7 +257,7 @@
                                 @for ($i = $pageStartNumber; $i <= $loopingNumberStop; $i++)
                                     <li class="page-item {{ $input['page'] === $i ? 'active' : '' }}">
                                         <a class="page-link"
-                                            href="{{ route('stocks.index', ['page' => $i, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                            href="{{ route('stocks.index', ['page' => $i, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword'], 'start_stock' => $input['start_stock'], 'end_stock' => $input['end_stock']]) }}">
                                             {{ $i }}
                                         </a>
                                     </li>
@@ -265,14 +265,14 @@
 
                                 <li class="page-item {{ $input['page'] === $pageTotal ? 'disabled' : '' }}">
                                     <a class="page-link"
-                                        href="{{ route('stocks.index', ['page' => $input['page'] + 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('stocks.index', ['page' => $input['page'] + 1, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword'], 'start_stock' => $input['start_stock'], 'end_stock' => $input['end_stock']]) }}">
                                         >
                                     </a>
                                 </li>
 
                                 <li class="page-item {{ $input['page'] === $pageTotal ? 'disabled' : '' }}">
                                     <a class="page-link"
-                                        href="{{ route('stocks.index', ['page' => $pageTotal, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword']]) }}">
+                                        href="{{ route('stocks.index', ['page' => $pageTotal, 'order_by' => $input['order_by'], 'order_direction' => $input['order_direction'], 'keyword' => $input['keyword'], 'start_stock' => $input['start_stock'], 'end_stock' => $input['end_stock']]) }}">
                                         >>
                                     </a>
                                 </li>
