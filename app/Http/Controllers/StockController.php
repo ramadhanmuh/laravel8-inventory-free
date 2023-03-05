@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Application;
 use App\Models\Item;
+use App\Models\Category;
+use App\Models\Brand;
+use App\Models\UnitOfMeasurement;
 
 class StockController extends Controller
 {
@@ -31,6 +34,12 @@ class StockController extends Controller
 
         $data['pageTotal'] = intval(ceil($itemTotal / 10));
 
+        $data['categories'] = Category::get();
+
+        $data['brands'] = Brand::get();
+
+        $data['unit_of_measurements'] = UnitOfMeasurement::get();
+
         return view('pages.stock.index', $data);
     }
 
@@ -41,9 +50,9 @@ class StockController extends Controller
             'order_by'=> strval($request->order_by),
             'order_direction'=> strval($request->order_direction),
             'keyword'=> strval($request->keyword),
-            'category' => strval($request->category),
-            'brand' => strval($request->brand),
-            'uom' => strval($request->uom),
+            'category_id' => strval($request->category_id),
+            'brand_id' => strval($request->brand_id),
+            'uom_id' => strval($request->uom_id),
             'start_stock' => $request->start_stock,
             'end_stock' => $request->end_stock,
         ];

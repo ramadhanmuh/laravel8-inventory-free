@@ -32,58 +32,69 @@ use App\Http\Controllers\StockController;
 Route::middleware(['guest'])->group(function () {
     Route::controller(LoginController::class)->group(function () {
         Route::get('', 'view')->name('login');
-        Route::post('', 'authenticate')->middleware('throttle:5,1');
+        Route::post('', 'authenticate')->middleware('throttle:5,1')
+                                        ->name('authenticate');
     });
 
     Route::prefix('forgot-password')->group(function () {
         Route::controller(ForgotPasswordController::class)->group(function () {
-            Route::get('', 'view');
-            Route::post('', 'sendEmail')->middleware('throttle:5,1');
+            Route::get('', 'view')->name('forgot-password.index');
+            Route::post('', 'sendEmail')->middleware('throttle:5,1')
+                                        ->name('forgot-password.send');
         });
     });
 
     Route::prefix('reset-password')->group(function () {
         Route::controller(ResetPasswordController::class)->group(function () {
-            Route::get('{token}', 'view');
-            Route::post('', 'reset')->middleware('throttle:5,1');
+            Route::get('{token}', 'view')->name('reset-password.index');
+            Route::post('', 'reset')->middleware('throttle:5,1')
+                                    ->name('reset-password.reset');
         });
     });
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::post('logout', [LogoutController::class, 'logout']);
+    Route::middleware(['can:isAdmin'])->group(function () {
+        Route::resource('categories', CategoryController::class)->except([
+            'show'
+        ]);
+    
+        Route::resource('brands', BrandController::class)->except([
+            'show'
+        ]);
+    
+        Route::resource('unit-of-measurements', UnitOfMeasurementController::class)->except([
+            'show'
+        ]);
+    
+        Route::get('items/{id}/image', [ItemController::class, 'openImage']);
+    
+        Route::resource('items', ItemController::class);
+    });
 
-    Route::get('dashboard', [DashboardController::class, 'index']);
+    Route::post('logout', [LogoutController::class, 'logout'])
+            ->name('logout');
 
-    Route::get('profile', [ProfileController::class, 'edit']);
-    Route::put('profile', [ProfileController::class, 'update']);
+    Route::get('dashboard', [DashboardController::class, 'index'])
+            ->name('dashboard');
 
-    Route::get('change-password', [ChangePasswordController::class, 'edit']);
-    Route::put('change-password', [ChangePasswordController::class, 'update']);
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('profile', 'edit')->name('profile.edit');
+        Route::put('profile', 'update')->name('profile.update');
+    });
 
-    Route::resource('categories', CategoryController::class)->except([
-        'show'
-    ]);
-
-    Route::resource('brands', BrandController::class)->except([
-        'show'
-    ]);
-
-    Route::resource('unit-of-measurements', UnitOfMeasurementController::class)->except([
-        'show'
-    ]);
-
-    Route::get('items/{id}/image', [ItemController::class, 'openImage']);
-
-    Route::resource('items', ItemController::class);
+    Route::controller(ChangePasswordController::class)->group(function () {
+        Route::get('change-password', 'edit')->name('change-password.edit');
+        Route::put('change-password', 'update')->name('change-password.update');
+    });
 
     Route::delete('income-transaction-items/{item_id}/create', [
         IncomeTransactionItemController::class, 'deleteCreateSession'
-    ]);
+    ])->name('income-transaction-items.delete-create-session');
 
     Route::delete('income-transaction-items/{income_transaction_id}/{item_id}', [
         IncomeTransactionItemController::class, 'deleteEditSession'
-    ]);
+    ])->name('income-transaction-items.delete-edit-session');
 
     Route::resource('income-transaction-items', IncomeTransactionItemController::class)->except([
         'show', 'index', 'delete'
@@ -93,11 +104,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::delete('expenditure-transaction-items/{item_id}/create', [
         ExpenditureTransactionItemController::class, 'deleteCreateSession'
-    ]);
+    ])->name('expenditure-transaction-items.delete-create-session');
 
     Route::delete('expenditure-transaction-items/{expenditure_transaction_id}/{item_id}', [
         ExpenditureTransactionItemController::class, 'deleteEditSession'
-    ]);
+    ])->name('expenditure-transaction-items.delete-edit-session');
 
     Route::resource('expenditure-transaction-items', ExpenditureTransactionItemController::class)->except([
         'show', 'index', 'delete'

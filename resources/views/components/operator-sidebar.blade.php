@@ -15,29 +15,6 @@
             <span>Dashboard</span></a>
     </li>
 
-    {{-- Nav Item - Master Data Collapse Menu  --}}
-    <li class="nav-item {{ (request()->is('categories') || request()->is('categories/*') || request()->is('brands') || request()->is('brands/*') || request()->is('unit-of-measurements') || request()->is('unit-of-measurements/*')) ? 'active' : '' }}">
-        <a class="nav-link {{ (request()->is('categories') || request()->is('categories/*') || request()->is('brands') || request()->is('brands/*') || request()->is('unit-of-measurements') || request()->is('unit-of-measurements/*')) ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapseTwo"
-            aria-expanded="{{ (request()->is('categories') || request()->is('categories/*') || request()->is('brands') || request()->is('brands/*') || request()->is('unit-of-measurements') || request()->is('unit-of-measurements/*')) ? 'true' : 'false' }}" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-briefcase"></i>
-            <span>Master Data</span>
-        </a>
-        <div id="collapseTwo" class="collapse {{ (request()->is('categories') || request()->is('categories/*') || request()->is('brands') || request()->is('brands/*') || request()->is('unit-of-measurements') || request()->is('unit-of-measurements/*')) ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Master Data:</h6>
-                <a class="collapse-item {{ (request()->is('categories') || request()->is('categories/*')) ? 'active' : '' }}" href="{{ url('categories') }}">Kategori</a>
-                <a class="collapse-item {{ (request()->is('brands') || request()->is('brands/*')) ? 'active' : '' }}" href="{{ url('brands') }}">Merek</a>
-                <a class="collapse-item {{ (request()->is('unit-of-measurements') || request()->is('unit-of-measurements/*')) ? 'active' : '' }}" href="{{ url('unit-of-measurements') }}">Satuan Barang</a>
-            </div>
-        </div>
-    </li>
-
-    <li class="nav-item {{ (request()->is('items') || request()->is('items/*')) ? 'active' : '' }}">
-        <a class="nav-link" href="{{ url('items') }}">
-            <i class="fas fa-fw fa-desktop"></i>
-            <span>Master Data Barang</span></a>
-    </li>
-
     <li class="nav-item">
         <a class="nav-link {{ (request()->is('income-transactions') || request()->is('income-transactions/*') || request()->is('expenditure-transactions') || request()->is('expenditure-transactions/*')) ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapseThree"
             aria-expanded="{{ (request()->is('income-transactions') || request()->is('income-transactions/*') || request()->is('expenditure-transactions') || request()->is('expenditure-transactions/*')) ? 'true' : 'false' }}" aria-controls="collapseThree">

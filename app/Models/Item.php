@@ -207,7 +207,11 @@ class Item extends Model
 
     public static function getWithCategoryBrandUOMStock($input)
     {
-        $query = "
+        $where = 0;
+
+        $values = [];
+        
+        $query = '
             select
                 a.*, b.name as category_name,
                 c.name as brand_name, d.short_name,
@@ -252,52 +256,108 @@ class Item extends Model
                 ) as y
             on
                 a.id = x.item_id
-        ";
+        ';
 
         if (!empty($input['keyword'])) {
-            $query .= "
+            $query .= '
                 where
-                    a.part_number
-                like
-                    '%:keyword%'
-                or
-                    a.description
-                like
-                    '%:keyword%'
-                or
-                    a.price
-                like
-                    '%:keyword%'
-                or
-                    b.name
-                like
-                    '%:keyword%'
-                or
-                    c.name
-                like
-                    '%:keyword%'
-                or
-                    d.short_name
-                like
-                    '%:keyword%'
-            ";
+                    (
+                        a.part_number
+                        like
+                            %:keyword%
+                        or
+                            a.description
+                        like
+                            %:keyword%
+                        or
+                            a.price
+                        like
+                            %:keyword%
+                        or
+                            b.name
+                        like
+                            %:keyword%
+                        or
+                            c.name
+                        like
+                            %:keyword%
+                        or
+                            d.short_name
+                        like
+                            %:keyword%
+                    )
+            ';
+
+            $where = 1;
+
+            $values['keyword'] = $input['keyword'];
         }
 
-        if ($input['start_stock'] !== '') {
-            $query .= "
-                having stock > " . (intval($input['start_stock']) - 1) . "
-            ";
-        }
-
-        if ($input['end_stock'] !== '') {
-            if ($input['start_stock'] !== '') {
-                $query .= "
-                    and stock < " . (intval($input['end_stock']) + 1) . "
-                ";
+        if (!empty($input['category_id'])) {
+            if ($where) {
+                $query .= '
+                    and a.category_id = :category_id
+                ';
             } else {
-                $query .= "
-                    having stock < " . (intval($input['end_stock']) + 1) . "
-                ";
+                $query .= '
+                    where a.category_id = :category_id
+                ';
+
+                $where = 1;
+            }
+
+            $values['category_id'] = $input['category_id'];
+        }
+
+        if (!empty($input['brand_id'])) {
+            if ($where) {
+                $query .= '
+                    and
+                        a.brand_id = :brand_id
+                ';
+            } else {
+                $query .= '
+                    where a.brand_id = :brand_id
+                ';
+
+                $where = 1;
+            }
+
+            $values['brand_id'] = $input['brand_id'];
+        }
+
+        if (!empty($input['uom_id'])) {
+            if ($where) {
+                $query .= '
+                    and
+                        a.unit_of_measurement_id = :uom_id
+                ';
+            } else {
+                $query .= '
+                    where a.unit_of_measurement_id = :uom_id
+                ';
+
+                $where = 1;
+            }
+
+            $values['uom_id'] = $input['uom_id'];
+        }
+
+        if (is_numeric($input['start_stock'])) {
+            $query .= '
+                having stock > ' . (intval($input['start_stock']) - 1) . '
+            ';
+        }
+
+        if (is_numeric($input['end_stock'])) {
+            if (is_numeric($input['start_stock'])) {
+                $query .= '
+                    and stock < ' . (intval($input['end_stock']) + 1) . '
+                ';
+            } else {
+                $query .= '
+                    having stock < ' . (intval($input['end_stock']) + 1) . '
+                ';
             }
         }
 
@@ -312,28 +372,32 @@ class Item extends Model
 
         if (array_key_exists($input['order_by'], $orderColumns)) {
             if ($input['order_direction'] === 'asc' || $input['order_direction'] === 'desc') {
-                $query .= "
+                $query .= '
                     order by
-                        " . $orderColumns[$input['order_by']] . "
-                    " . $input['order_direction'] . "
-                ";
+                        ' . $orderColumns[$input['order_by']] . '
+                    ' . $input['order_direction'] . '
+                ';
             } else {
-                $query .= "order by a.part_number asc";
+                $query .= 'order by a.part_number asc';
             }
         } else {
-            $query .= "order by a.part_number asc";
+            $query .= 'order by a.part_number asc';
         }
 
-        $query .= "
-            limit 10 offset " . $input['offset'] . "
-        ";
+        $query .= '
+            limit 10 offset ' . $input['offset'] . '
+        ';
 
-        return DB::select($query, ['keyword' => $input['keyword']]);
+        return DB::select($query, $values);
     }
 
     public static function countWithCategoryBrandUOMStock($input)
     {
-        $query = "
+        $where = 0;
+
+        $values = [];
+
+        $query = '
             select
                 count(*) as total
             from
@@ -380,58 +444,114 @@ class Item extends Model
                         ) as y
                     on
                         a.id = x.item_id
-        ";
+        ';
 
         if (!empty($input['keyword'])) {
-            $query .= "
+            $query .= '
                 where
-                    a.part_number
-                like
-                    '%:keyword%'
-                or
-                    a.description
-                like
-                    '%:keyword%'
-                or
-                    a.price
-                like
-                    '%:keyword%'
-                or
-                    b.name
-                like
-                    '%:keyword%'
-                or
-                    c.name
-                like
-                    '%:keyword%'
-                or
-                    d.short_name
-                like
-                    '%:keyword%'
-            ";
+                    (
+                        a.part_number
+                        like
+                            %:keyword%
+                        or
+                            a.description
+                        like
+                            %:keyword%
+                        or
+                            a.price
+                        like
+                            %:keyword%
+                        or
+                            b.name
+                        like
+                            %:keyword%
+                        or
+                            c.name
+                        like
+                            %:keyword%
+                        or
+                            d.short_name
+                        like
+                            %:keyword%
+                    )
+            ';
+
+            $where = 1;
+
+            $values['keyword'] = $input['keyword'];
         }
 
-        if ($input['start_stock'] !== '') {
-            $query .= "
-                having stock > " . (intval($input['start_stock']) - 1) . "
-            ";
-        }
-
-        if ($input['end_stock'] !== '') {
-            if ($input['start_stock'] !== '') {
-                $query .= "
-                    and stock < " . (intval($input['end_stock']) + 1) . "
-                ";
+        if (!empty($input['category_id'])) {
+            if ($where) {
+                $query .= '
+                    and a.category_id = :category_id
+                ';
             } else {
-                $query .= "
-                    having stock < " . (intval($input['end_stock']) + 1) . "
-                ";
+                $query .= '
+                    where a.category_id = :category_id
+                ';
+
+                $where = 1;
+            }
+
+            $values['category_id'] = $input['category_id'];
+        }
+
+        if (!empty($input['brand_id'])) {
+            if ($where) {
+                $query .= '
+                    and
+                        a.brand_id = :brand_id
+                ';
+            } else {
+                $query .= '
+                    where a.brand_id = :brand_id
+                ';
+
+                $where = 1;
+            }
+
+            $values['brand_id'] = $input['brand_id'];
+        }
+
+        if (!empty($input['uom_id'])) {
+            if ($where) {
+                $query .= '
+                    and
+                        a.unit_of_measurement_id = :uom_id
+                ';
+            } else {
+                $query .= '
+                    where a.unit_of_measurement_id = :uom_id
+                ';
+
+                $where = 1;
+            }
+
+            $values['uom_id'] = $input['uom_id'];
+        }
+
+        if (is_numeric($input['start_stock'])) {
+            $query .= '
+                having stock > ' . (intval($input['start_stock']) - 1) . '
+            ';
+        }
+
+        if (is_numeric($input['end_stock'])) {
+            if (is_numeric($input['start_stock'])) {
+                $query .= '
+                    and stock < ' . (intval($input['end_stock']) + 1) . '
+                ';
+            } else {
+                $query .= '
+                    having stock < ' . (intval($input['end_stock']) + 1) . '
+                ';
             }
         }
 
-        $query .= ") as a";
+        $query .= ') as x';
 
-        return DB::select($query, ['keyword' => $input['keyword']])[0]->total;
+        return DB::select($query, $values)[0]->total;
     }
 
     /**
