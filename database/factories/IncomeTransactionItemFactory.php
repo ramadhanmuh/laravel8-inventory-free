@@ -25,8 +25,8 @@ class IncomeTransactionItemFactory extends Factory
                     'income_transaction_id', $income_transaction_id
                 )
                 ->where('item_id', $value)
-                ->count();
-            } while ($item);
+                ->first();
+            } while (!empty($item));
         
             return $value;
         };

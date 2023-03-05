@@ -21,12 +21,11 @@ class ExpenditureTransactionItemFactory extends Factory
         $unique_item_id = function() use ($expenditure_transaction_id) {
             do {
                 $value = ExpenditureTransaction::inRandomOrder()->first()->id;
-                $item = ExpenditureTransactionItem::where(
-                    'expenditure_transaction_id', $expenditure_transaction_id
-                )
-                ->where('item_id', $value)
-                ->count();
-            } while ($item);
+            } while (ExpenditureTransactionItem::where(
+                'expenditure_transaction_id', $expenditure_transaction_id
+            )
+            ->where('item_id', $value)
+            ->count());
         
             return $value;
         };
@@ -34,7 +33,7 @@ class ExpenditureTransactionItemFactory extends Factory
         return [
             'expenditure_transaction_id' => $expenditure_transaction_id,
             'item_id' => $unique_item_id,
-            'amount' => $this->faker->numberBetween(1, 999)
+            'amount' => $this->faker->numberBetween(1, 9999999999)
         ];
     }
 }

@@ -30,6 +30,8 @@ class StockController extends Controller
 
         $data['items'] = Item::getWithCategoryBrandUOMStock($data['input']);
 
+        // dd($data['items']);
+
         $itemTotal = Item::countWithCategoryBrandUOMStock($data['input']);
 
         $data['pageTotal'] = intval(ceil($itemTotal / 10));

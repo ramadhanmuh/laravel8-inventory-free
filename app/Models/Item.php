@@ -110,45 +110,88 @@ class Item extends Model
 
     public static function getAvailableItem()
     {
-        $expenditure_transaction_items = DB::table('expenditure_transaction_items')
-                ->select(DB::raw('item_id, SUM(amount) as b_amount'))
-                ->groupBy('item_id');
-
-        return self::whereHas('incomeTransactionItems', function (Builder $query) use ($expenditure_transaction_items)
-        {
-            $query->select(DB::raw('(IFNULL(SUM(income_transaction_items.amount), 0) - IFNUll(SUM(b_amount), 0)) as total'))
-                    ->joinSub($expenditure_transaction_items, 'expenditure_transaction_items', function ($join) {
-                        $join->on('income_transaction_items.item_id', '=', 'expenditure_transaction_items.item_id');
-                    })
-                    ->groupBy('income_transaction_items.item_id')
-                    ->having('total', '>', 0);
-        })
-        ->orderBy('description')
-        ->get();
+        return DB::select(
+            'SELECT
+                a.*,
+                (IFNULL(b_amount, 0) - IFNULL(c_amount, 0)) as total
+            FROM
+                items as a
+            LEFT JOIN
+                (
+                    SELECT
+                        b.item_id,
+                        SUM(b.amount) as b_amount
+                    FROM
+                        income_transaction_items as b
+                    GROUP BY
+                        b.item_id
+                ) as x
+            ON
+                a.id = x.item_id
+            LEFT JOIN
+                (
+                    SELECT
+                        c.item_id,
+                        SUM(c.amount) as c_amount
+                    FROM
+                        expenditure_transaction_items as c
+                    GROUP BY
+                        c.item_id
+                ) as y
+            ON
+                a.id = y.item_id
+            HAVING
+                total > 0
+            ORDER BY
+                a.description ASC'
+        );
     }
 
     public static function getAvailableItemIncludeIds($ids)
     {
-        $expenditure_transaction_items = DB::table('expenditure_transaction_items')
-                ->select(DB::raw('item_id, SUM(amount) as b_amount'))
-                ->groupBy('item_id');
+        $query = 'SELECT a.*, (IFNULL(b_amount, 0) - IFNULL(c_amount, 0)) as total
+            FROM
+                items as a
+            LEFT JOIN
+                (
+                    SELECT
+                        b.item_id,
+                        SUM(b.amount) as b_amount
+                    FROM
+                        income_transaction_items as b
+                    GROUP BY
+                        b.item_id
+                ) as x
+            ON
+                a.id = x.item_id
+            LEFT JOIN
+                (
+                    SELECT
+                        c.item_id,
+                        SUM(c.amount) as c_amount
+                    FROM
+                        expenditure_transaction_items as c
+                    GROUP BY
+                        c.item_id
+                ) as y
+            ON
+                a.id = y.item_id
+        ';
 
-        $query = self::whereHas('incomeTransactionItems', function (Builder $query) use ($expenditure_transaction_items)
-        {
-            $query->select(DB::raw('(SUM(income_transaction_items.amount) - IFNUll(SUM(b_amount), 0)) as total'))
-                    ->joinSub($expenditure_transaction_items, 'expenditure_transaction_items', function ($join) {
-                        $join->on('income_transaction_items.item_id', '=', 'expenditure_transaction_items.item_id');
-                    })
-                    ->groupBy('income_transaction_items.item_id')
-                    ->having('total', '>', 0);
-        });
+        $values = [];
+
+        // $query .= 'HAVING total > 0 OR a.id = "1" ORDER BY a.description ASC';
+        $query .= 'HAVING total > 0';
 
         foreach ($ids as $key => $value) {
-            $query->orWhere('id', '=', $value);
+            array_push($values, $value);
+            
+            $query .= " OR a.id = :$key ";
         }
 
-        return $query->orderBy('description')
-                    ->get();
+        $query .= 'ORDER BY a.description ASC';
+
+        return DB::select($query, $values);
     }
 
     public static function countAvailableItemById($id)

@@ -104,9 +104,11 @@ class IncomeTransactionController extends Controller
     public function show($id)
     {
         $data = [
-            'item' => IncomeTransaction::with('incomeTransactionItems')->findOrFail($id), 
+            'item' => IncomeTransaction::with('incomeTransactionItems.item.unitOfMeasurement')->findOrFail($id), 
             'application' => Application::first()
         ];
+
+        $data['subitems'] = $data['item']->incomeTransactionItems->sortBy('item.description');
 
         return view('pages.income-transaction.detail', $data);
     }

@@ -60,7 +60,11 @@
 
             createFormEvent();
 
-            disablePageLoader()
+            disablePageLoader();
+
+            if (window.innerWidth < 992) {
+                document.getElementById('sidebarToggleTop').click();
+            }
         }
     }, 100);
 </script>

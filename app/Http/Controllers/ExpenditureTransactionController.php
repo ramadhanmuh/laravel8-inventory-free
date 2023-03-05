@@ -103,9 +103,12 @@ class ExpenditureTransactionController extends Controller
     public function show($id)
     {
         $data = [
-            'item' => ExpenditureTransaction::with('expenditureTransactionItems.item.unitOfMeasurement')->findOrFail($id), 
+            'item' => ExpenditureTransaction::with(['expenditureTransactionItems.item.unitOfMeasurement'])
+                                            ->findOrFail($id), 
             'application' => Application::first()
         ];
+
+        $data['subitems'] = $data['item']->expenditureTransactionItems->sortBy('item.description');
 
         return view('pages.expenditure-transaction.detail', $data);
     }

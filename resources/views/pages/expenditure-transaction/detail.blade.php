@@ -49,7 +49,7 @@
                                     $number = 1;
                                     $itemTotal = 0;
                                 @endphp
-                                @foreach ($item->expenditureTransactionItems as $expenditureTransactionItem)
+                                @foreach ($subitems as $expenditureTransactionItem)
                                     <tr>
                                         <td class="align-middle">
                                             {{ $number }}
