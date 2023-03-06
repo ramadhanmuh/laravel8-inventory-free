@@ -23,6 +23,8 @@ class User extends Authenticatable
         'username',
         'role',
         'password',
+        'created_at',
+        'updated_at'
     ];
 
     /**
@@ -50,4 +52,62 @@ class User extends Authenticatable
      * @var string
      */
     protected $dateFormat = 'U';
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    public static function getData($input)
+    {
+        $data = self::select(
+            'id', 'name', 'username', 'email',
+            'role'
+        );
+
+        if (!empty($input['keyword'])) {
+            $data->where(function ($query) use ($input) {
+                $query->where('name', 'LIKE', '%' . $input['keyword'] . '%')
+                        ->orWhere('username', 'LIKE', '%' . $input['keyword'] . '%')
+                        ->orWhere('email', 'LIKE', '%' . $input['keyword'] . '%')
+                        ->orWhere('role', 'LIKE', '%' . $input['keyword'] . '%');
+            });
+        }
+
+        if (!empty($input['role'])) {
+            $data->where('role', '=',$input['role']);
+        }
+
+        $orderColumns = [
+            'name', 'email', 'username', 'role'
+        ];
+
+        if (in_array($input['order_by'], $orderColumns)) {
+            if ($input['order_direction'] === 'asc' || $input['order_direction'] === 'desc') {
+                $data->orderBy($input['order_by'], $input['order_direction']);
+            } else {
+                $data->orderBy($input['order_by']);
+            }
+        } else {
+            $data->orderBy('name', 'asc');
+        }
+
+        return $data->offset($input['offset'])
+                        ->limit(10)
+                        ->get();
+    }
+
+    public static function countData($input)
+    {
+        $data = self::select('id');
+
+        if (!empty($input['keyword'])) {
+            $data->where('name', 'like', "%" . $input['keyword'] . "%")
+                    ->orWhere('id', 'like', "%" . $input['keyword'] . "%");
+        }
+
+        return $data->count();
+    }
 }

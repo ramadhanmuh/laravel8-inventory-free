@@ -17,6 +17,7 @@ use App\Http\Controllers\IncomeTransactionItemController;
 use App\Http\Controllers\ExpenditureTransactionController;
 use App\Http\Controllers\ExpenditureTransactionItemController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +71,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('items/{id}/image', [ItemController::class, 'openImage']);
     
         Route::resource('items', ItemController::class);
+
+        Route::resource('users', UserController::class);
     });
 
     Route::post('logout', [LogoutController::class, 'logout'])

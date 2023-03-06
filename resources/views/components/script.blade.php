@@ -42,8 +42,13 @@
 
         for (var index = 0; index < unixColumns.length; index++) {
             var unixColumn = unixColumns[index],
-                unix = parseInt(unixColumn.textContent),
-                date = new Date(unix * 1000),
+                unix = parseInt(unixColumn.textContent);
+
+            if (isNaN(unix)) {
+                continue;
+            }
+
+            var date = new Date(unix * 1000),
                 local = date.toLocaleDateString('id-ID', {
                     hour: '2-digit', minute: '2-digit'
                 });
