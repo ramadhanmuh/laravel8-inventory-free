@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Application;
 use App\Models\User;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 
@@ -70,9 +70,9 @@ class UserController extends Controller
     {
         $input = $request->validated();
 
-        $input['created_at'] = time();
+        $input['password'] = Hash::make($input['password']);
 
-        // $input['updated_at'] = null;
+        $input['created_at'] = time();
 
         User::create($input);
 
@@ -123,6 +123,12 @@ class UserController extends Controller
         $data = User::findOrFail($id);
 
         $input = $request->validated();
+
+        $input['updated_at'] = time();
+
+        if (!empty($request->password)) {
+            $input['password'] = Hash::make($request->password);
+        }
 
         User::where('id', $id)->update($input);
 
