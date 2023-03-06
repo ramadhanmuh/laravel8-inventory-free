@@ -58,6 +58,8 @@ class ItemController extends Controller
      */
     public function create()
     {
+        $this->authorize('isAdmin');
+
         $data = [
             'application' => Application::first(),
             'unit_of_measurements' => UnitOfMeasurement::get(),
@@ -76,6 +78,8 @@ class ItemController extends Controller
      */
     public function store(StoreItemRequest $request)
     {
+        $this->authorize('isAdmin');
+
         $input = $request->validated();
 
         if ($request->hasFile('image')) {
@@ -119,6 +123,8 @@ class ItemController extends Controller
      */
     public function edit($id)
     {
+        $this->authorize('isAdmin');
+
         $data = [
             'item' => Item::findOrFail($id), 
             'application' => Application::first(),
@@ -139,6 +145,8 @@ class ItemController extends Controller
      */
     public function update(UpdateItemRequest $request, $id)
     {
+        $this->authorize('isAdmin');
+
         $data = Item::findOrFail($id);
 
         $input = $request->validated();
@@ -174,6 +182,8 @@ class ItemController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('isAdmin');
+        
         $data = Item::findOrFail($id);
 
         $file = $data->image;

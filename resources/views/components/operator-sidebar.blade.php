@@ -15,6 +15,12 @@
             <span>Dashboard</span></a>
     </li>
 
+    <li class="nav-item {{ request()->is('items') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ url('items') }}">
+            <i class="fas fa-fw fa-desktop"></i>
+            <span>Master Data Barang</span></a>
+    </li>
+
     <li class="nav-item">
         <a class="nav-link {{ (request()->is('income-transactions') || request()->is('income-transactions/*') || request()->is('expenditure-transactions') || request()->is('expenditure-transactions/*')) ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapseThree"
             aria-expanded="{{ (request()->is('income-transactions') || request()->is('income-transactions/*') || request()->is('expenditure-transactions') || request()->is('expenditure-transactions/*')) ? 'true' : 'false' }}" aria-controls="collapseThree">

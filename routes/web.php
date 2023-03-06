@@ -18,6 +18,7 @@ use App\Http\Controllers\ExpenditureTransactionController;
 use App\Http\Controllers\ExpenditureTransactionItemController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ApplicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,10 +70,13 @@ Route::middleware(['auth'])->group(function () {
         ]);
     
         Route::get('items/{id}/image', [ItemController::class, 'openImage']);
-    
-        Route::resource('items', ItemController::class);
 
         Route::resource('users', UserController::class);
+
+        Route::controller(ApplicationController::class)->group(function () {
+            Route::get('application', 'edit')->name('application.edit');
+            Route::put('application', 'update')->name('application.update');
+        });
     });
 
     Route::post('logout', [LogoutController::class, 'logout'])
@@ -91,6 +95,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('change-password', 'update')->name('change-password.update');
     });
 
+    Route::resource('items', ItemController::class);
+    
     Route::delete('income-transaction-items/{item_id}/create', [
         IncomeTransactionItemController::class, 'deleteCreateSession'
     ])->name('income-transaction-items.delete-create-session');

@@ -1,10 +1,10 @@
 @extends('layouts.dashboard')
 
-@section('title', "$application->name - Ubah Profil")
+@section('title', "$application->name - Ubah Pengaturan Aplikasi")
 
-@section('description', 'Halaman formulir untuk mengubah profil pengguna.')
+@section('description', 'Halaman formulir untuk mengubah pengaturan aplikasi.')
 
-@section('route_name', 'Ubah Profil')
+@section('route_name', 'Ubah Pengaturan Aplikasi')
 
 @section('content')
 @if ($errors->any())
@@ -18,7 +18,7 @@
 @endif
 @if (session('status'))
     <div class="alert alert-success alert-dismissible fade show">
-        Berhasil mengubah profil.
+        {{ session('status') }}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -29,7 +29,7 @@
         Isi formulir
     </div>
     <div class="card-body">
-        <form action="{{ url('profile') }}" method="POST">
+        <form action="{{ url('application') }}" method="POST">
             @method('PUT')
             @csrf
             <div class="row">
@@ -41,37 +41,17 @@
                         class="form-control"
                         name="name"
                         id="name"
-                        value="{{ empty(old('name')) ? auth()->user()->name : old('name') }}">
+                        value="{{ empty(old('name')) ? $application->name : old('name') }}">
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="username">
-                        Username
+                    <label for="copyright">
+                        Copyright
                     </label>
                     <input type="text"
                         class="form-control"
-                        name="username"
-                        id="username"
-                        value="{{ empty(old('username')) ? auth()->user()->username : old('username') }}">
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="email">
-                        Email
-                    </label>
-                    <input type="email"
-                        class="form-control"
-                        name="email"
-                        id="email"
-                        value="{{ empty(old('email')) ? auth()->user()->email : old('email') }}">
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="password">
-                        Kata Sandi Saat Ini
-                    </label>
-                    <input type="password"
-                        class="form-control"
-                        name="password"
-                        id="password"
-                        placeholder="Isi kata sandi...">
+                        name="copyright"
+                        id="copyright"
+                        value="{{ empty(old('copyright')) ? $application->copyright : old('copyright') }}">
                 </div>
                 <div class="col-12">
                     <button type="submit" class="btn btn-block btn-primary">

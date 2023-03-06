@@ -77,7 +77,7 @@ class Item extends Model
                 $data->orderBy($order[$input['order_by']], $input['order_direction']);
             }
         } else {
-            $data->orderBy('a.description', 'asc');
+            $data->orderBy('a.part_number', 'asc');
         }
 
         return $data->offset($input['offset'])

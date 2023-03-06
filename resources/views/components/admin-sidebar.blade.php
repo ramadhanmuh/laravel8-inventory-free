@@ -69,8 +69,8 @@
             <span>Pengguna</span></a>
     </li>
 
-    <li class="nav-item {{ (request()->is('settings') || request()->is('settings/*')) ? 'active' : '' }}">
-        <a class="nav-link" href="{{ url('settings') }}">
+    <li class="nav-item {{ (request()->is('setting') || request()->is('setting/*')) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ url('application') }}">
             <i class="fas fa-fw fa-cog"></i>
             <span>Pengaturan Aplikasi</span></a>
     </li>

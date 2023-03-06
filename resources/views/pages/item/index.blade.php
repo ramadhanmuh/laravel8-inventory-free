@@ -24,14 +24,16 @@
             </button>
         </div>
     @endif
-    <div class="row justify-content-end">
-        <div class="col-auto">
-            <a href="{{ route('items.create') }}" class="btn btn-sm btn-primary mb-3">
-                <i class="fas fa-plus mr-1"></i>
-                Tambah
-            </a>
+    @can('isAdmin')
+        <div class="row justify-content-end">
+            <div class="col-auto">
+                <a href="{{ route('items.create') }}" class="btn btn-sm btn-primary mb-3">
+                    <i class="fas fa-plus mr-1"></i>
+                    Tambah
+                </a>
+            </div>
         </div>
-    </div>
+    @endcan
     <div class="card">
         <div class="card-header bg-white">
             <div class="row justify-content-center justify-content-lg-between align-items-center">
@@ -42,14 +44,6 @@
                         </div>
                         <div class="col p-md-0">
                             <select class="form-control form-control-sm" onchange="window.location.replace(this.value)">
-                                <option value="{{ route('items.index', ['order_by' => 'description', 'order_direction' => 'asc']) }}"
-                                    {{ $input['order_by'] === 'description' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
-                                    Deskripsi (Menaik)
-                                </option>
-                                <option value="{{ route('items.index', ['order_by' => 'description', 'order_direction' => 'desc']) }}"
-                                    {{ $input['order_by'] === 'description' && $input['order_direction'] === 'desc' ? 'selected' : '' }}>
-                                    Deskripsi (Menurun)
-                                </option>
                                 <option value="{{ route('items.index', ['order_by' => 'part_number', 'order_direction' => 'asc']) }}"
                                     {{ $input['order_by'] === 'part_number' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
                                     Nomor Unik (Menaik)
@@ -57,6 +51,14 @@
                                 <option value="{{ route('items.index', ['order_by' => 'part_number', 'order_direction' => 'desc']) }}"
                                     {{ $input['order_by'] === 'part_number' && $input['order_direction'] === 'desc' ? 'selected' : '' }}>
                                     Nomor Unik (Menurun)
+                                </option>
+                                <option value="{{ route('items.index', ['order_by' => 'description', 'order_direction' => 'asc']) }}"
+                                    {{ $input['order_by'] === 'description' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
+                                    Deskripsi (Menaik)
+                                </option>
+                                <option value="{{ route('items.index', ['order_by' => 'description', 'order_direction' => 'desc']) }}"
+                                    {{ $input['order_by'] === 'description' && $input['order_direction'] === 'desc' ? 'selected' : '' }}>
+                                    Deskripsi (Menurun)
                                 </option>
                                 <option value="{{ route('items.index', ['order_by' => 'category', 'order_direction' => 'asc']) }}"
                                     {{ $input['order_by'] === 'category' && $input['order_direction'] === 'asc' ? 'selected' : '' }}>
@@ -118,7 +120,9 @@
                             <th class="align-middle">Kategori</th>
                             <th class="align-middle">Merek</th>
                             <th class="align-middle">Satuan Barang</th>
-                            <th></th>
+                            @can('isAdmin')
+                                <th></th>
+                            @endcan
                         </tr>
                     </thead>
                     <tbody>
@@ -135,7 +139,13 @@
                                         {{ $number }}
                                     </td>
                                     <td class="align-middle">
-                                        {{ $item->part_number }}
+                                        @can('isAdmin')
+                                            {{ $item->part_number }}
+                                        @elsecan('isOperator')
+                                            <a href="{{ route('items.show', $item->id) }}">
+                                                {{ $item->part_number }}
+                                            </a>
+                                        @endcan
                                     </td>
                                     <td class="align-middle">
                                         {{ $item->description }}
@@ -149,28 +159,30 @@
                                     <td class="align-middle">
                                         {{ $item->uom }}
                                     </td>
-                                    <td class="text-center align-middle">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                                              Aksi
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <a href="{{ route('items.show', $item->id) }}" class="dropdown-item">
-                                                    Detail
-                                                </a>
-                                                <a href="{{ route('items.edit', $item->id) }}" class="dropdown-item">
-                                                    Ubah
-                                                </a>
-                                                <form action="{{ route('items.destroy', $item->id) }}" method="post" class="dropdown-item">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="dropdown-item text-left p-0" onclick="return confirm('Data lain yang menggunakan barang ini akan ikut terhapus. Lanjutkan ?')">
-                                                        Hapus
-                                                    </button>
-                                                </form>
+                                    @can('isAdmin')
+                                        <td class="text-center align-middle">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                                                Aksi
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a href="{{ route('items.show', $item->id) }}" class="dropdown-item">
+                                                        Detail
+                                                    </a>
+                                                    <a href="{{ route('items.edit', $item->id) }}" class="dropdown-item">
+                                                        Ubah
+                                                    </a>
+                                                    <form action="{{ route('items.destroy', $item->id) }}" method="post" class="dropdown-item">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="dropdown-item text-left p-0" onclick="return confirm('Data lain yang menggunakan barang ini akan ikut terhapus. Lanjutkan ?')">
+                                                            Hapus
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
+                                        </td>
+                                    @endcan
                                 </tr>
                                 @php
                                     $number++

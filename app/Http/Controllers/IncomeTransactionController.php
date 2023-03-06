@@ -20,6 +20,10 @@ class IncomeTransactionController extends Controller
      */
     public function index(Request $request)
     {
+        return Item::whereRelation(
+            'incomeTransactionItems', 'income_transaction_id', '!=', 2
+        )->get();
+
         $data['application'] = Application::first();
 
         $data['input'] = $this->getInputParameter($request);
