@@ -4,9 +4,7 @@ namespace Database\Factories;
  
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\IncomeTransaction;
-use App\Models\IncomeTransactionItem;
 use App\Models\Item;
-use Illuminate\Database\Eloquent\Builder;
  
 class IncomeTransactionItemFactory extends Factory
 {
@@ -17,10 +15,10 @@ class IncomeTransactionItemFactory extends Factory
      */
     public function definition()
     {
-        // return [
-        //     'income_transaction_id' => $income_transaction_id,
-        //     'item_id' => $unique_item_id,
-        //     'amount' => $this->faker->numberBetween(1, 9999999999)
-        // ];
+        return [
+            'income_transaction_id' => IncomeTransaction::inRandomOrder()->first()->id,
+            'item_id' => Item::inRandomOrder()->first()->id,
+            'amount' => $this->faker->numberBetween(1, 9999999999)
+        ];
     }
 }

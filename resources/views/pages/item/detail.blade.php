@@ -53,7 +53,7 @@
                 </div>
                 <div class="col-md-8 col-lg-9">
                     <b class="d-none d-md-inline">:</b>
-                    {{ number_format($item->price, 0, ',', '.') }}
+                    {{ currency($item->price) }}
                 </div>
             </div>
             <div class="row">

@@ -64,7 +64,7 @@
                                             {{ $incomeTransactionItem->item->unitOfMeasurement->full_name }}
                                         </td>
                                         <td class="align-middle text-right">
-                                            {{ number_format($incomeTransactionItem->amount, 0, ',', '.') }}
+                                            {{ currency($incomeTransactionItem->amount) }}
                                         </td>
                                     </tr>
                                     @php
@@ -79,7 +79,7 @@
                                         Total Barang
                                     </th>
                                     <th class="text-right">
-                                        {{ number_format($itemTotal, 0, ',', '.') }}
+                                        {{ currency($itemTotal) }}
                                     </th>
                                 </tr>
                             </tfoot>
