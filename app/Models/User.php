@@ -65,7 +65,8 @@ class User extends Authenticatable
         $data = self::select(
             'id', 'name', 'username', 'email',
             'role'
-        );
+        )
+        ->where('id', '!=', auth()->user()->id);
 
         if (!empty($input['keyword'])) {
             $data->where(function ($query) use ($input) {
@@ -77,7 +78,7 @@ class User extends Authenticatable
         }
 
         if (!empty($input['role'])) {
-            $data->where('role', '=',$input['role']);
+            $data->where('role', '=', $input['role']);
         }
 
         $orderColumns = [
@@ -101,11 +102,20 @@ class User extends Authenticatable
 
     public static function countData($input)
     {
-        $data = self::select('id');
+        $data = self::select('id')
+                    ->where('id', '!=', auth()->user()->id);
 
         if (!empty($input['keyword'])) {
-            $data->where('name', 'like', "%" . $input['keyword'] . "%")
-                    ->orWhere('id', 'like', "%" . $input['keyword'] . "%");
+            $data->where(function ($query) use ($input) {
+                $query->where('name', 'LIKE', '%' . $input['keyword'] . '%')
+                        ->orWhere('username', 'LIKE', '%' . $input['keyword'] . '%')
+                        ->orWhere('email', 'LIKE', '%' . $input['keyword'] . '%')
+                        ->orWhere('role', 'LIKE', '%' . $input['keyword'] . '%');
+            });
+        }
+
+        if (!empty($input['role'])) {
+            $data->where('role', '=', $input['role']);
         }
 
         return $data->count();

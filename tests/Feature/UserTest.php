@@ -190,10 +190,22 @@ class UserTest extends TestCase
         $user = User::where('role', '=', 'Admin')->first();
 
         $response = $this->actingAs($user)
-                            ->get('users/30');
+                            ->get('users/12');
 
         $response->assertStatus(200);
 
         $response->assertSee('Detail Pengguna');
+    }
+
+    public function test_delete()
+    {
+        $user = User::where('role', '=', 'Admin')->first();
+
+        $response = $this->actingAs($user)
+                            ->delete('users/30');
+
+        $response->assertStatus(302);
+
+        $response->assertSessionHas('status', 'Berhasil menghapus pengguna.');
     }
 }
