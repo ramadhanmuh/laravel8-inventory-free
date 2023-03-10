@@ -20,7 +20,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <input type="hidden" name="keyword" value="{{ $input['keyword'] }}">
-                        <label for="order_by">Kolom Sortir</label>
+                        <label for="order_by">Kolom Urut</label>
                         <select class="form-control form-control-sm" id="order_by" name="order_by">
                             <option value="part_number"
                                 {{ $input['order_by'] === 'part_number' ? 'selected' : '' }}>
@@ -49,7 +49,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="order_direction">Arah Sortir</label>
+                        <label for="order_direction">Arah Urut</label>
                         <select name="order_direction" id="order_direction" class="form-control form-control-sm">
                             <option value="asc"
                                 {{ $input['order_direction'] === 'asc' ? 'selected' : '' }}>

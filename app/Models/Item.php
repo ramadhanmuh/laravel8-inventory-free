@@ -388,20 +388,24 @@ class Item extends Model
 
         if (is_numeric($input['start_stock'])) {
             $query .= '
-                having stock > ' . (intval($input['start_stock']) - 1) . '
+                having stock > :start_stock
             ';
+
+            $values['start_stock'] = intval($input['start_stock']) - 1;
         }
 
         if (is_numeric($input['end_stock'])) {
             if (is_numeric($input['start_stock'])) {
                 $query .= '
-                    and stock < ' . (intval($input['end_stock']) + 1) . '
+                    and stock < :end_stock
                 ';
             } else {
                 $query .= '
-                    having stock < ' . (intval($input['end_stock']) + 1) . '
+                    having stock < :end_stock
                 ';
             }
+
+            $values['end_stock'] = intval($input['end_stock']) + 1;
         }
 
         $orderColumns = [
@@ -576,20 +580,24 @@ class Item extends Model
 
         if (is_numeric($input['start_stock'])) {
             $query .= '
-                having stock > ' . (intval($input['start_stock']) - 1) . '
+                having stock > :start_stock
             ';
+
+            $values['start_stock'] = intval($input['start_stock']) - 1;
         }
 
         if (is_numeric($input['end_stock'])) {
             if (is_numeric($input['start_stock'])) {
                 $query .= '
-                    and stock < ' . (intval($input['end_stock']) + 1) . '
+                    and stock < :end_stock
                 ';
             } else {
                 $query .= '
-                    having stock < ' . (intval($input['end_stock']) + 1) . '
+                    having stock < :end_stock
                 ';
             }
+
+            $values['end_stock'] = intval($input['end_stock']) + 1;
         }
 
         $query .= ') as x';

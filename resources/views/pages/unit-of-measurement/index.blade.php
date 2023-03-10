@@ -38,7 +38,7 @@
                 <div class="col-md-7 col-lg-4 mb-2 mb-md-0">
                     <div class="row align-items-center justify-content-center">
                         <div class="col-md-auto">
-                            <label for="sort" class="m-0 font-weight-bold">Sortir</label>
+                            <label for="sort" class="m-0 font-weight-bold">Urutan</label>
                         </div>
                         <div class="col p-md-0">
                             <select class="form-control form-control-sm" onchange="window.location.replace(this.value)">

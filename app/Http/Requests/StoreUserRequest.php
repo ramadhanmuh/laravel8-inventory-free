@@ -24,15 +24,15 @@ class StoreUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:191'],
             'username' => [
-                'required', 'string', 'alpha_dash', 'max:255',
+                'required', 'string', 'alpha_dash', 'max:191',
                 'unique:users'
             ],
             'email' => [
                 'required', 'email', 'max:255', 'unique:users'
             ],
-            'password' => ['required', 'string', 'max:255'],
+            'password' => ['required', 'string', 'max:191'],
             'role' => ['required', 'string', 'in:Admin,Operator']
         ];
     }

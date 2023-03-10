@@ -41,10 +41,10 @@ class UserController extends Controller
     {
         return [
             'page'=> intval($request->page),
-            'order_by'=> strval($request->order_by),
-            'order_direction'=> strval($request->order_direction),
-            'keyword'=> strval($request->keyword),
-            'role'=> strval($request->role),
+            'order_by'=> $request->order_by,
+            'order_direction'=> $request->order_direction,
+            'keyword'=> $request->keyword,
+            'role'=> $request->role,
         ];
     }
 

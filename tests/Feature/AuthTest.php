@@ -25,7 +25,7 @@ class AuthTest extends TestCase
 
         $response->assertStatus(302);
 
-        $response->assertRedirectContains('dashboard');
+        $response->assertRedirect('dashboard');
     }
 
     public function test_login_validation_failure()
