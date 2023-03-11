@@ -22,21 +22,24 @@ class CreateItemsTable extends Migration
                     ->references('id')
                     ->on('categories')
                     ->constrained()
-                    ->onUpdate('cascade');
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
 
             $table->uuid('brand_id');
             $table->foreign('brand_id')
                     ->references('id')
                     ->on('brands')
                     ->constrained()
-                    ->onUpdate('cascade');
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
 
             $table->uuid('unit_of_measurement_id');
             $table->foreign('unit_of_measurement_id')
                     ->references('id')
                     ->on('unit_of_measurements')
                     ->constrained()
-                    ->onUpdate('cascade');
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
 
             $table->decimal('price', 10, 2);
 

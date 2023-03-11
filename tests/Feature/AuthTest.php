@@ -28,6 +28,23 @@ class AuthTest extends TestCase
         $response->assertRedirect('dashboard');
     }
 
+    public function test_login_with_remember_me_success()
+    {
+        $response = $this->post('', [
+            'username' => 'admin',
+            'password' => 'admin',
+            'remember_me' => '1'
+        ]);
+
+        $response->assertStatus(302);
+
+        $response->assertRedirect('dashboard');
+
+        $response->assertCookieNotExpired(
+            'remember_web_59ba36addc2b2f9401580f014c7f58ea4e30989d'
+        );
+    }
+
     public function test_login_validation_failure()
     {
         $response = $this->post('', [
