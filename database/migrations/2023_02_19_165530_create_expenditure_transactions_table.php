@@ -17,7 +17,7 @@ class CreateExpenditureTransactionsTable extends Migration
             $table->id();
             $table->string('picker');
             $table->string('reference_number')->unique();
-            $table->text('remarks');
+            $table->text('remarks')->nullable();
             $table->bigInteger('created_at');
         });
     }

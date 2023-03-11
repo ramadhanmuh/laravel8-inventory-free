@@ -61,7 +61,7 @@ class StoreExpenditureTransactionRequest extends FormRequest
                 'required', 'string', 'max:191',
                 'unique:expenditure_transactions'
             ],
-            'remarks' => ['required', 'string', 'max:60000'],
+            'remarks' => ['nullable', 'string', 'max:60000'],
             'created_at' => [
                 'required', 'numeric',
                 'max:99999999999999999999'

@@ -114,7 +114,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="price">Harga</label>
-                            <input type="number" max="9999999999" class="form-control" id="price" name="price" value="{{ empty(old('price')) ? $item->price : old('price') }}">
+                            <input type="number" max="9999999999" class="form-control" id="price" name="price" value="{{ empty(old('price')) ? intval($item->price) : old('price') }}">
                         </div>
                     </div>
                     <div class="col-md-6">

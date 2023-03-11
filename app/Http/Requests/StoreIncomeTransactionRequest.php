@@ -61,12 +61,10 @@ class StoreIncomeTransactionRequest extends FormRequest
                 'required', 'string', 'max:191',
                 'unique:income_transactions'
             ],
-            'remarks' => ['required', 'string', 'max:60000'],
+            'remarks' => ['nullable', 'string', 'max:60000'],
             'created_at' => [
                 'required', 'numeric',
                 'max:99999999999999999999'
-            ],
-            'income_transaction_items' => [
             ],
         ];
     }
