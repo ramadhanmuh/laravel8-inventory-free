@@ -39,6 +39,7 @@ class UpdateExpenditureTransactionRequest extends FormRequest
 
                     if (is_array($session['expenditureTransactionItems']) && count($session['expenditureTransactionItems']) < 1) {
                         $fail('Barang wajib dipilih.');
+                        return;
                     }
 
                     if (!empty($session)) {

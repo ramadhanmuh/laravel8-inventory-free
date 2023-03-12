@@ -39,6 +39,7 @@ class UpdateIncomeTransactionRequest extends FormRequest
 
                     if (is_array($session['incomeTransactionItems']) && count($session['incomeTransactionItems']) < 1) {
                         $fail('Barang wajib dipilih.');
+                        return;
                     }
 
                     if (!empty($session)) {

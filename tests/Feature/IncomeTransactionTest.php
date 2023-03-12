@@ -99,9 +99,17 @@ class IncomeTransactionTest extends TestCase
 
         for ($i=0; $i < 5; $i++) {
             $item = Item::inRandomOrder()->first();
-            
-            while (!empty(Item::find($item->id))) {
-                $item = Item::inRandomOrder()->first();
+
+            if (!empty($session)) {
+                foreach ($session as $key => $value) {
+                    if ($value['item_id'] == $item->id) {
+                        $item = Item::inRandomOrder()->first();
+
+                        while ($item->id == $value['item_id']) {
+                            $item = Item::inRandomOrder()->first();
+                        }
+                    }
+                }
             }
 
             array_push($session, [
@@ -112,7 +120,7 @@ class IncomeTransactionTest extends TestCase
 
         $response = $this->actingAs($user)
                             ->withSession([
-                                'create-income-transaction-item' => $session
+                                'create-income-transaction-item' => $session,
                             ])
                             ->post($url, $input);
 
@@ -150,16 +158,27 @@ class IncomeTransactionTest extends TestCase
             'remarks' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, minus.'
         ];
 
-        $session = [];
+        $session = [
+            'id' => $data->id,
+            'incomeTransactionItems' => []
+        ];
 
         for ($i=0; $i < 5; $i++) {
             $item = Item::inRandomOrder()->first();
             
-            while (!empty(Item::find($item->id))) {
-                $item = Item::inRandomOrder()->first();
+            if (!empty($session['incomeTransactionItems'])) {
+                foreach ($session['incomeTransactionItems'] as $key => $value) {
+                    if ($value['item_id'] == $item->id) {
+                        $item = Item::inRandomOrder()->first();
+
+                        while ($item->id == $value['item_id']) {
+                            $item = Item::inRandomOrder()->first();
+                        }
+                    }
+                }
             }
 
-            array_push($session, [
+            array_push($session['incomeTransactionItems'], [
                 'item_id' => $item->id,
                 'amount' => rand(1, 50)
             ]);

@@ -32,6 +32,7 @@ class StoreExpenditureTransactionRequest extends FormRequest
 
                     if (empty($session)) {
                         $fail('Barang perlu dipilih terlebih dahulu.');
+                        return;
                     }
 
                     $itemNotFound = 0;
