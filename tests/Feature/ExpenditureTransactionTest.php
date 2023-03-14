@@ -6,18 +6,18 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
-use App\Models\IncomeTransaction;
+use App\Models\ExpenditureTransaction;
 use App\Models\Item;
 use Illuminate\Support\Str;
 
-class IncomeTransactionTest extends TestCase
+class ExpenditureTransactionTest extends TestCase
 {
     public function test_index()
     {
         $user = User::inRandomOrder()->first();
 
         $response = $this->actingAs($user)
-                        ->get('income-transactions');
+                        ->get('expenditure-transactions');
 
         $response->assertStatus(200);
     }
@@ -26,7 +26,7 @@ class IncomeTransactionTest extends TestCase
     {
         $user = User::inRandomOrder()->first();
 
-        $url = 'income-transactions?';
+        $url = 'expenditure-transactions?';
 
         $url .= 'order_by=created_at&order_direction=desc';
 
@@ -40,7 +40,7 @@ class IncomeTransactionTest extends TestCase
     {
         $user = User::inRandomOrder()->first();
 
-        $url = 'income-transactions?';
+        $url = 'expenditure-transactions?';
 
         $url .= 'order_by=created_at&order_direction=desc';
 
@@ -56,7 +56,7 @@ class IncomeTransactionTest extends TestCase
     {
         $user = User::inRandomOrder()->first();
 
-        $url = 'income-transactions?';
+        $url = 'expenditure-transactions?';
 
         $url .= 'order_by=created_at&order_direction=desc';
 
@@ -74,7 +74,7 @@ class IncomeTransactionTest extends TestCase
     {
         $user = User::inRandomOrder()->first();
 
-        $url = 'income-transactions/create';
+        $url = 'expenditure-transactions/create';
 
         $response = $this->actingAs($user)
                         ->get($url);
@@ -86,27 +86,40 @@ class IncomeTransactionTest extends TestCase
     {
         $user = User::inRandomOrder()->first();
 
-        $url = 'income-transactions';
+        $url = 'expenditure-transactions';
 
         $input = [
             'created_at' => strval(rand(100000, 1000000)),
             'reference_number' => strval(rand(10000, 1000000)),
-            'supplier' => Str::random(10),
+            'picker' => Str::random(10),
             'remarks' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, minus.'
         ];
 
         $session = [];
 
+        $stock = [];
+
         for ($i=0; $i < 5; $i++) {
             $item = Item::inRandomOrder()->first();
 
+            $itemStock = Item::getStockById($item->id);
+
+            while ($itemStock->total < 50) {
+                $item = Item::inRandomOrder()->first();
+                $itemStock = Item::getStockById($item->id);
+            }
+
             if (!empty($session)) {
                 foreach ($session as $key => $value) {
-                    if ($value['item_id'] == $item->id) {
-                        $item = Item::inRandomOrder()->first();
+                    $sameItem = $item->id == $value['item_id'];
 
-                        while ($item->id == $value['item_id']) {
+                    while ($sameItem) {
+                        $item = Item::inRandomOrder()->first();
+                        $itemStock = Item::getStockById($item->id);
+
+                        while ($itemStock->total < 50) {
                             $item = Item::inRandomOrder()->first();
+                            $itemStock = Item::getStockById($item->id);
                         }
                     }
                 }
@@ -116,18 +129,22 @@ class IncomeTransactionTest extends TestCase
                 'item_id' => $item->id,
                 'amount' => rand(1, 50)
             ]);
+
+            array_push($stock, $itemStock->total);
         }
 
         $response = $this->actingAs($user)
                             ->withSession([
-                                'create-income-transaction-item' => $session,
+                                'create-expenditure-transaction-item' => $session,
                             ])
                             ->post($url, $input);
 
-        $response->assertRedirect('income-transactions')
+        $response->assertSessionHasNoErrors();
+
+        $response->assertRedirect('expenditure-transactions')
                     ->assertSessionHas(
                         'status',
-                        'Berhasil menambah transaksi (masuk).'
+                        'Berhasil menambah transaksi (keluar).'
                     );
     }
 
@@ -135,9 +152,9 @@ class IncomeTransactionTest extends TestCase
     {
         $user = User::inRandomOrder()->first();
 
-        $data = IncomeTransaction::inRandomOrder()->first();
+        $data = ExpenditureTransaction::inRandomOrder()->first();
 
-        $url = "income-transactions/$data->id/edit";
+        $url = "expenditure-transactions/$data->id/edit";
 
         $response = $this->actingAs($user)
                         ->get($url);
@@ -149,53 +166,73 @@ class IncomeTransactionTest extends TestCase
     {
         $user = User::inRandomOrder()->first();
 
-        $data = IncomeTransaction::inRandomOrder()->first();
+        $data = ExpenditureTransaction::inRandomOrder()->first();
 
         $input = [
             'created_at' => strval(rand(100000, 1000000)),
             'reference_number' => strval(rand(10000, 1000000)),
-            'supplier' => Str::random(10),
+            'picker' => Str::random(10),
             'remarks' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, minus.'
         ];
 
         $session = [
             'id' => $data->id,
-            'incomeTransactionItems' => []
+            'expenditureTransactionItems' => []
         ];
 
         for ($i=0; $i < 5; $i++) {
             $item = Item::inRandomOrder()->first();
+
+            $itemStock = Item::getStockById($item->id);
+
+            while ($itemStock->total < 50) {
+                $item = Item::inRandomOrder()->first();
+                $itemStock = Item::getStockById($item->id);
+            }
             
-            if (!empty($session['incomeTransactionItems'])) {
-                foreach ($session['incomeTransactionItems'] as $key => $value) {
+            if (!empty($session['expenditureTransactionItems'])) {
+                foreach ($session['expenditureTransactionItems'] as $key => $value) {
                     if ($value['item_id'] == $item->id) {
                         $item = Item::inRandomOrder()->first();
 
-                        while ($item->id == $value['item_id']) {
+                        $sameItem = $item->id == $value['item_id'];
+
+                        while ($sameItem || $itemStock->total < 50) {
                             $item = Item::inRandomOrder()->first();
+                            $itemStock = Item::getStockById($item->id);
+
+                            while ($itemStock->total < 50) {
+                                $item = Item::inRandomOrder()->first();
+                                $itemStock = Item::getStockById($item->id);
+                            }
                         }
                     }
                 }
             }
 
-            array_push($session['incomeTransactionItems'], [
+            array_push($session['expenditureTransactionItems'], [
                 'item_id' => $item->id,
                 'amount' => rand(1, 50)
             ]);
         }
 
-        $url = "income-transactions/$data->id";
+        $url = "expenditure-transactions/$data->id";
 
         $response = $this->actingAs($user)
                             ->withSession([
-                                'edit-income-transaction-item' => $session
+                                'edit-expenditure-transaction-item' => $session
                             ])
                             ->put($url, $input);
 
-        $response->assertRedirect('income-transactions')
+        // $response->assertStatus(302);
+        // $response->assertSessionHasNoErrors();
+
+        // $response->assertRedirect('expenditure-transactions/' . $data->id . '/edit');
+
+        $response->assertRedirect('expenditure-transactions')
                     ->assertSessionHas(
                         'status',
-                        'Berhasil mengubah transaksi (masuk).'
+                        'Berhasil mengubah transaksi (keluar).'
                     );
     }
 
@@ -203,15 +240,15 @@ class IncomeTransactionTest extends TestCase
     {
         $user = User::inRandomOrder()->first();
 
-        $data = IncomeTransaction::inRandomOrder()->first();
+        $data = ExpenditureTransaction::inRandomOrder()->first();
 
-        $url = "income-transactions/$data->id";
+        $url = "expenditure-transactions/$data->id";
 
         $response = $this->actingAs($user)
                         ->delete($url);
 
         $response->assertSessionHas(
-            'status', 'Berhasil menghapus transaksi (masuk).'
+            'status', 'Berhasil menghapus transaksi (keluar).'
         );
     }
 }

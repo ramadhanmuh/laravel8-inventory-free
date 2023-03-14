@@ -106,7 +106,7 @@ Route::middleware(['auth'])->group(function () {
     ])->name('income-transaction-items.delete-edit-session');
 
     Route::resource('income-transaction-items', IncomeTransactionItemController::class)->except([
-        'show', 'index', 'delete'
+        'show', 'index'
     ]);
 
     Route::resource('income-transactions', IncomeTransactionController::class);

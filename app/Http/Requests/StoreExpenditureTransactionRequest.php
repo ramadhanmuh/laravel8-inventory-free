@@ -38,7 +38,9 @@ class StoreExpenditureTransactionRequest extends FormRequest
                     $itemNotFound = 0;
 
                     foreach ($session as $key => $value) {
-                        if (!Item::countAvailableItemById($value['item_id'])) {
+                        $item = Item::getStockById($value['item_id']);
+
+                        if (empty($item) || $item->total < $value['amount']) {
                             $itemNotFound = 1;
 
                             unset($session[$key]);

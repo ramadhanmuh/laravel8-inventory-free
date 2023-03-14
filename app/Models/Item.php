@@ -245,7 +245,7 @@ class Item extends Model
                     })
                     ->where('id', '=', $id)
                     ->groupBy('a.id')
-                    ->get();
+                    ->first();
     }
 
     public static function getWithCategoryBrandUOMStock($input)
@@ -385,6 +385,10 @@ class Item extends Model
 
             $values['uom_id'] = $input['uom_id'];
         }
+
+        $query .= '
+            GROUP BY a.id
+        ';
 
         if (is_numeric($input['start_stock'])) {
             $query .= '
@@ -600,7 +604,7 @@ class Item extends Model
             $values['end_stock'] = intval($input['end_stock']) + 1;
         }
 
-        $query .= ') as x';
+        $query .= ' group by a.id) as x';
 
         return DB::select($query, $values)[0]->total;
     }

@@ -37,12 +37,12 @@ class UpdateExpenditureTransactionRequest extends FormRequest
                 function ($attribute, $value, $fail) use ($id) {
                     $session = session('edit-expenditure-transaction-item');
 
-                    if (is_array($session['expenditureTransactionItems']) && count($session['expenditureTransactionItems']) < 1) {
-                        $fail('Barang wajib dipilih.');
-                        return;
-                    }
-
                     if (!empty($session)) {
+                        if (array_key_exists('expenditureTransactionItems', $session) && count($session['expenditureTransactionItems']) < 1) {
+                            $fail('Barang wajib dipilih.');
+                            return;
+                        }
+                        
                         $itemNotFound = 0;
 
                         foreach ($session['expenditureTransactionItems'] as $key => $value) {
@@ -54,7 +54,7 @@ class UpdateExpenditureTransactionRequest extends FormRequest
                                     $id, $value['item_id']
                                 );
     
-                                if (empty($expenditureTransactionItem) && $expenditureTransactionItem->amount < $value['amount']) {
+                                if (empty($expenditureTransactionItem) || $expenditureTransactionItem->amount < $value['amount']) {
                                     $item =  Item::getStockById($value['item_id']);
     
                                     if (($item->total - $value['amount']) < 1) {
