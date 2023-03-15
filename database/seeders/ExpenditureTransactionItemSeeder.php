@@ -18,7 +18,7 @@ class ExpenditureTransactionItemSeeder extends Seeder
     {
         $input = collect([]);
 
-        for ($i=0; $i < 150; $i++) { 
+        for ($i=0; $i < 100; $i++) { 
             $data['expenditure_transaction_id'] = ExpenditureTransaction::inRandomOrder()->first()->id;
 
             $data['item_id'] = Item::inRandomOrder()->first()->id;

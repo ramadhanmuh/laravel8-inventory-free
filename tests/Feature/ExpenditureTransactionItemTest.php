@@ -36,6 +36,8 @@ class ExpenditureTransactionItemTest extends TestCase
         $response = $this->actingAs($user)
                             ->post($url, $input);
 
+        $response->assertStatus(302);
+        $response->assertSessionHasNoErrors();
         $response->assertSessionHas(
             'status',
             'Berhasil menambahkan barang.'
@@ -91,12 +93,15 @@ class ExpenditureTransactionItemTest extends TestCase
         while ($stock->total < $input['amount']) {
             $item = Item::inRandomOrder()->first();
             $stock = Item::getStockById($item->id);
-            $input['item_id'] = $item->id;
         }
+
+        $input['item_id'] = $item->id;
 
         $response = $this->actingAs($user)
                             ->put($url, $input);
 
+        $response->assertStatus(302);
+        $response->assertSessionHasNoErrors();
         $response->assertSessionHas(
             'status',
             'Berhasil menambahkan barang.'

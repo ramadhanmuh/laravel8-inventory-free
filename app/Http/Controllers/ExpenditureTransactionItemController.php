@@ -164,7 +164,7 @@ class ExpenditureTransactionItemController extends Controller
         } else {
             foreach ($session['expenditureTransactionItems'] as $key => $value) {
                 if ($request->item_id == $value['item_id']) {
-                    $session['expenditureTransactionItems'][$key]->amount += $request->amount;
+                    $session['expenditureTransactionItems'][$key]['amount'] += $request->amount;
                     $itemExists = 1;
                 }
             }

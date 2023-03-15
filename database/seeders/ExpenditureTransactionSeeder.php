@@ -15,7 +15,7 @@ class ExpenditureTransactionSeeder extends Seeder
     public function run()
     {
         ExpenditureTransaction::factory()
-                            ->count(30)
+                            ->count(25)
                             ->create();
     }
 }

@@ -28,7 +28,8 @@ class StoreExpenditureTransactionItemRequest extends FormRequest
             'item_id' => [
                 'required', 'numeric',
                 function ($attribute, $value, $fail) {
-                    if (!Item::countAvailableItemById($value)) {
+                    $data = Item::getStockById($value);
+                    if ($data->total < 0) {
                         $fail('Barang yang dipilih tidak valid.');
                     }
                 }

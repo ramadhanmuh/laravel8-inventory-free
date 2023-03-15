@@ -35,16 +35,16 @@ class UpdateIncomeTransactionItemRequest extends FormRequest
                     $session = session('edit-income-transaction-item');
 
                     if (empty($session)) {
-                        $id = $this->segment(count($this->segments()));
+                        $incomeTransactionId = $this->segment( count($this->segments()) );
 
-                        $incomeTransactionItems = IncomeTransactionItem::where(
-                            'id', '=', $id
+                        $incomeTransactionItem = IncomeTransactionItem::where(
+                            'income_transaction_id', '=', $incomeTransactionId
                         )
                         ->where('item_id', '=', request()->item_id)
-                        ->get();
+                        ->first();
 
-                        if (!$incomeTransactionItems->isEmpty()) {
-                            if ($incomeTransactionItems->amount > 9999999999) {
+                        if (!empty($incomeTransactionItem)) {
+                            if ($incomeTransactionItem->amount > 9999999999) {
                                 $fail('Jumlah barang telah mencapai maksimum kapasitas.');
                             }
                         }

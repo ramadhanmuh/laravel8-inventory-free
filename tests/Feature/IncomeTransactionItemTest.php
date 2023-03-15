@@ -80,7 +80,7 @@ class IncomeTransactionItemTest extends TestCase
 
         $response = $this->actingAs($user)
                             ->put($url, $input);
-
+                            
         $response->assertSessionHas(
             'status',
             'Berhasil menambahkan barang.'

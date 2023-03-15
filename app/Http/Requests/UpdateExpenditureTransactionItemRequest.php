@@ -32,7 +32,9 @@ class UpdateExpenditureTransactionItemRequest extends FormRequest
                     $session = session('edit-expenditure-transaction-item');
 
                     if (empty($session)) {
-                        if (!Item::countAvailableItemById($value)) {
+                        $data = Item::getStockById($value);
+
+                        if ($data->total < 0) {
                             $fail('Barang yang dipilih tidak valid.');
                         }
                     } else {
@@ -41,7 +43,8 @@ class UpdateExpenditureTransactionItemRequest extends FormRequest
                         });
 
                         if (!count($filtered)) {
-                            if (!Item::countAvailableItemById($value)) {
+                            $data = Item::getStockById($value);
+                            if ($data->total < 0) {
                                 $fail('Barang yang dipilih tidak valid.');
                             }
                         }
@@ -55,16 +58,16 @@ class UpdateExpenditureTransactionItemRequest extends FormRequest
                     $session = session('edit-expenditure-transaction-item');
 
                     if (empty($session)) {
-                        $id = $this->segment(count($this->segments()));
+                        $expenditureTransactionId = $this->segment( count($this->segments()) );
 
-                        $expenditureTransactionItems = ExpenditureTransactionItem::where(
-                            'id', '=', $id
+                        $expenditureTransactionItem = ExpenditureTransactionItem::where(
+                            'expenditure_transaction_id', '=', $expenditureTransactionId
                         )
                         ->where('item_id', '=', request()->item_id)
-                        ->get();
+                        ->first();
 
-                        if (!$expenditureTransactionItems->isEmpty()) {
-                            if ($expenditureTransactionItems->amount > 9999999999) {
+                        if (!empty($expenditureTransactionItem)) {
+                            if ($expenditureTransactionItem->amount > 9999999999) {
                                 $fail('Jumlah barang telah mencapai maksimum kapasitas.');
                             }
                         }

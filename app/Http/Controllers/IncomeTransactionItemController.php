@@ -118,7 +118,7 @@ class IncomeTransactionItemController extends Controller
 
         foreach ($session['incomeTransactionItems'] as $key => $value) {
             if ($request->item_id == $value['item_id']) {
-                $session['incomeTransactionItems'][$key]->amount += $request->amount;
+                $session['incomeTransactionItems'][$key]['amount'] += $request->amount;
                 $itemExists = 1;
             }
         }
