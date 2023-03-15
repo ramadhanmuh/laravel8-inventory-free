@@ -92,7 +92,8 @@
                             @foreach ($unit_of_measurements as $item)
                                 <option value="{{ $item->id }}"
                                     {{ $input['uom_id'] === $item->id ? 'selected' : '' }}>
-                                    {{ $item->name }}
+                                    {{ $item->short_name }}
+                                    ({{ $item->full_name }})
                                 </option>
                             @endforeach
                         </select>
@@ -146,6 +147,9 @@
                     <form action="{{ route('stocks.index') }}" method="get">
                         <input type="hidden" name="order_by" value="{{ $input['order_by'] }}">
                         <input type="hidden" name="order_direction" value="{{ $input['order_direction'] }}">
+                        <input type="hidden" name="category_id" value="{{ $input['category_id'] }}">
+                        <input type="hidden" name="brand_id" value="{{ $input['brand_id'] }}">
+                        <input type="hidden" name="uom_id" value="{{ $input['uom_id'] }}">
                         <input type="hidden" name="start_stock" value="{{ $input['start_stock'] }}">
                         <input type="hidden" name="end_stock" value="{{ $input['end_stock'] }}">
                         <div class="input-group input-group-sm">

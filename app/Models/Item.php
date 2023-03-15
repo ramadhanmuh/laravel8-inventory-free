@@ -248,6 +248,206 @@ class Item extends Model
                     ->first();
     }
 
+    // public static function getWithCategoryBrandUOMStock($input)
+    // {
+    //     $where = 0;
+
+    //     $values = [];
+        
+    //     $query = '
+    //         select
+    //             a.*, b.name as category_name,
+    //             c.name as brand_name, d.short_name,
+    //             x.income_transaction_items_amount,
+    //             y.expenditure_transaction_items_amount,
+    //             (IFNULL(x.income_transaction_items_amount, 0) -
+    //             IFNULL(y.expenditure_transaction_items_amount, 0))
+    //             as stock
+    //         from
+    //             items as a
+    //         inner join
+    //             categories as b
+    //         on
+    //             a.category_id = b.id
+    //         inner join
+    //             brands as c
+    //         on
+    //             a.brand_id = c.id
+    //         inner join
+    //             unit_of_measurements as d
+    //         on
+    //             a.unit_of_measurement_id = d.id
+    //         left join
+    //             (
+    //                 select
+    //                     SUM(amount) as income_transaction_items_amount,
+    //                     item_id
+    //                 from
+    //                     income_transaction_items
+    //                 group by
+    //                     item_id
+    //             ) as x
+    //         on
+    //             a.id = x.item_id
+    //         left join
+    //             (
+    //                 select
+    //                     SUM(amount) as expenditure_transaction_items_amount,
+    //                     item_id
+    //                 from
+    //                     expenditure_transaction_items
+    //                 group by
+    //                     item_id
+    //             ) as y
+    //         on
+    //             a.id = y.item_id
+    //     ';
+
+    //     if (!empty($input['keyword'])) {
+    //         $query .= '
+    //             where
+    //                 (
+    //                     a.part_number
+    //                     like
+    //                         %?%
+    //                     or
+    //                         a.description
+    //                     like
+    //                         %?%
+    //                     or
+    //                         a.price
+    //                     like
+    //                         %?%
+    //                     or
+    //                         b.name
+    //                     like
+    //                         %?%
+    //                     or
+    //                         c.name
+    //                     like
+    //                         %?%
+    //                     or
+    //                         d.short_name
+    //                     like
+    //                         %?%
+    //                 )
+    //         ';
+
+    //         $where = 1;
+
+    //         for ($i=0; $i < 6; $i++) { 
+    //             array_push($values, $input['keyword']);
+    //         }
+    //     }
+
+    //     if (!empty($input['category_id'])) {
+    //         if ($where) {
+    //             $query .= '
+    //                 and a.category_id = ?
+    //             ';
+    //         } else {
+    //             $query .= '
+    //                 where a.category_id = ?
+    //             ';
+
+    //             $where = 1;
+    //         }
+
+    //         array_push($values, $input['category_id']);
+    //     }
+
+    //     if (!empty($input['brand_id'])) {
+    //         if ($where) {
+    //             $query .= '
+    //                 and
+    //                     a.brand_id = ?
+    //             ';
+    //         } else {
+    //             $query .= '
+    //                 where a.brand_id = ?
+    //             ';
+
+    //             $where = 1;
+    //         }
+
+    //         array_push($values, $input['brand_id']);
+    //     }
+
+    //     if (!empty($input['uom_id'])) {
+    //         if ($where) {
+    //             $query .= '
+    //                 and
+    //                     a.unit_of_measurement_id = ?
+    //             ';
+    //         } else {
+    //             $query .= '
+    //                 where a.unit_of_measurement_id = ?
+    //             ';
+
+    //             $where = 1;
+    //         }
+
+    //         array_push($values, $input['uom_id']);
+    //     }
+
+    //     $query .= '
+    //         GROUP BY a.id
+    //     ';
+
+    //     if (is_numeric($input['start_stock'])) {
+    //         $query .= '
+    //             having stock > ?
+    //         ';
+
+    //         array_push($values, intval($input['start_stock']) - 1);
+    //     }
+
+    //     if (is_numeric($input['end_stock'])) {
+    //         if (is_numeric($input['start_stock'])) {
+    //             $query .= '
+    //                 and stock < ?
+    //             ';
+    //         } else {
+    //             $query .= '
+    //                 having stock < ?
+    //             ';
+    //         }
+
+    //         array_push($values, intval($input['end_stock']) + 1);
+    //     }
+
+    //     $orderColumns = [
+    //         'part_number' => 'a.part_number',
+    //         'description' => 'a.description',
+    //         'price' => 'a.price',
+    //         'category' => 'b.name',
+    //         'brand' => 'c.name',
+    //         'uom' => 'd.short_name',
+    //     ];
+
+    //     if (array_key_exists($input['order_by'], $orderColumns)) {
+    //         if ($input['order_direction'] === 'asc' || $input['order_direction'] === 'desc') {
+    //             $query .= '
+    //                 order by
+    //                     ' . $orderColumns[$input['order_by']] . '
+    //                 ' . $input['order_direction'] . '
+    //             ';
+    //         } else {
+    //             $query .= 'order by a.part_number asc';
+    //         }
+    //     } else {
+    //         $query .= 'order by a.part_number asc';
+    //     }
+
+    //     $query .= '
+    //         limit 10 offset ' . $input['offset'] . '
+    //     ';
+
+    //     // dd($values);
+
+    //     return DB::select($query, $values);
+    // }
+
     public static function getWithCategoryBrandUOMStock($input)
     {
         $where = 0;
@@ -309,33 +509,35 @@ class Item extends Model
                     (
                         a.part_number
                         like
-                            %:keyword%
+                            :keyword1
                         or
                             a.description
                         like
-                            %:keyword%
+                            :keyword2
                         or
                             a.price
                         like
-                            %:keyword%
+                            :keyword3
                         or
                             b.name
                         like
-                            %:keyword%
+                            :keyword4
                         or
                             c.name
                         like
-                            %:keyword%
+                            :keyword5
                         or
                             d.short_name
                         like
-                            %:keyword%
+                            :keyword6
                     )
             ';
 
             $where = 1;
 
-            $values['keyword'] = $input['keyword'];
+            for ($i=1; $i < 7; $i++) { 
+                $values['keyword' . $i] = '%' .  $input['keyword'] . '%';
+            }
         }
 
         if (!empty($input['category_id'])) {
@@ -505,33 +707,35 @@ class Item extends Model
                     (
                         a.part_number
                         like
-                            %:keyword%
+                            :keyword1
                         or
                             a.description
                         like
-                            %:keyword%
+                            :keyword2
                         or
                             a.price
                         like
-                            %:keyword%
+                            :keyword3
                         or
                             b.name
                         like
-                            %:keyword%
+                            :keyword4
                         or
                             c.name
                         like
-                            %:keyword%
+                            :keyword5
                         or
                             d.short_name
                         like
-                            %:keyword%
+                            :keyword6
                     )
             ';
 
             $where = 1;
 
-            $values['keyword'] = $input['keyword'];
+            for ($i=1; $i < 7; $i++) { 
+                $values["keyword$i"] = $input['keyword'];
+            }
         }
 
         if (!empty($input['category_id'])) {
@@ -606,7 +810,9 @@ class Item extends Model
             $values['end_stock'] = intval($input['end_stock']) + 1;
         }
 
-        $query .= ' group by a.id) as x';
+        $query .= ') as x';
+
+        // dd($query);
 
         return DB::select($query, $values)[0]->total;
     }

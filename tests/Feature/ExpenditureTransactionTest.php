@@ -200,25 +200,6 @@ class ExpenditureTransactionTest extends TestCase
             }
             
             $expenditureTransactionItem['item_id'] = $item->id;
-            // if (!empty($session['expenditureTransactionItems'])) {
-            //     foreach ($session['expenditureTransactionItems'] as $key => $value) {
-            //         if ($value['item_id'] == $item->id) {
-            //             $item = Item::inRandomOrder()->first();
-
-            //             $sameItem = $item->id == $value['item_id'];
-
-            //             while ($sameItem || $itemStock->total < 50) {
-            //                 $item = Item::inRandomOrder()->first();
-            //                 $itemStock = Item::getStockById($item->id);
-
-            //                 while ($itemStock->total < 50) {
-            //                     $item = Item::inRandomOrder()->first();
-            //                     $itemStock = Item::getStockById($item->id);
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
 
             array_push($session['expenditureTransactionItems'], $expenditureTransactionItem);
         }

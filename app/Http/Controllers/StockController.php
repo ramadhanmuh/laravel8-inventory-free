@@ -34,11 +34,11 @@ class StockController extends Controller
 
         $data['pageTotal'] = intval(ceil($itemTotal / 10));
 
-        $data['categories'] = Category::get();
+        $data['categories'] = Category::orderBy('name')->get();
 
-        $data['brands'] = Brand::get();
+        $data['brands'] = Brand::orderBy('name')->get();
 
-        $data['unit_of_measurements'] = UnitOfMeasurement::get();
+        $data['unit_of_measurements'] = UnitOfMeasurement::orderBy('short_name')->get();
 
         return view('pages.stock.index', $data);
     }
