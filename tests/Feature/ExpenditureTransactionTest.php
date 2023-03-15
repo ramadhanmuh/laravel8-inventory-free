@@ -113,14 +113,9 @@ class ExpenditureTransactionTest extends TestCase
                 foreach ($session as $key => $value) {
                     $sameItem = $item->id == $value['item_id'];
 
-                    while ($sameItem) {
+                    while ($sameItem || $itemStock->total < 50) {
                         $item = Item::inRandomOrder()->first();
                         $itemStock = Item::getStockById($item->id);
-
-                        while ($itemStock->total < 50) {
-                            $item = Item::inRandomOrder()->first();
-                            $itemStock = Item::getStockById($item->id);
-                        }
                     }
                 }
             }
@@ -181,39 +176,51 @@ class ExpenditureTransactionTest extends TestCase
         ];
 
         for ($i=0; $i < 5; $i++) {
+            $expenditureTransactionItem = [
+                'amount' => rand(1, 50)
+            ];
+
             $item = Item::inRandomOrder()->first();
 
             $itemStock = Item::getStockById($item->id);
 
-            while ($itemStock->total < 50) {
+            while ($itemStock->total < $expenditureTransactionItem['amount']) {
                 $item = Item::inRandomOrder()->first();
                 $itemStock = Item::getStockById($item->id);
             }
-            
+
             if (!empty($session['expenditureTransactionItems'])) {
                 foreach ($session['expenditureTransactionItems'] as $key => $value) {
-                    if ($value['item_id'] == $item->id) {
+                    while ($value['item_id'] == $item->id || $itemStock->total < $expenditureTransactionItem['amount']) {
                         $item = Item::inRandomOrder()->first();
-
-                        $sameItem = $item->id == $value['item_id'];
-
-                        while ($sameItem || $itemStock->total < 50) {
-                            $item = Item::inRandomOrder()->first();
-                            $itemStock = Item::getStockById($item->id);
-
-                            while ($itemStock->total < 50) {
-                                $item = Item::inRandomOrder()->first();
-                                $itemStock = Item::getStockById($item->id);
-                            }
-                        }
+                        $itemStock = Item::getStockById($item->id);
+                        $expenditureTransactionItem['amount'] = 1;
                     }
                 }
             }
+            
+            $expenditureTransactionItem['item_id'] = $item->id;
+            // if (!empty($session['expenditureTransactionItems'])) {
+            //     foreach ($session['expenditureTransactionItems'] as $key => $value) {
+            //         if ($value['item_id'] == $item->id) {
+            //             $item = Item::inRandomOrder()->first();
 
-            array_push($session['expenditureTransactionItems'], [
-                'item_id' => $item->id,
-                'amount' => rand(1, 50)
-            ]);
+            //             $sameItem = $item->id == $value['item_id'];
+
+            //             while ($sameItem || $itemStock->total < 50) {
+            //                 $item = Item::inRandomOrder()->first();
+            //                 $itemStock = Item::getStockById($item->id);
+
+            //                 while ($itemStock->total < 50) {
+            //                     $item = Item::inRandomOrder()->first();
+            //                     $itemStock = Item::getStockById($item->id);
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+
+            array_push($session['expenditureTransactionItems'], $expenditureTransactionItem);
         }
 
         $url = "expenditure-transactions/$data->id";
@@ -223,11 +230,6 @@ class ExpenditureTransactionTest extends TestCase
                                 'edit-expenditure-transaction-item' => $session
                             ])
                             ->put($url, $input);
-
-        // $response->assertStatus(302);
-        // $response->assertSessionHasNoErrors();
-
-        // $response->assertRedirect('expenditure-transactions/' . $data->id . '/edit');
 
         $response->assertRedirect('expenditure-transactions')
                     ->assertSessionHas(

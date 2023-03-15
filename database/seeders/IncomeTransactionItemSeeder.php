@@ -18,7 +18,7 @@ class IncomeTransactionItemSeeder extends Seeder
     {
         $input = collect([]);
 
-        for ($i=0; $i < 200; $i++) { 
+        for ($i=0; $i < 250; $i++) { 
             $data['income_transaction_id'] = IncomeTransaction::inRandomOrder()->first()->id;
 
             $data['item_id'] = Item::inRandomOrder()->first()->id;
@@ -32,7 +32,7 @@ class IncomeTransactionItemSeeder extends Seeder
                 }
             }
 
-            $data['amount'] = random_int(0, 9999999999);
+            $data['amount'] = rand(1000, 1000000000);
 
             $input->push($data);
         }

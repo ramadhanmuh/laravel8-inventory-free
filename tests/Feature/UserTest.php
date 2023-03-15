@@ -6,6 +6,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class UserTest extends TestCase
 {
@@ -121,14 +123,32 @@ class UserTest extends TestCase
     {
         $user = User::where('role', '=', 'Admin')->first();
 
+        $roles = ['Admin', 'Operator'];
+
+        $input = [
+            'name' => Str::random(20),
+            'username' => Str::random(10),
+            'email' => Str::random(10) . '@gmail.com',
+            'password' => Str::random(10),
+            'role' => Arr::random($roles)
+        ];
+
+        $usernameData = User::where('username', $input['username'])
+                            ->first();
+
+        $emailData = User::where('email', $input['email'])
+                            ->first();
+
+        while (!empty($usernameData)) {
+            $input['username'] = Str::random(10);
+        }
+
+        while (!empty($emailData)) {
+            $input['email'] = Str::random(10) . '@gmail.com';
+        }
+
         $response = $this->actingAs($user)
-                            ->post('users', [
-                                'name' => 'John Doe',
-                                'username' => 'john-doe',
-                                'email' => 'johndoe@gmail.com',
-                                'password' => 'johndoe',
-                                'role' => 'Admin'
-                            ]);
+                            ->post('users', $input);
 
         $response->assertStatus(302);
 
@@ -138,6 +158,10 @@ class UserTest extends TestCase
     public function test_edit_page()
     {
         $user = User::where('role', '=', 'Admin')->first();
+
+        $data = User::where('id', '!=', $user->id)->first();
+
+        $url = "users/$data->id/edit";
 
         $response = $this->actingAs($user)
                             ->get('users/30/edit');
@@ -171,14 +195,40 @@ class UserTest extends TestCase
     {
         $user = User::where('role', '=', 'Admin')->first();
 
+        $data = User::where('id', '!=', $user->id)
+                    ->inRandomOrder()
+                    ->first();
+
+        $roles = ['Admin', 'Operator'];
+
+        $input = [
+            'name' => Str::random(20),
+            'username' => Str::random(10),
+            'email' => Str::random(10) . '@gmail.com',
+            'password' => Str::random(10),
+            'role' => Arr::random($roles)
+        ];
+
+        $usernameData = User::where('username', $input['username'])
+                            ->where('id', '!=', $data->id)
+                            ->first();
+
+        $emailData = User::where('email', $input['email'])
+                            ->where('id', '!=', $data->id)
+                            ->first();
+
+        while (!empty($usernameData)) {
+            $input['username'] = Str::random(10);
+        }
+
+        while (!empty($emailData)) {
+            $input['email'] = Str::random(10) . '@gmail.com';
+        }
+
+        $url = "users/$data->id";
+
         $response = $this->actingAs($user)
-                            ->put('users/30', [
-                                'name' => 'John Doe Edit',
-                                'username' => 'john-doe-edit',
-                                'email' => 'johndoeedit@gmail.com',
-                                'password' => 'johndoe',
-                                'role' => 'Admin'
-                            ]);
+                            ->put($url, $input);
 
         $response->assertStatus(302);
 
@@ -201,8 +251,14 @@ class UserTest extends TestCase
     {
         $user = User::where('role', '=', 'Admin')->first();
 
+        $data = User::where('id', '!=', $user->id)
+                    ->inRandomOrder()
+                    ->first();
+
+        $url = "users/$data->id";
+
         $response = $this->actingAs($user)
-                            ->delete('users/30');
+                            ->delete($url);
 
         $response->assertStatus(302);
 

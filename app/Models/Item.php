@@ -258,6 +258,8 @@ class Item extends Model
             select
                 a.*, b.name as category_name,
                 c.name as brand_name, d.short_name,
+                x.income_transaction_items_amount,
+                y.expenditure_transaction_items_amount,
                 (IFNULL(x.income_transaction_items_amount, 0) -
                 IFNULL(y.expenditure_transaction_items_amount, 0))
                 as stock
@@ -298,7 +300,7 @@ class Item extends Model
                         item_id
                 ) as y
             on
-                a.id = x.item_id
+                a.id = y.item_id
         ';
 
         if (!empty($input['keyword'])) {
@@ -494,7 +496,7 @@ class Item extends Model
                                 item_id
                         ) as y
                     on
-                        a.id = x.item_id
+                        a.id = y.item_id
         ';
 
         if (!empty($input['keyword'])) {

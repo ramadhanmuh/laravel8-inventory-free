@@ -79,13 +79,22 @@ class ItemTest extends TestCase
         $url = 'items';
 
         $input = [
-            'part_number' => '053e5092',
+            'part_number' => strval(rand(100000, 999999)),
             'category_id' => $category->id,
             'brand_id' => $brand->id,
             'unit_of_measurement_id' => $unitOfMeasurement->id,
             'description' => 'Lorem ipsum',
             'price' => '1000'
         ];
+
+        $partNumberData = Item::where('part_number', $input['part_number'])
+                                ->first();
+
+        while (!empty($partNumberData)) {
+            $input['part_number'] = strval(rand(100000, 999999));
+            $partNumberData = Item::where('part_number', $input['part_number'])
+                                    ->first();
+        }
 
         $response = $this->actingAs($user)
                         ->post($url, $input);
